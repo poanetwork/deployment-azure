@@ -149,7 +149,7 @@
         {
             "apiVersion": "2017-03-30",
             "type": "Microsoft.Compute/virtualMachines",
-            "name": "[variables('vmName')]",
+            "name": "[concat(variables('vmName'), '-', copyIndex())]",
             "location": "[resourceGroup().location]",
             "copy": {
                 "name": "vmloop",

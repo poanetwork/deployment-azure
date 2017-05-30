@@ -108,7 +108,7 @@
                 },
                 "subnets": [
                     {
-                        "name": "[concat(variables('subnetName'), '-', copyIndex())]",
+                        "name": "[variables('subnetName')]",
                         "properties": {
                             "addressPrefix": "[variables('subnetPrefix')]"
                         }
@@ -139,7 +139,7 @@
                                 "id": "[resourceId('Microsoft.Network/publicIPAddresses',concat(variables('publicIPAddressName'), '-', copyIndex()))]"
                             },
                             "subnet": {
-                                "id": "[variables('subnetRef')]"
+                                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks',concat(variables('virtualNetworkName'), '-', copyIndex())),'/subnets/',variables('subnetName'))]"
                             }
                         }
                     }

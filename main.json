@@ -203,6 +203,9 @@
         }
     ],
     "outputs": {
-        "adminUsername": "[parameters('adminUsername')]"
+        "adminUsername": {
+            "type": "string",
+            "value": "[parameters('adminUsername')]"
+        }
     }
 }

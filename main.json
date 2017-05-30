@@ -132,7 +132,7 @@
             "properties": {
                 "ipConfigurations": [
                     {
-                        "name": "[concat('ipconfig1, '-', copyIndex())]",
+                        "name": "[concat('ipconfig1', '-', copyIndex())]",
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIPAddress": {

@@ -62,7 +62,7 @@
     "resources": [
         {
             "type": "Microsoft.Storage/storageAccounts",
-            "name": "[concat(variables('storageAccountName'), '-', copyIndex())]",
+            "name": "[concat(variables('storageAccountName'), copyIndex())]",
             "apiVersion": "2017-06-01",
             "location": "[resourceGroup().location]",
             "copy": {
@@ -156,7 +156,7 @@
                 "count": "[parameters('nCopies')]"
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts/', concat(variables('storageAccountName'), '-', copyIndex()))]",
+                "[resourceId('Microsoft.Storage/storageAccounts/', concat(variables('storageAccountName'), copyIndex()))]",
                 "[resourceId('Microsoft.Network/networkInterfaces/', concat(variables('nicName'), '-', copyIndex()))]"
             ],
             "properties": {
@@ -196,7 +196,7 @@
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
                         "enabled": "true",
-                        "storageUri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', concat(variables('storageAccountName'), '-', copyIndex())), '2016-01-01').primaryEndpoints.blob)]"
+                        "storageUri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', concat(variables('storageAccountName'), copyIndex())), '2016-01-01').primaryEndpoints.blob)]"
                     }
                 }
             }

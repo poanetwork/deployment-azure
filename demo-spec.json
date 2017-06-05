@@ -17,7 +17,7 @@
     "params": {
         "maximumExtraDataSize": "0x20",
         "minGasLimit": "0x1388",
-        "networkID" : 12648430
+        "networkID" : "0x2323"
     },
     "genesis": {
         "seal": {

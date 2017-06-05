@@ -13,4 +13,4 @@ curl -O 'https://raw.githubusercontent.com/oraclesorg/test-templates/master/node
 curl -O 'https://raw.githubusercontent.com/oraclesorg/test-templates/master/node-to-enode.toml'
 sed -i 's/@172.16./@/g' node-to-enode.toml
 mkdir parity-data
-sudo docker run --name eth-parity -d -p 30300:30300 -p 8080:8080 -p 8180:8180 -p 8540:8540 -v node.pwds:/build/node.pwds -v parity-data:/tmp/parity -v demo-spec.json:/build/demo-spec.json -v node-to-enode.toml:/build/node-to-enode.toml ethcore/parity:stable --config node-to-enode.toml
+sudo docker run --name eth-parity -d -p 30300:30300 -p 8080:8080 -p 8180:8180 -p 8540:8540 -v $(pwd)/node.pwds:/build/node.pwds -v $(pwd)/parity-data:/tmp/parity -v $(pwd)/demo-spec.json:/build/demo-spec.json -v $(pwd)/node-to-enode.toml:/build/node-to-enode.toml ethcore/parity:stable --config node-to-enode.toml

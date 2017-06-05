@@ -191,11 +191,9 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
                 "fileUris": [
-                    "https://raw.githubusercontent.com/oraclesorg/test-templates/master/test.sh"
-                ]
-            },
-            "protectedSettings": {
-                "commandToExecute": "sh test.sh"
+                    "https://raw.githubusercontent.com/oraclesorg/test-templates/master/install.sh"
+                ],
+                "commandToExecute": "sh install.sh"
             }
           }
         }

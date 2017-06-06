@@ -2,7 +2,6 @@
 set -e
 set -u
 set -x
-set -o pipefail
 
 # script parameters
 INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"

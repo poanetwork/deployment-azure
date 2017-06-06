@@ -3,6 +3,10 @@ set -e
 sudo timedatectl set-ntp no
 sudo apt-get -y install ntp
 
+# install haveged
+sudo apt-get -y install haveged
+sudo update-rc.d haveged defaults
+
 # download and install docker
 sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -

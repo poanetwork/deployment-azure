@@ -8,10 +8,10 @@
         "description": "User name for the Virtual Machine."
       }
     },
-    "adminPassword": {
-      "type": "securestring",
+    "sshPublicKey": {
+      "type": "string",
       "metadata": {
-        "description": "Password for the Virtual Machine."
+        "description": "Public key to access the Virtual Machine."
       }
     },
     "dnsLabelPrefix": {
@@ -126,7 +126,18 @@
         "osProfile": {
           "computerName": "[variables('vmName')]",
           "adminUsername": "[parameters('adminUsername')]",
-          "adminPassword": "[parameters('adminPassword')]"
+          "adminPassword": "",
+          "linuxConfiguration": {
+            "disablePasswordAuthentication": true,
+            "ssh": {
+              "publicKeys": [
+                {
+                  "path": "[concat('/home/', variables('adminUsername'), '/.ssh/authorized_keys')]",
+                  "keyData": "[variables('sshPublicKey')]"
+                }
+              ]
+            }
+          },
         },
         "storageProfile": {
           "imageReference": {

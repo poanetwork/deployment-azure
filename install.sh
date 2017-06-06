@@ -1,4 +1,13 @@
+#!/usr/bin/env bash
 set -e
+set -u
+set -x
+set -o pipefail
+
+# script parameters
+INSTLL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
+INSTLL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/master"
+
 # install ntpd, replace timesyncd
 sudo timedatectl set-ntp no
 sudo apt-get -y install ntp
@@ -10,18 +19,15 @@ sudo update-rc.d haveged defaults
 # download and install docker
 sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-#sudo apt-key fingerprint 0EBFCD88
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 sudo apt-get update
-#sudo apt-get -y install docker-ce
-#apt-cache madison docker-ce
-sudo apt-get -y install docker-ce=17.03.1~ce-0~ubuntu-xenial
+sudo apt-get -y install docker-ce=${INSTALL_DOCKER_VERSION}
 
 # pull image, configs and setup parity
 sudo docker pull ethcore/parity:stable
-curl -O 'https://raw.githubusercontent.com/oraclesorg/test-templates/master/demo-spec.json'
-curl -O 'https://raw.githubusercontent.com/oraclesorg/test-templates/master/node.pwds'
-curl -O 'https://raw.githubusercontent.com/oraclesorg/test-templates/master/node-to-enode.toml'
+curl -s -O "${INSTLL_CONFIG_REPO}/demo-spec.json"
+curl -s -O "${INSTLL_CONFIG_REPO}/node.pwds"
+curl -s -O "${INSTLL_CONFIG_REPO}/node-to-enode.toml"
 sed -i 's/@172.16./@/g' node-to-enode.toml
 mkdir parity-data
 

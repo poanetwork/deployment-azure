@@ -16,6 +16,17 @@ sudo apt-get -y install ntp
 sudo apt-get -y install haveged
 sudo update-rc.d haveged defaults
 
+# allocate swap
+sudo apt-get -y install bc
+sudo fallocate -l $(echo "$(free -b | awk '/Mem/{ print $2 }')*2"  | bc -l) /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+sudo sh -c "printf '/swapfile   none    swap    sw    0   0\n' >> /etc/fstab"
+sudo sh -c "printf 'vm.swappiness=10\n' >> /etc/sysctl.conf"
+sudo sysctl vm.vfs_cache_pressure=50
+sudo sh -c "printf 'vm.vfs_cache_pressure = 50\n' >> /etc/sysctl.conf"
+
 # download and install docker
 sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -

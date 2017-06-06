@@ -5,8 +5,8 @@ set -x
 set -o pipefail
 
 # script parameters
-INSTLL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
-INSTLL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/master"
+INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
+INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/master"
 
 # install ntpd, replace timesyncd
 sudo timedatectl set-ntp no
@@ -25,9 +25,9 @@ sudo apt-get -y install docker-ce=${INSTALL_DOCKER_VERSION}
 
 # pull image, configs and setup parity
 sudo docker pull ethcore/parity:stable
-curl -s -O "${INSTLL_CONFIG_REPO}/demo-spec.json"
-curl -s -O "${INSTLL_CONFIG_REPO}/node.pwds"
-curl -s -O "${INSTLL_CONFIG_REPO}/node-to-enode.toml"
+curl -s -O "${INSTALL_CONFIG_REPO}/demo-spec.json"
+curl -s -O "${INSTALL_CONFIG_REPO}/node.pwds"
+curl -s -O "${INSTALL_CONFIG_REPO}/node-to-enode.toml"
 sed -i 's/@172.16./@/g' node-to-enode.toml
 mkdir parity-data
 

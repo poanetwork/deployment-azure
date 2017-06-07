@@ -37,7 +37,10 @@
     "virtualNetworkName": "MyVNET",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
-    "ubuntuOSVersion": "16.04.0-LTS"
+    "ubuntuOSVersion": "16.04.0-LTS",
+    "dnsLabelPrefix": "[parameters('dnsLabelPrefix')]",
+    "adminUsername": "[parameters('adminUsername')]",
+    "sshPublicKey": "[parameters('sshPublicKey')]"
   },
   "resources": [
     {
@@ -59,7 +62,7 @@
       "properties": {
         "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
         "dnsSettings": {
-          "domainNameLabel": "[parameters('dnsLabelPrefix')]"
+          "domainNameLabel": "[variables('dnsLabelPrefix')]"
         }
       }
     },
@@ -125,15 +128,15 @@
         },
         "osProfile": {
           "computerName": "[variables('vmName')]",
-          "adminUsername": "[parameters('adminUsername')]",
+          "adminUsername": "[variables('adminUsername')]",
           "adminPassword": "",
           "linuxConfiguration": {
             "disablePasswordAuthentication": true,
             "ssh": {
               "publicKeys": [
                 {
-                  "path": "[concat('/home/', parameters('adminUsername'), '/.ssh/authorized_keys')]",
-                  "keyData": "[parameters('sshPublicKey')]"
+                  "path": "[concat('/home/', variables('adminUsername'), '/.ssh/authorized_keys')]",
+                  "keyData": "[variables('sshPublicKey')]"
                 }
               ]
             }
@@ -206,7 +209,7 @@
     },
     "sshCommand": {
       "type": "string",
-      "value": "[concat('ssh ', parameters('adminUsername'), '@', reference(variables('publicIPAddressName')).dnsSettings.fqdn)]"
+      "value": "[concat('ssh ', variables('adminUsername'), '@', reference(variables('publicIPAddressName')).dnsSettings.fqdn)]"
     }
   }
 }

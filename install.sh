@@ -11,6 +11,14 @@ NETSTATS_SECRET="${NETSTATS_SECRET:-1234321}" # this should be replaced or provi
 function install_ntpd() {
     sudo timedatectl set-ntp no
     sudo apt-get -y install ntp
+
+    sudo bash -c "cat > /etc/cron.hourly/ntpdate << EOF
+#!/bin/sh
+sudo service ntp stop
+sudo ntpdate -s ntp.ubuntu.com
+sudo service ntp start
+EOF"
+    sudo chmod 755 /etc/cron.hourly/ntpdate
 }
 
 function install_haveged() {

@@ -11,6 +11,15 @@ INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates
 sudo timedatectl set-ntp no
 sudo apt-get -y install ntp
 
+# set up time update cronjob
+sudo bash -c "cat > /etc/cron.hourly/ntpdate << EOF
+#!/bin/sh
+sudo service ntp stop
+sudo ntpdate -s ntp.ubuntu.com
+sudo service ntp start
+EOF"
+sudo chmod 755 /etc/cron.hourly/ntpdate
+
 # install haveged
 sudo apt-get -y install haveged
 sudo update-rc.d haveged defaults

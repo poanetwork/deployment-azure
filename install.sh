@@ -3,6 +3,22 @@ set -e
 set -u
 set -x
 
+# check what shell am i running in
+echo $0
+ps -ef | grep $$ | grep -v grep
+ps -p $$
+echo $SHELL
+# tcsh?
+echo $version
+# bash?
+echo $BASH
+# csh/tsch
+echo $shell
+# zsh
+echo $ZSH_NAME
+# ksh
+echo $PS3 $PS4
+
 # script parameters
 INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
 INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/master"

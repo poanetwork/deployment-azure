@@ -195,7 +195,7 @@
                 "fileUris": [
                     "https://raw.githubusercontent.com/oraclesorg/test-templates/master/install.sh"
                 ],
-                "commandToExecute": "sh install.sh"
+                "commandToExecute": "chmod +x install.sh; ./install.sh"
             }
           }
         }

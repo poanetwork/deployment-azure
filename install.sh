@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-set -e
-set -u
-set -x
+# set -e
+# set -u
+# set -x
 
 # check what shell am i running in
 echo $0

@@ -8,7 +8,7 @@ INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
 INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/master"
 NETSTATS_SECRET="${NETSTATS_SECRET:-1234321}" # this should be replaced or provided through env by azure template
 
-function install_ntpd() {
+install_ntpd() {
     sudo timedatectl set-ntp no
     sudo apt-get -y install ntp
 
@@ -21,12 +21,12 @@ EOF"
     sudo chmod 755 /etc/cron.hourly/ntpdate
 }
 
-function install_haveged() {
+install_haveged() {
     sudo apt-get -y install haveged
     sudo update-rc.d haveged defaults
 }
 
-function allocate_swap() {
+allocate_swap() {
     sudo apt-get -y install bc
     #sudo fallocate -l $(echo "$(free -b | awk '/Mem/{ print $2 }')*2"  | bc -l) /swapfile
     sudo fallocate -l 1G /swapfile
@@ -39,7 +39,7 @@ function allocate_swap() {
     sudo sh -c "printf 'vm.vfs_cache_pressure = 50\n' >> /etc/sysctl.conf"
 }
 
-function install_docker_ce() {
+install_docker_ce() {
     sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
@@ -47,7 +47,7 @@ function install_docker_ce() {
     sudo apt-get -y install docker-ce=${INSTALL_DOCKER_VERSION}
 }
 
-function pull_image_and_configs() {
+pull_image_and_configs() {
     sudo docker pull ethcore/parity:stable
     curl -s -O "${INSTALL_CONFIG_REPO}/demo-spec.json"
     curl -s -O "${INSTALL_CONFIG_REPO}/node.pwds"
@@ -57,7 +57,7 @@ function pull_image_and_configs() {
 }
 
 # based on https://get.parity.io
-function install_netstats() {
+install_netstats() {
     # install node.js
     curl -sL https://deb.nodesource.com/setup_0.12 | bash -
     sudo apt-get update
@@ -105,7 +105,7 @@ EOL
     cd $oldpwd
 }
 
-function start_docker() {
+start_docker() {
     sudo docker run -d \
         --name eth-parity \
         -p 30300:30300 \
@@ -120,7 +120,7 @@ function start_docker() {
 }
 
 # MAIN
-function main () {
+main () {
     install_ntpd
     install_haveged
     allocate_swap

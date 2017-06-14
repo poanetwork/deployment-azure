@@ -194,7 +194,9 @@
             "settings": {
                 "fileUris": [
                     "https://raw.githubusercontent.com/oraclesorg/test-templates/master/install.sh"
-                ],
+                ]
+            },
+            "protectedSettings": {
                 "commandToExecute": "chmod +x install.sh; ./install.sh"
             }
           }

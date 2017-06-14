@@ -9,12 +9,16 @@ echo "pwd: $(pwd)"
 
 # script parameters
 INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
-INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/master"
-GENESIS_JSON="demo-spec.json"
-NODE_TOML="node-to-enode.toml"
+INSTALL_DOCKER_IMAGE="ethcore/parity:beta-release"
+INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/master/0new"
+GENESIS_JSON="genesis.json"
+NODE_TOML="node.toml"
+NODE_PWD="node.pwd"
 
-# this should be replaced or provided through env by azure template
-NETSTATS_SECRET="${NETSTATS_SECRET:-1234321}"
+# this should be provided through env by azure template
+NETSTATS_SECRET="${NETSTATS_SECRET}"
+MINING_KEYFILE="${MINING_KEYFILE}"
+MINING_KEYPASS="${MINING_KEYPASS}"
 
 install_ntpd() {
     echo "=====> install_ntpd"
@@ -65,10 +69,10 @@ install_docker_ce() {
 
 pull_image_and_configs() {
     echo "=====> pull_image_and_configs"
-    sudo docker pull ethcore/parity:beta-release
+    sudo docker pull ${INSTALL_DOCKER_IMAGE}
     curl -s -O "${INSTALL_CONFIG_REPO}/${GENESIS_JSON}"
-    curl -s -O "${INSTALL_CONFIG_REPO}/node.pwds"
     curl -s -O "${INSTALL_CONFIG_REPO}/${NODE_TOML}"
+    echo "${MINING_KEYPASS}" > "${NODE_PWD}"
     sed -i 's/@172.16./@/g' ${NODE_TOML}
     mkdir parity-data
     echo "<===== pull_image_and_configs"
@@ -86,10 +90,7 @@ install_netstats() {
     # add symlink if it doesn't exist
     [[ ! -f /usr/bin/node ]] && sudo ln -s /usr/bin/nodejs /usr/bin/node
 
-    cd $HOME
-
-    [ ! -d "www" ] && git clone https://github.com/cubedro/eth-net-intelligence-api netstats
-    oldpwd="$(pwd)"
+    git clone https://github.com/cubedro/eth-net-intelligence-api netstats
     cd netstats
     sudo npm install
     sudo npm install pm2 -g
@@ -99,10 +100,10 @@ install_netstats() {
     {
         "name"                 : "node-app",
         "script"               : "app.js",
-        "log_date_format"      : "YYYY-MM-DD HH:mm Z",
+        "log_date_format"      : "YYYY-MM-DD HH:mm:SS Z",
         "merge_logs"           : false,
         "watch"                : false,
-        "max_restarts"         : 10,
+        "max_restarts"         : 100,
         "exec_interpreter"     : "node",
         "exec_mode"            : "fork_mode",
         "env":
@@ -121,23 +122,27 @@ install_netstats() {
 ]
 EOL
     pm2 startOrRestart app.json
-    cd $oldpwd
+    cd ..
     echo "<===== install_netstats"
 }
 
 start_docker() {
     echo "=====> start_docker"
-    sudo docker run -d \
-        --name eth-parity \
-        -p 30300:30300 \
-        -p 8080:8080 \
-        -p 8180:8180 \
-        -p 8540:8540 \
-        -v "$(pwd)/node.pwds:/build/node.pwds" \
-        -v "$(pwd)/parity-data:/tmp/parity" \
-        -v "$(pwd)/${GENESIS_JSON}:/build/${GENESIS_JSON}" \
-        -v "$(pwd)/${NODE_TOML}:/build/${NODE_TOML}" \
-        ethcore/parity:stable --config "${NODE_TOML}"
+    cat > rundocker.sh << EOF
+sudo docker run -d \\
+    --name eth-parity \\
+    -p 30300:30300 \\
+    -p 8080:8080 \\
+    -p 8180:8180 \\
+    -p 8540:8540 \\
+    -v "$(pwd)/node.pwds:/build/node.pwds" \\
+    -v "$(pwd)/parity-data:/tmp/parity" \\
+    -v "$(pwd)/${GENESIS_JSON}:/build/${GENESIS_JSON}" \\
+    -v "$(pwd)/${NODE_TOML}:/build/${NODE_TOML}" \\
+    ${INSTALL_DOCKER_IMAGE} --config "${NODE_TOML}"
+EOF
+    chmod +x rundocker.sh
+    ./rundocker.sh
     echo "<===== start_docker"
 }
 

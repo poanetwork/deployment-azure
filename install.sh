@@ -126,16 +126,16 @@ EOL
 start_docker() {
     echo "=====> start_docker"
     cat > rundocker.sh << EOF
-sudo docker run -d \
-    --name eth-parity \
-    -p 30300:30300 \
-    -p 8080:8080 \
-    -p 8180:8180 \
-    -p 8540:8540 \
-    -v "$(pwd)/node.pwds:/build/node.pwds" \
-    -v "$(pwd)/parity-data:/tmp/parity" \
-    -v "$(pwd)/${GENESIS_JSON}:/build/${GENESIS_JSON}" \
-    -v "$(pwd)/${NODE_TOML}:/build/${NODE_TOML}" \
+sudo docker run -d \\
+    --name eth-parity \\
+    -p 30300:30300 \\
+    -p 8080:8080 \\
+    -p 8180:8180 \\
+    -p 8540:8540 \\
+    -v "$(pwd)/node.pwds:/build/node.pwds" \\
+    -v "$(pwd)/parity-data:/tmp/parity" \\
+    -v "$(pwd)/${GENESIS_JSON}:/build/${GENESIS_JSON}" \\
+    -v "$(pwd)/${NODE_TOML}:/build/${NODE_TOML}" \\
     ${INSTALL_DOCKER_IMAGE} --config "${NODE_TOML}" --ui-no-validation
 EOF
     chmod +x rundocker.sh

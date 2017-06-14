@@ -9,6 +9,7 @@ echo "pwd: $(pwd)"
 
 # script parameters
 INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
+INSTALL_DOCKER_IMAGE="ethcore/parity:beta-release"
 INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/master"
 GENESIS_JSON="demo-spec.json"
 NODE_TOML="node-to-enode.toml"
@@ -65,7 +66,7 @@ install_docker_ce() {
 
 pull_image_and_configs() {
     echo "=====> pull_image_and_configs"
-    sudo docker pull ethcore/parity:beta-release
+    sudo docker pull ${INSTALL_DOCKER_IMAGE}
     curl -s -O "${INSTALL_CONFIG_REPO}/${GENESIS_JSON}"
     curl -s -O "${INSTALL_CONFIG_REPO}/node.pwds"
     curl -s -O "${INSTALL_CONFIG_REPO}/${NODE_TOML}"
@@ -96,10 +97,10 @@ install_netstats() {
     {
         "name"                 : "node-app",
         "script"               : "app.js",
-        "log_date_format"      : "YYYY-MM-DD HH:mm Z",
+        "log_date_format"      : "YYYY-MM-DD HH:mm:SS Z",
         "merge_logs"           : false,
         "watch"                : false,
-        "max_restarts"         : 10,
+        "max_restarts"         : 100,
         "exec_interpreter"     : "node",
         "exec_mode"            : "fork_mode",
         "env":
@@ -124,17 +125,21 @@ EOL
 
 start_docker() {
     echo "=====> start_docker"
-    sudo docker run -d \
-        --name eth-parity \
-        -p 30300:30300 \
-        -p 8080:8080 \
-        -p 8180:8180 \
-        -p 8540:8540 \
-        -v "$(pwd)/node.pwds:/build/node.pwds" \
-        -v "$(pwd)/parity-data:/tmp/parity" \
-        -v "$(pwd)/${GENESIS_JSON}:/build/${GENESIS_JSON}" \
-        -v "$(pwd)/${NODE_TOML}:/build/${NODE_TOML}" \
-        ethcore/parity:stable --config "${NODE_TOML}"
+    cat > rundocker.sh << EOF
+sudo docker run -d \
+    --name eth-parity \
+    -p 30300:30300 \
+    -p 8080:8080 \
+    -p 8180:8180 \
+    -p 8540:8540 \
+    -v "$(pwd)/node.pwds:/build/node.pwds" \
+    -v "$(pwd)/parity-data:/tmp/parity" \
+    -v "$(pwd)/${GENESIS_JSON}:/build/${GENESIS_JSON}" \
+    -v "$(pwd)/${NODE_TOML}:/build/${NODE_TOML}" \
+    ${INSTALL_DOCKER_IMAGE} --config "${NODE_TOML}" --ui-no-validation
+EOF
+    chmod +x rundocker.sh
+    ./rundocker.sh
     echo "<===== start_docker"
 }
 

@@ -86,10 +86,7 @@ install_netstats() {
     # add symlink if it doesn't exist
     [[ ! -f /usr/bin/node ]] && sudo ln -s /usr/bin/nodejs /usr/bin/node
 
-    cd $HOME
-
-    [ ! -d "www" ] && git clone https://github.com/cubedro/eth-net-intelligence-api netstats
-    oldpwd="$(pwd)"
+    git clone https://github.com/cubedro/eth-net-intelligence-api netstats
     cd netstats
     sudo npm install
     sudo npm install pm2 -g
@@ -121,7 +118,7 @@ install_netstats() {
 ]
 EOL
     pm2 startOrRestart app.json
-    cd $oldpwd
+    cd ..
     echo "<===== install_netstats"
 }
 

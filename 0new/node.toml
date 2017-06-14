@@ -1,0 +1,34 @@
+[parity]
+chain = "spec.json"
+base_path = "parity"
+db_path = "parity/chains"
+keys_path = "parity/keys"
+
+[network]
+port = 30300
+
+[rpc]
+cors = "all"
+interface = "0.0.0.0"
+hosts = ["all"]
+port = 8540
+apis = ["web3", "eth", "net", "personal", "parity", "parity_set", "traces", "rpc", "parity_accounts"]
+
+[ui]
+interface = "0.0.0.0"
+port = 8180
+
+[dapps]
+cors = "all"
+interface = "0.0.0.0"
+hosts = ["all"]
+port = 8080
+path = "parity/dapps"
+
+[account]
+password = ["node.pwd"]
+
+[mining]
+force_sealing = true
+engine_signer = "0xdd0bb0e2a1594240fed0c2f2c17c1e9ab4f87126"
+reseal_on_txs = "none"

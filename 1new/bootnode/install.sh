@@ -129,6 +129,7 @@ install_dashboard() {
     sudo npm install -g grunt-cli
     grunt
     npm start &
+    cd ..
     echo "<====== install_dashboard"
 }
 

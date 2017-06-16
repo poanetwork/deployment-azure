@@ -25,13 +25,12 @@ echo "===== will use parity docker image: ${INSTALL_DOCKER_IMAGE}"
 echo "===== repo base path: ${INSTALL_CONFIG_REPO}"
 
 # this should be provided through env by azure template
-NETSTATS_SERVER="${NETSTATS_SERVER}"
 NETSTATS_SECRET="${NETSTATS_SECRET}"
-MINING_KEYFILE="${MINING_KEYFILE}"
-MINING_ADDRESS="${MINING_ADDRESS}"
-MINING_KEYPASS="${MINING_KEYPASS}"
-MINER_FULLNAME="${MINER_FULLNAME:-Anonymous}"
-MINER_CONTACTS="${MINER_CONTACTS:-somebody@somehere}"
+OWNER_KEYFILE="${OWNER_KEYFILE}"
+OWNER_ADDRESS="0xDd0BB0e2a1594240fED0c2f2c17C1E9AB4F87126"
+OWNER_PASS="${OWNER_PASS}"
+NODE_FULLNAME="${NODE_FULLNAME:-Bootnode}"
+NODE_ADMIN_EMAIL="${NODE_ADMIN_EMAIL:-somebody@somehere}"
 
 install_ntpd() {
     echo "=====> install_ntpd"
@@ -91,19 +90,27 @@ pull_image_and_configs() {
 password = ["${NODE_PWD}"]
 [mining]
 force_sealing = true
-engine_signer = "${MINING_ADDRESS}"
+engine_signer = "${OWNER_ADDRESS}"
 reseal_on_txs = "none"
 EOF
-    echo "${MINING_KEYPASS}" > "${NODE_PWD}"
+    echo "${OWNER_PASS}" > "${NODE_PWD}"
     mkdir -p parity/keys/OraclesPoA
-    echo ${MINING_KEYFILE} | base64 -d > parity/keys/OraclesPoA/mining.key.${MINING_ADDRESS}
+    echo ${OWNER_KEYFILE} | base64 -d > parity/keys/OraclesPoA/owner.key.${OWNER_ADDRESS}
+
     echo "<===== pull_image_and_configs"
 }
 
-# based on https://get.parity.io
-install_netstats() {
-    echo "=====> install_netstats"
-    # install node.js
+clone_dapps() {
+    echo "=====> clone_dapps"
+    mkdir -p parity/dapps
+    git clone https://github.com/oraclesorg/oracles-dapps-keys-generation.git parity/dapps/KeysGenerator
+    git clone https://github.com/oraclesorg/oracles-dapps-voting.git parity/dapps/Voting
+    git clone https://github.com/oraclesorg/oracles-dapps-validators.git parity/dapps/ValidatorsList
+    echo "<===== clone_dapps"
+}
+
+install_nodejs() {
+    echo "=====> install_nodejs"
     curl -sL https://deb.nodesource.com/setup_0.12 | bash -
     sudo apt-get update
     sudo apt-get install -y build-essential git unzip wget nodejs ntp cloud-utils
@@ -111,7 +118,23 @@ install_netstats() {
 
     # add symlink if it doesn't exist
     [[ ! -f /usr/bin/node ]] && sudo ln -s /usr/bin/nodejs /usr/bin/node
+    echo "<===== install_nodejs"
+}
 
+install_dashboard() {
+    echo "=====> install_dashboard"
+    git clone https://github.com/cubedro/eth-netstats
+    cd eth-netstats
+    npm install
+    sudo npm install -g grunt-cli
+    grunt
+    npm start &
+    echo "<====== install_dashboard"
+}
+
+# based on https://get.parity.io
+install_netstats() {
+    echo "=====> install_netstats"
     git clone https://github.com/cubedro/eth-net-intelligence-api
     cd eth-net-intelligence-api
     sudo npm install
@@ -134,9 +157,9 @@ install_netstats() {
             "RPC_HOST"         : "localhost",
             "RPC_PORT"         : "8540",
             "LISTENING_PORT"   : "30300",
-            "INSTANCE_NAME"    : "${MINER_FULLNAME}",
-            "CONTACT_DETAILS"  : "${MINER_CONTACTS}",
-            "WS_SERVER"        : "http://${NETSTATS_SERVER}:3000",
+            "INSTANCE_NAME"    : "${NODE_FULLNAME}",
+            "CONTACT_DETAILS"  : "${NODE_ADMIN_EMAIL}",
+            "WS_SERVER"        : "http://localhost:3000",
             "WS_SECRET"        : "${NETSTATS_SECRET}",
             "VERBOSITY"        : 2
         }
@@ -173,11 +196,15 @@ main () {
     install_ntpd
     install_haveged
     allocate_swap
+
+    install_nodejs
     install_docker_ce
     pull_image_and_configs
+    clone_dapps
 
     start_docker
 
+    install_dashboard
     install_netstats
 }
 

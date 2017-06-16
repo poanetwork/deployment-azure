@@ -30,8 +30,8 @@ NETSTATS_SECRET="${NETSTATS_SECRET}"
 MINING_KEYFILE="${MINING_KEYFILE}"
 MINING_ADDRESS="${MINING_ADDRESS}"
 MINING_KEYPASS="${MINING_KEYPASS}"
-MINER_FULLNAME="${MINER_FULLNAME:-Anonymous}"
-MINER_CONTACTS="${MINER_CONTACTS:-somebody@somehere}"
+NODE_FULLNAME="${NODE_FULLNAME:-Anonymous}"
+NODE_ADMIN_EMAIL="${NODE_ADMIN_EMAIL:-somebody@somehere}"
 
 install_ntpd() {
     echo "=====> install_ntpd"
@@ -70,6 +70,18 @@ allocate_swap() {
     echo "<===== allocate_swap"
 }
 
+install_nodejs() {
+    echo "=====> install_nodejs"
+    curl -sL https://deb.nodesource.com/setup_0.12 | bash -
+    sudo apt-get update
+    sudo apt-get install -y build-essential git unzip wget nodejs ntp cloud-utils
+    sudo apt-get install -y npm
+
+    # add symlink if it doesn't exist
+    [[ ! -f /usr/bin/node ]] && sudo ln -s /usr/bin/nodejs /usr/bin/node
+    echo "<===== install_nodejs"
+}
+
 install_docker_ce() {
     echo "=====> install_docker_ce"
     sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
@@ -103,15 +115,6 @@ EOF
 # based on https://get.parity.io
 install_netstats() {
     echo "=====> install_netstats"
-    # install node.js
-    curl -sL https://deb.nodesource.com/setup_0.12 | bash -
-    sudo apt-get update
-    sudo apt-get install -y build-essential git unzip wget nodejs ntp cloud-utils
-    sudo apt-get install -y npm
-
-    # add symlink if it doesn't exist
-    [[ ! -f /usr/bin/node ]] && sudo ln -s /usr/bin/nodejs /usr/bin/node
-
     git clone https://github.com/cubedro/eth-net-intelligence-api
     cd eth-net-intelligence-api
     sudo npm install
@@ -134,8 +137,8 @@ install_netstats() {
             "RPC_HOST"         : "localhost",
             "RPC_PORT"         : "8540",
             "LISTENING_PORT"   : "30300",
-            "INSTANCE_NAME"    : "${MINER_FULLNAME}",
-            "CONTACT_DETAILS"  : "${MINER_CONTACTS}",
+            "INSTANCE_NAME"    : "${NODE_FULLNAME}",
+            "CONTACT_DETAILS"  : "${NODE_ADMIN_EMAIL}",
             "WS_SERVER"        : "http://${NETSTATS_SERVER}:3000",
             "WS_SECRET"        : "${NETSTATS_SECRET}",
             "VERBOSITY"        : 2
@@ -173,6 +176,8 @@ main () {
     install_ntpd
     install_haveged
     allocate_swap
+
+    install_nodejs
     install_docker_ce
     pull_image_and_configs
 

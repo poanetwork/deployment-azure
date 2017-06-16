@@ -3,7 +3,7 @@ set -e
 set -u
 set -x
 
-echo "========== install.sh starting =========="
+echo "========== mining-node/install.sh starting =========="
 echo "===== current time: $(date)"
 echo "===== username: $(whoami)"
 echo "===== working directory: $(pwd)"
@@ -182,4 +182,4 @@ main () {
 }
 
 main
-echo "========== install.sh finished =========="
+echo "========== mining-node/install.sh finished =========="

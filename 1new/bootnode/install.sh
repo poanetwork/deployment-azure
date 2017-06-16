@@ -128,7 +128,7 @@ install_dashboard() {
     npm install
     sudo npm install -g grunt-cli
     grunt
-    npm start &
+    nohup npm start &
     cd ..
     echo "<====== install_dashboard"
 }

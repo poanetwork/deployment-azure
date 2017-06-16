@@ -1,0 +1,23 @@
+[parity]
+chain = "genesis.json"
+base_path = "parity"
+# db_path = "parity/chains"
+# keys_path = "parity/keys"
+[network]
+bootnodes=["enode://78461aecb40d4b3b878e6e645417b267dd8a846e59838f56824c68bce3237936ace367a0270d7eb742d5510a8f049c59eaa0955117a1264ab72fbc8686087251@40.83.213.87:30300"]
+port = 30300
+[rpc]
+cors = "all"
+interface = "0.0.0.0"
+hosts = ["all"]
+port = 8540
+apis = ["web3", "eth", "net", "personal", "parity", "parity_set", "traces", "rpc", "parity_accounts"]
+# [ui]
+# interface = "0.0.0.0"
+# port = 8180
+# [dapps]
+# cors = "all"
+# interface = "0.0.0.0"
+# hosts = ["all"]
+# port = 8080
+# path = "parity/dapps"

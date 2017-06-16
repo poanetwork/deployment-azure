@@ -4,20 +4,25 @@ set -u
 set -x
 
 echo "========== install.sh starting =========="
-echo "current time: $(date)"
-echo "username: $(whoami)"
-echo "working directory: $(pwd)"
-echo "operating system: $(uname -a)"
-echo "environmental variables:"
+echo "===== current time: $(date)"
+echo "===== username: $(whoami)"
+echo "===== working directory: $(pwd)"
+echo "===== operating system info:"
+lsb_release -a
+echo "===== environmental variables:"
 printenv
 
 # script parameters
 INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
 INSTALL_DOCKER_IMAGE="ethcore/parity:v1.6.8"
-INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/master/1new"
+INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/master/1new/mining-node"
 GENESIS_JSON="../genesis.json"
 NODE_TOML="node.toml"
 NODE_PWD="node.pwd"
+
+echo "===== will use docker version: ${INSTALL_DOCKER_VERSION}"
+echo "===== will use parity docker image: ${INSTALL_DOCKER_IMAGE}"
+echo "===== repo base path: ${INSTALL_CONFIG_REPO}"
 
 # this should be provided through env by azure template
 NETSTATS_SERVER="${NETSTATS_SERVER}"
@@ -107,8 +112,8 @@ install_netstats() {
     # add symlink if it doesn't exist
     [[ ! -f /usr/bin/node ]] && sudo ln -s /usr/bin/nodejs /usr/bin/node
 
-    git clone https://github.com/cubedro/eth-net-intelligence-api netstats
-    cd netstats
+    git clone https://github.com/cubedro/eth-net-intelligence-api
+    cd eth-net-intelligence-api
     sudo npm install
     sudo npm install pm2 -g
 
@@ -147,7 +152,7 @@ start_docker() {
     echo "=====> start_docker"
     cat > rundocker.sh << EOF
 sudo docker run -d \\
-    --name eth-parity \\
+    --name oracles-poa \\
     -p 30300:30300 \\
     -p 8080:8080 \\
     -p 8180:8180 \\

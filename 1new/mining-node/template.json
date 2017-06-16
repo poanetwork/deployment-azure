@@ -45,9 +45,9 @@
       }
     },
     "netstatsServer": {
-      "type": "secureString",
+      "type": "string",
       "metadata": {
-        "description": "NetStats server ip"
+        "description": "NetStats server IP"
       }
     },
     "netstatsSecret": {

@@ -14,9 +14,9 @@ printenv
 
 # script parameters
 INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
-INSTALL_DOCKER_IMAGE="ethcore/parity:v1.6.8"
+INSTALL_DOCKER_IMAGE="ethcore/parity:v1.6.6"
 INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/master/1new/mining-node"
-GENESIS_JSON="/genesis.json"
+GENESIS_JSON="genesis.json"
 NODE_TOML="node.toml"
 NODE_PWD="node.pwd"
 

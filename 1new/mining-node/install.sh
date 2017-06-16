@@ -18,9 +18,9 @@ INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates
 GENESIS_JSON="../genesis.json"
 NODE_TOML="node.toml"
 NODE_PWD="node.pwd"
-BOOTNODE_IP=""
 
 # this should be provided through env by azure template
+NETSTATS_SERVER="${NETSTATS_SERVER}"
 NETSTATS_SECRET="${NETSTATS_SECRET}"
 MINING_KEYFILE="${MINING_KEYFILE}"
 MINING_ADDRESS="${MINING_ADDRESS}"
@@ -90,7 +90,6 @@ engine_signer = "${MINING_ADDRESS}"
 reseal_on_txs = "none"
 EOF
     echo "${MINING_KEYPASS}" > "${NODE_PWD}"
-    BOOTNODE_IP=$( python <<< "print( ($(cat test-node.toml | awk -F'=' '/^bootnodes/{ print $2 }'))[0].split('@')[1].split(':')[0] )" )
     mkdir -p parity/keys/OraclesPoA
     echo ${MINING_KEYFILE} | base64 -d > parity/keys/OraclesPoA/mining.key.${MINING_ADDRESS}
     echo "<===== pull_image_and_configs"
@@ -132,7 +131,7 @@ install_netstats() {
             "LISTENING_PORT"   : "30300",
             "INSTANCE_NAME"    : "${MINER_FULLNAME}",
             "CONTACT_DETAILS"  : "${MINER_CONTACTS}",
-            "WS_SERVER"        : "http://${BOOTNODE_IP}:3000",
+            "WS_SERVER"        : "http://${NETSTATS_SERVER}:3000",
             "WS_SECRET"        : "${NETSTATS_SECRET}",
             "VERBOSITY"        : 2
         }

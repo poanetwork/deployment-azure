@@ -2,18 +2,6 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "adminUsername": {
-      "type": "string",
-      "metadata": {
-        "description": "Username for the Virtual Machine"
-      }
-    },
-    "sshPublicKey": {
-      "type": "string",
-      "metadata": {
-        "description": "SSH public key for the Virtual Machine"
-      }
-    },
     "minerFullName": {
       "type": "string",
       "metadata": {
@@ -42,6 +30,24 @@
       "type": "secureString",
       "metadata": {
         "description": "Password for the mining key"
+      }
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "Username for the Virtual Machine"
+      }
+    },
+    "sshPublicKey": {
+      "type": "string",
+      "metadata": {
+        "description": "SSH public key for the Virtual Machine"
+      }
+    },
+    "netstatsServer": {
+      "type": "secureString",
+      "metadata": {
+        "description": "NetStats server ip"
       }
     },
     "netstatsSecret": {
@@ -76,6 +82,7 @@
     "miningAddress": "[parameters('miningAddress')]",
     "miningKeyfile": "[base64(string(parameters('miningKeyfile')))]",
     "miningKeypass": "[parameters('miningKeypass')]",
+    "netstatsServer": "[parameters('netstatsServer')]",
     "netstatsSecret": "[parameters('netstatsSecret')]"
   },
   "resources": [
@@ -229,11 +236,11 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
                 "fileUris": [
-                    "https://raw.githubusercontent.com/oraclesorg/test-templates/master/install.sh"
+                    "https://raw.githubusercontent.com/oraclesorg/test-templates/master/1new/mining-node/install.sh"
                 ]
             },
             "protectedSettings": {
-                "commandToExecute": "chmod +x install.sh; NETSTATS_SECRET=\"[variables('netstatsSecret')]\" MINING_KEYFILE=\"[variables('miningKeyfile')]\" MINING_ADDRESS=\"[variables('miningAddress')]\" MINING_KEYPASS=\"[variables('miningKeypass')]\" MINER_FULLNAME=\"[variables('minerFullName')]\" MINER_CONTACTS=\"[variables('minerContacts')]\" ./install.sh"
+                "commandToExecute": "chmod +x install.sh; NETSTATS_SERVER=\"[variables('netstatsServer')]\" NETSTATS_SECRET=\"[variables('netstatsSecret')]\" MINING_KEYFILE=\"[variables('miningKeyfile')]\" MINING_ADDRESS=\"[variables('miningAddress')]\" MINING_KEYPASS=\"[variables('miningKeypass')]\" MINER_FULLNAME=\"[variables('minerFullName')]\" MINER_CONTACTS=\"[variables('minerContacts')]\" ./install.sh"
             }
           }
         }
@@ -248,6 +255,10 @@
     "sshCommand": {
       "type": "string",
       "value": "[concat('ssh ', variables('adminUsername'), '@', reference(variables('publicIPAddressName')).dnsSettings.fqdn)]"
+    },
+    "miningAddress": {
+      "type": "string",
+      "value": "[variables('miningAddress')]"
     }
   }
 }

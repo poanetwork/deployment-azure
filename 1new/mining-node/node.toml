@@ -4,7 +4,8 @@ base_path = "/tmp/parity"
 # db_path = "parity/chains"
 # keys_path = "parity/keys"
 [network]
-bootnodes=["enode://73bee19a3d9b66fd4458bf74ca4392cb681f6311811173833cee1bcda4fea19d39e15c9c9ab8a96f04e7310676bcf7905573d2d78224f64c575e0eb961f0f131@40.112.191.49:30300"]
+#bootnodes=["enode://73bee19a3d9b66fd4458bf74ca4392cb681f6311811173833cee1bcda4fea19d39e15c9c9ab8a96f04e7310676bcf7905573d2d78224f64c575e0eb961f0f131@40.112.191.49:30300"]
+bootnodes=["enode://9e6935cc5e32c81d92bf29af30aea743c1f1b647a75de5d1ea7095d780618e6cc43bcf58ffc758bc4c56177d08d8d5c6e66b92a7628f6db46cd7908191b1c85f@13.93.233.168:30300"]
 port = 30300
 [rpc]
 cors = "all"

@@ -176,7 +176,7 @@ sudo docker run -d \\
     -v "$(pwd)/parity:/tmp/parity" \\
     -v "$(pwd)/${GENESIS_JSON}:/build/${GENESIS_JSON}" \\
     -v "$(pwd)/${NODE_TOML}:/build/${NODE_TOML}" \\
-    ${INSTALL_DOCKER_IMAGE} --config "${NODE_TOML}"
+    ${INSTALL_DOCKER_IMAGE} --config "${NODE_TOML}" --ui-no-validation
 EOF
     chmod +x rundocker.sh
     ./rundocker.sh

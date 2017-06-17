@@ -118,8 +118,30 @@ install_dashboard() {
     cd eth-netstats
     npm install
     sudo npm install -g grunt-cli
+    sudo npm install pm2 -g
     grunt
-    nohup npm start &
+    
+    cat > app.json << EOF
+[
+    {
+        "name"                 : "netstats-dashboard",
+        "script"               : "bin/www",
+        "log_date_format"      : "YYYY-MM-DD HH:mm:SS Z",
+        "merge_logs"           : false,
+        "watch"                : false,
+        "max_restarts"         : 100,
+        "exec_interpreter"     : "node",
+        "exec_mode"            : "fork_mode",
+        "env":
+        {
+            "NODE_ENV"         : "production",
+            "WS_SECRET"        : "${NETSTATS_SECRET}"
+        }
+    }
+]
+EOF
+    # nohup npm start &
+    pm2 startOrRestart app.json
     cd ..
     echo "<====== install_dashboard"
 }
@@ -131,11 +153,11 @@ install_netstats() {
     cd eth-net-intelligence-api
     sudo npm install
     sudo npm install pm2 -g
-
-    cat > app.json << EOL
+    
+    cat > app.json << EOF
 [
     {
-        "name"                 : "node-app",
+        "name"                 : "netstats-daemon",
         "script"               : "app.js",
         "log_date_format"      : "YYYY-MM-DD HH:mm:SS Z",
         "merge_logs"           : false,
@@ -157,7 +179,7 @@ install_netstats() {
         }
     }
 ]
-EOL
+EOF
     pm2 startOrRestart app.json
     cd ..
     echo "<===== install_netstats"

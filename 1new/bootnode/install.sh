@@ -28,7 +28,7 @@ echo "===== repo base path: ${INSTALL_CONFIG_REPO}"
 NETSTATS_SECRET="${NETSTATS_SECRET}"
 OWNER_KEYFILE="${OWNER_KEYFILE}"
 OWNER_ADDRESS="0xDd0BB0e2a1594240fED0c2f2c17C1E9AB4F87126"
-OWNER_PASS="${OWNER_PASS}"
+OWNER_KEYPASS="${OWNER_KEYPASS}"
 NODE_FULLNAME="${NODE_FULLNAME:-Bootnode}"
 NODE_ADMIN_EMAIL="${NODE_ADMIN_EMAIL:-somebody@somehere}"
 
@@ -93,7 +93,7 @@ force_sealing = true
 engine_signer = "${OWNER_ADDRESS}"
 reseal_on_txs = "none"
 EOF
-    echo "${OWNER_PASS}" > "${NODE_PWD}"
+    echo "${OWNER_KEYPASS}" > "${NODE_PWD}"
     mkdir -p parity/keys/OraclesPoA
     echo ${OWNER_KEYFILE} | base64 -d > parity/keys/OraclesPoA/owner.key.${OWNER_ADDRESS}
 

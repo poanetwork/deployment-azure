@@ -27,7 +27,6 @@ echo "===== repo base path: ${INSTALL_CONFIG_REPO}"
 # this should be provided through env by azure template
 NETSTATS_SECRET="${NETSTATS_SECRET}"
 OWNER_KEYFILE="${OWNER_KEYFILE}"
-OWNER_ADDRESS="0xDd0BB0e2a1594240fED0c2f2c17C1E9AB4F87126"
 OWNER_KEYPASS="${OWNER_KEYPASS}"
 NODE_FULLNAME="${NODE_FULLNAME:-Bootnode}"
 NODE_ADMIN_EMAIL="${NODE_ADMIN_EMAIL:-somebody@somehere}"
@@ -85,17 +84,9 @@ pull_image_and_configs() {
 
     curl -s -O "${INSTALL_CONFIG_REPO}/../${GENESIS_JSON}"
     curl -s -O "${INSTALL_CONFIG_REPO}/${NODE_TOML}"
-    cat >> ${NODE_TOML} <<EOF
-[account]
-password = ["${NODE_PWD}"]
-[mining]
-force_sealing = true
-engine_signer = "${OWNER_ADDRESS}"
-reseal_on_txs = "none"
-EOF
     echo "${OWNER_KEYPASS}" > "${NODE_PWD}"
     mkdir -p parity/keys/OraclesPoA
-    echo ${OWNER_KEYFILE} | base64 -d > parity/keys/OraclesPoA/owner.key.${OWNER_ADDRESS}
+    echo ${OWNER_KEYFILE} | base64 -d > parity/keys/OraclesPoA/owner.key
 
     echo "<===== pull_image_and_configs"
 }

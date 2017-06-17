@@ -227,8 +227,8 @@ main () {
 
     start_docker
 
-    install_dashboard
     install_netstats
+    install_dashboard
 }
 
 main

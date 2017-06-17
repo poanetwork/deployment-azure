@@ -148,7 +148,7 @@ install_dashboard() {
 ]
 EOF
     echo "[\"${NETSTATS_SECRET}\"]" > ws_secret.json
-    nohup npm start &
+    nohup npm start >nohup.out 2>nohup.err &
     #pm2 startOrRestart app.json
     cd ..
     echo "<====== install_dashboard"

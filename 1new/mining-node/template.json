@@ -240,7 +240,7 @@
                 ]
             },
             "protectedSettings": {
-                "commandToExecute": "[concat('chmod +x install.sh; NETSTATS_SERVER=\"', variables('netstatsServer'), '\" NETSTATS_SECRET=\"', variables('netstatsSecret'), '\" MINING_KEYFILE=\"', variables('miningKeyfile'), '\" MINING_ADDRESS=\"', variables('miningAddress'), '\" MINING_KEYPASS=\"', variables('miningKeypass'), '\" NODE_FULLNAME=\"', variables('nodeFullName'), '\" NODE_ADMIN_EMAIL=\"', variables('nodeAdminEmail'), '\" ./install.sh')]"
+                "commandToExecute": "[concat('chmod +x install.sh; ADMIN_USERNAME=\"', variables('adminUsername'), '\" NETSTATS_SERVER=\"', variables('netstatsServer'), '\" NETSTATS_SECRET=\"', variables('netstatsSecret'), '\" MINING_KEYFILE=\"', variables('miningKeyfile'), '\" MINING_ADDRESS=\"', variables('miningAddress'), '\" MINING_KEYPASS=\"', variables('miningKeypass'), '\" NODE_FULLNAME=\"', variables('nodeFullName'), '\" NODE_ADMIN_EMAIL=\"', variables('nodeAdminEmail'), '\" ./install.sh')]"
             }
           }
         }

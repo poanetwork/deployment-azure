@@ -9,6 +9,8 @@ echo "===== username: $(whoami)"
 echo "===== working directory: $(pwd)"
 echo "===== operating system info:"
 lsb_release -a
+echo "===== memory usage info:"
+free -m
 echo "===== environmental variables:"
 printenv
 
@@ -30,6 +32,11 @@ OWNER_KEYFILE="${OWNER_KEYFILE}"
 OWNER_KEYPASS="${OWNER_KEYPASS}"
 NODE_FULLNAME="${NODE_FULLNAME:-Bootnode}"
 NODE_ADMIN_EMAIL="${NODE_ADMIN_EMAIL:-somebody@somehere}"
+ADMIN_USERNAME="${ADMIN_USERNAME}"
+
+prepare_homedir() {
+    ln -s "$(pwd)" "/home/${ADMIN_USERNAME}/script-dir"
+}
 
 install_ntpd() {
     echo "=====> install_ntpd"
@@ -207,6 +214,8 @@ EOF
 
 # MAIN
 main () {
+    prepare_homedir
+
     install_ntpd
     install_haveged
     allocate_swap

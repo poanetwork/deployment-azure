@@ -83,7 +83,6 @@ install_nodejs() {
     curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
     sudo apt-get update
     sudo apt-get install -y build-essential git unzip wget nodejs ntp cloud-utils
-    sudo apt-get install -y npm
 
     # add symlink if it doesn't exist
     [[ ! -f /usr/bin/node ]] && sudo ln -s /usr/bin/nodejs /usr/bin/node

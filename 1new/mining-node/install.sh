@@ -18,7 +18,7 @@ printenv
 INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
 INSTALL_DOCKER_IMAGE="ethcore/parity:v1.6.6"
 INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/master/1new/mining-node"
-GENESIS_JSON="genesis.json"
+GENESIS_JSON="spec.json"
 NODE_TOML="node.toml"
 NODE_PWD="node.pwd"
 
@@ -180,6 +180,15 @@ EOF
     echo "<===== start_docker"
 }
 
+install_scripts() {
+    echo "=====> install_scripts"
+    git clone https://github.com/oraclesorg/oracles-scripts
+    cd oracles-scripts
+    npm install
+    cd ..
+    echo "<===== install_scripts"
+}
+
 # MAIN
 main () {
     prepare_homedir
@@ -195,6 +204,7 @@ main () {
     start_docker
 
     install_netstats
+    install_scripts
 }
 
 main

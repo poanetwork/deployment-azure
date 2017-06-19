@@ -35,7 +35,9 @@ NODE_ADMIN_EMAIL="${NODE_ADMIN_EMAIL:-somebody@somehere}"
 ADMIN_USERNAME="${ADMIN_USERNAME}"
 
 prepare_homedir() {
+    echo "=====> prepare_homedir"
     ln -s "$(pwd)" "/home/${ADMIN_USERNAME}/script-dir"
+    echo "<===== prepare_homedir"
 }
 
 install_ntpd() {
@@ -109,7 +111,8 @@ clone_dapps() {
 
 install_nodejs() {
     echo "=====> install_nodejs"
-    curl -sL https://deb.nodesource.com/setup_0.12 | bash -
+    # curl -sL https://deb.nodesource.com/setup_0.12 | bash -
+    curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
     sudo apt-get update
     sudo apt-get install -y build-essential git unzip wget nodejs ntp cloud-utils
     sudo apt-get install -y npm
@@ -127,7 +130,7 @@ install_dashboard() {
     sudo npm install -g grunt-cli
     sudo npm install pm2 -g
     grunt
-    
+
     cat > app.json << EOF
 [
     {
@@ -161,7 +164,7 @@ install_netstats() {
     cd eth-net-intelligence-api
     sudo npm install
     sudo npm install pm2 -g
-    
+
     cat > app.json << EOF
 [
     {

@@ -108,6 +108,7 @@ pull_image_and_configs() {
     cat >> ${NODE_TOML} <<EOF
 [account]
 password = ["${NODE_PWD}"]
+unlock = ["${MINING_ADDRESS}"]
 [mining]
 force_sealing = true
 engine_signer = "${MINING_ADDRESS}"

@@ -185,6 +185,16 @@ install_scripts() {
     git clone https://github.com/oraclesorg/oracles-scripts
     cd oracles-scripts
     npm install
+    sudo cat > /etc/cron.hourly/transferRewardToPayoutKey << EOF
+#!/bin/bash
+cd "$(pwd)"
+echo "Running transferRewardToPayoutKey at $(date)" >> transferRewardToPayoutKey.out
+echo "Running transferRewardToPayoutKey at $(date)" >> transferRewardToPayoutKey.err
+node transferRewardToPayoutKey.js >> transferRewardToPayoutKey.out 2>> transferRewardToPayoutKey.err
+echo "" >> transferRewardToPayoutKey.out
+echo "" >> transferRewardToPayoutKey.err
+EOF
+    sudo chmod 755 /etc/cron.hourly/transferRewardToPayoutKey
     cd ..
     echo "<===== install_scripts"
 }

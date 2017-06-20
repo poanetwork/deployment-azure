@@ -18,6 +18,7 @@ printenv
 INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
 INSTALL_DOCKER_IMAGE="ethcore/parity:v1.6.6"
 INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/master/1new/mining-node"
+GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/master/spec.json"
 GENESIS_JSON="spec.json"
 NODE_TOML="node.toml"
 NODE_PWD="node.pwd"
@@ -106,7 +107,8 @@ pull_image_and_configs() {
     echo "=====> pull_image_and_configs"
     sudo docker pull ${INSTALL_DOCKER_IMAGE}
 
-    curl -s -O "${INSTALL_CONFIG_REPO}/../${GENESIS_JSON}"
+    # curl -s -O "${INSTALL_CONFIG_REPO}/../${GENESIS_JSON}"
+    curl -s -o "${GENESIS_JSON}" "${GENESIS_REPO_LOC}"
     curl -s -O "${INSTALL_CONFIG_REPO}/${NODE_TOML}"
     cat >> ${NODE_TOML} <<EOF
 [account]
@@ -185,7 +187,7 @@ EOF
 install_scripts() {
     echo "=====> install_scripts"
     git clone https://github.com/oraclesorg/oracles-scripts
-    cd oracles-scripts
+    cd oracles-scripts/scripts
     npm install
     sudo cat > /etc/cron.hourly/transferRewardToPayoutKey << EOF
 #!/bin/bash
@@ -197,7 +199,7 @@ echo "" >> transferRewardToPayoutKey.out
 echo "" >> transferRewardToPayoutKey.err
 EOF
     sudo chmod 755 /etc/cron.hourly/transferRewardToPayoutKey
-    cd ..
+    cd ../..
     echo "<===== install_scripts"
 }
 

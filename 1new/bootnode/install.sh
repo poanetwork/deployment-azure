@@ -18,6 +18,7 @@ printenv
 INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
 INSTALL_DOCKER_IMAGE="ethcore/parity:v1.6.6"
 INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/master/1new/bootnode"
+GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/master/spec.json"
 GENESIS_JSON="spec.json"
 NODE_TOML="node.toml"
 NODE_PWD="node.pwd"
@@ -92,7 +93,8 @@ pull_image_and_configs() {
     echo "=====> pull_image_and_configs"
     sudo docker pull ${INSTALL_DOCKER_IMAGE}
 
-    curl -s -O "${INSTALL_CONFIG_REPO}/../${GENESIS_JSON}"
+    # curl -s -O "${INSTALL_CONFIG_REPO}/../${GENESIS_JSON}"
+    curl -s -o "${GENESIS_JSON}" "${GENESIS_REPO_LOC}"
     curl -s -O "${INSTALL_CONFIG_REPO}/${NODE_TOML}"
     echo "${OWNER_KEYPASS}" > "${NODE_PWD}"
     mkdir -p parity/keys/OraclesPoA

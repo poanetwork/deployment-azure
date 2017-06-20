@@ -36,7 +36,8 @@ ADMIN_USERNAME="${ADMIN_USERNAME}"
 
 prepare_homedir() {
     echo "=====> prepare_homedir"
-    ln -s "$(pwd)" "/home/${ADMIN_USERNAME}/script-dir"
+    # ln -s "$(pwd)" "/home/${ADMIN_USERNAME}/script-dir"
+    cd "/home/${ADMIN_USERNAME}"
     echo "<===== prepare_homedir"
 }
 

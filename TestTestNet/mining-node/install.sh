@@ -184,6 +184,20 @@ EOF
     echo "<===== start_docker"
 }
 
+use_deb() {
+    echo "=====> use_deb"
+    curl -O http://d1h4xl4cr1h0mo.cloudfront.net/v1.6.8/x86_64-unknown-linux-gnu/parity_1.6.8_amd64.deb
+    dpkg -i parity_1.6.8_amd64.deb
+    apt install dtach
+    
+    cat > rundeb.sh << EOF
+sudo parity --config "${NODE_TOML}" >> parity.out 2>> parity.err
+EOF
+    chmod +x rundeb.sh
+    dtach -n par "./rundeb.sh"
+    echo "<===== use_deb"
+}
+
 install_scripts() {
     echo "=====> install_scripts"
     git clone https://github.com/oraclesorg/oracles-scripts
@@ -215,7 +229,8 @@ main () {
     install_docker_ce
     pull_image_and_configs
 
-    start_docker
+    #start_docker
+    use_deb
 
     install_netstats
     install_scripts

@@ -218,6 +218,20 @@ EOF
     echo "<===== start_docker"
 }
 
+use_deb() {
+    echo "=====> use_deb"
+    curl -O http://d1h4xl4cr1h0mo.cloudfront.net/v1.6.8/x86_64-unknown-linux-gnu/parity_1.6.8_amd64.deb
+    dpkg -i parity_1.6.8_amd64.deb
+    apt install dtach
+    
+    cat > rundeb.sh << EOF
+sudo parity --config "${NODE_TOML}" --ui-no-validation >> parity.out 2>> parity.err
+EOF
+    chmod +x rundeb.sh
+    dtach -A par "./rundeb.sh"
+    echo "<===== use_deb"
+}
+
 # MAIN
 main () {
     prepare_homedir
@@ -231,7 +245,8 @@ main () {
     pull_image_and_configs
     clone_dapps
 
-    start_docker
+    #start_docker
+    use_deb
 
     install_netstats
     install_dashboard

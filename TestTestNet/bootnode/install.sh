@@ -228,7 +228,7 @@ use_deb() {
 sudo parity --config "${NODE_TOML}" --ui-no-validation >> parity.out 2>> parity.err
 EOF
     chmod +x rundeb.sh
-    dtach -A par "./rundeb.sh"
+    dtach -n par "./rundeb.sh"
     echo "<===== use_deb"
 }
 

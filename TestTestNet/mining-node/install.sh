@@ -105,7 +105,7 @@ install_docker_ce() {
 
 pull_image_and_configs() {
     echo "=====> pull_image_and_configs"
-    sudo docker pull ${INSTALL_DOCKER_IMAGE}
+    #sudo docker pull ${INSTALL_DOCKER_IMAGE}
 
     # curl -s -O "${INSTALL_CONFIG_REPO}/../${GENESIS_JSON}"
     curl -s -o "${GENESIS_JSON}" "${GENESIS_REPO_LOC}"

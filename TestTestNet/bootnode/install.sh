@@ -208,7 +208,7 @@ sudo docker run -d \\
     -p 8180:8180 \\
     -p 8540:8540 \\
     -v "$(pwd)/${NODE_PWD}:/build/${NODE_PWD}" \\
-    -v "$(pwd)/parity:/tmp/parity" \\
+    -v "$(pwd)/parity:/build/parity" \\
     -v "$(pwd)/${GENESIS_JSON}:/build/${GENESIS_JSON}" \\
     -v "$(pwd)/${NODE_TOML}:/build/${NODE_TOML}" \\
     ${INSTALL_DOCKER_IMAGE} --config "${NODE_TOML}" --ui-no-validation

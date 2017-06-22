@@ -16,7 +16,7 @@ printenv
 
 # script parameters
 INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
-INSTALL_DOCKER_IMAGE="ethcore/parity:v1.6.6"
+INSTALL_DOCKER_IMAGE="parity/parity:v1.6.8"
 INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/master/TestTestNet/bootnode"
 GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/master/spec.json"
 GENESIS_JSON="spec.json"
@@ -245,8 +245,8 @@ main () {
     pull_image_and_configs
     clone_dapps
 
-    #start_docker
-    use_deb
+    start_docker
+    #use_deb
 
     install_netstats
     install_dashboard

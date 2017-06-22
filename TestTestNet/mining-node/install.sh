@@ -16,7 +16,7 @@ printenv
 
 # script parameters
 INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
-INSTALL_DOCKER_IMAGE="ethcore/parity:v1.6.6"
+INSTALL_DOCKER_IMAGE="parity/parity:v1.6.8"
 INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/master/TestTestNet/mining-node"
 GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/master/spec.json"
 GENESIS_JSON="spec.json"
@@ -105,7 +105,7 @@ install_docker_ce() {
 
 pull_image_and_configs() {
     echo "=====> pull_image_and_configs"
-    #sudo docker pull ${INSTALL_DOCKER_IMAGE}
+    sudo docker pull ${INSTALL_DOCKER_IMAGE}
 
     # curl -s -O "${INSTALL_CONFIG_REPO}/../${GENESIS_JSON}"
     curl -s -o "${GENESIS_JSON}" "${GENESIS_REPO_LOC}"
@@ -229,8 +229,8 @@ main () {
     install_docker_ce
     pull_image_and_configs
 
-    #start_docker
-    use_deb
+    start_docker
+    #use_deb
 
     install_netstats
     install_scripts

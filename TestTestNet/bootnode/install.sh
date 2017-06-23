@@ -211,7 +211,7 @@ sudo docker run -d \\
     -v "$(pwd)/parity:/build/parity" \\
     -v "$(pwd)/${GENESIS_JSON}:/build/${GENESIS_JSON}" \\
     -v "$(pwd)/${NODE_TOML}:/build/${NODE_TOML}" \\
-    ${INSTALL_DOCKER_IMAGE} --config "${NODE_TOML}" --ui-no-validation
+    ${INSTALL_DOCKER_IMAGE} -lengine=trace --config "${NODE_TOML}" --ui-no-validation
 EOF
     chmod +x rundocker.sh
     ./rundocker.sh
@@ -225,11 +225,43 @@ use_deb() {
     apt install dtach
     
     cat > rundeb.sh << EOF
-sudo parity --config "${NODE_TOML}" --ui-no-validation >> parity.out 2>> parity.err
+sudo parity -lengine=trace --config "${NODE_TOML}" --ui-no-validation >> parity.out 2>> parity.err
 EOF
     chmod +x rundeb.sh
     dtach -n par "./rundeb.sh"
     echo "<===== use_deb"
+}
+
+compile_source() {
+    echo "=====> compile_source"
+    # 1. install Rust
+    #apt-get install -y gcc g++ libssl-dev openssl libudev-dev pkg-config
+    #curl https://sh.rustup.rs -sSf | sh
+    curl -O https://static.rust-lang.org/dist/rust-1.18.0-x86_64-unknown-linux-gnu.tar.gz
+    tar -xf rust-1.18.0-x86_64-unknown-linux-gnu.tar.gz
+    PATH=$PATH:$(pwd)/rust-1.18.0-x86_64-unknown-linux-gnu/cargo/bin:$(pwd)/rust-1.18.0-x86_64-unknown-linux-gnu/rustc/bin
+    type -a rustc
+    rustc --version
+    type -a cargo
+    cargo --version
+    
+    # 2. download source
+    git clone https://github.com/paritytech/parity src
+    cd src
+    
+    # 3. compile
+    cargo build --release
+    cd ..
+    
+    # 4. install dtach and run
+    apt install dtach
+    cat > runsrc.sh << EOF
+sudo src/target/release/parity -lengine=trace --config "${NODE_TOML}" --ui-no-validation >> parity.out 2>> parity.err
+EOF
+    chmod +x runsrc.sh
+    dtach -n par "./runsrc.sh"
+
+    echo "<===== compile_source"
 }
 
 # MAIN
@@ -245,8 +277,9 @@ main () {
     pull_image_and_configs
     clone_dapps
 
-    start_docker
+    #start_docker
     #use_deb
+    compile_source
 
     install_netstats
     install_dashboard

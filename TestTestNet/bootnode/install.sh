@@ -277,9 +277,9 @@ main () {
     pull_image_and_configs
     clone_dapps
 
-    #start_docker
+    start_docker
     #use_deb
-    compile_source
+    #compile_source
 
     install_netstats
     install_dashboard

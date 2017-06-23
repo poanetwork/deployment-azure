@@ -11,7 +11,7 @@ echo "===== operating system info:"
 lsb_release -a
 echo "===== memory usage info:"
 free -m
-EXT_IP=$(curl ifconfig.co)
+EXT_IP="$(curl ifconfig.co)"
 echo "===== external ip: ${EXT_IP}"
 echo "===== environmental variables:"
 printenv

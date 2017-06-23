@@ -118,7 +118,7 @@ pull_image_and_configs() {
 password = ["${NODE_PWD}"]
 unlock = ["${MINING_ADDRESS}"]
 [mining]
-#force_sealing = true
+force_sealing = true
 engine_signer = "${MINING_ADDRESS}"
 reseal_on_txs = "none"
 EOF

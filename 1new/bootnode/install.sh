@@ -38,13 +38,14 @@ ADMIN_USERNAME="${ADMIN_USERNAME}"
 prepare_homedir() {
     echo "=====> prepare_homedir"
     # ln -s "$(pwd)" "/home/${ADMIN_USERNAME}/script-dir"
-    cd "/home/${ADMIN_USERNAME}"
-    echo "<===== prepare_homedir"
     sudo groupadd docker
     sudo usermod -aG docker "${ADMIN_USERNAME}"
-    sudo -i -u "${ADMIN_USERNAME}"
-    echo "===== Now logged-in as $(whoami)"
-    echo "===== Working directory: $(pwd)"
+    sudo -E -u "${ADMIN_USERNAME}"
+    cd "/home/${ADMIN_USERNAME}"
+    echo "===== NEW username $(whoami)"
+    echo "===== NEW working directory: $(pwd)"
+    echo "===== NEW environment variabless:"
+    printenv
     echo "<===== prepare_homedir"
 }
 

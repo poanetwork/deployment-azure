@@ -16,7 +16,7 @@ printenv
 
 # script parameters
 INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
-INSTALL_DOCKER_IMAGE="ethcore/parity:beta"
+INSTALL_DOCKER_IMAGE="parity/parity:beta"
 INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/master/1new/bootnode"
 GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/master/spec.json"
 GENESIS_JSON="spec.json"

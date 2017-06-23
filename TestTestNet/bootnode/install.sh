@@ -11,6 +11,8 @@ echo "===== operating system info:"
 lsb_release -a
 echo "===== memory usage info:"
 free -m
+EXT_IP=$(curl ifconfig.co)
+echo "===== external ip: ${EXT_IP}"
 echo "===== environmental variables:"
 printenv
 
@@ -96,6 +98,7 @@ pull_image_and_configs() {
     # curl -s -O "${INSTALL_CONFIG_REPO}/../${GENESIS_JSON}"
     curl -s -o "${GENESIS_JSON}" "${GENESIS_REPO_LOC}"
     curl -s -O "${INSTALL_CONFIG_REPO}/${NODE_TOML}"
+    sed -i '/\[network\]/a nat="extip:${EXT_IP}"' ${NODE_TOML}
     echo "${OWNER_KEYPASS}" > "${NODE_PWD}"
     mkdir -p parity/keys/OraclesPoA
     echo ${OWNER_KEYFILE} | base64 -d > parity/keys/OraclesPoA/owner.key

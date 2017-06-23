@@ -112,7 +112,7 @@ pull_image_and_configs() {
     # curl -s -O "${INSTALL_CONFIG_REPO}/../${GENESIS_JSON}"
     curl -s -o "${GENESIS_JSON}" "${GENESIS_REPO_LOC}"
     curl -s -O "${INSTALL_CONFIG_REPO}/${NODE_TOML}"
-    sed -i '/\[network\]/a nat="extip:${EXT_IP}"' ${NODE_TOML}
+    sed -i "/\[network\]/a nat=\"extip:${EXT_IP}\"" ${NODE_TOML}
     cat >> ${NODE_TOML} <<EOF
 [account]
 password = ["${NODE_PWD}"]

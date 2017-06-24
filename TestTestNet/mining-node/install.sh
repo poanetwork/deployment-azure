@@ -133,6 +133,7 @@ install_netstats() {
     echo "=====> install_netstats"
     git clone https://github.com/cubedro/eth-net-intelligence-api
     cd eth-net-intelligence-api
+    sed -i '/"web3"/c "web3": "0.19.x",' package.json
     sudo npm install
     sudo npm install pm2 -g
 
@@ -236,7 +237,7 @@ main () {
     #use_deb
 
     install_netstats
-    install_scripts
+    #install_scripts
 }
 
 main

@@ -6,9 +6,10 @@ base_path = "parity"
 [network]
 bootnodes=["enode://974c44a3a94e08059ebcf1ba27bb6ef033ad8e97547bce560312b885edf191a8fb1a8fba468ab357266fccbb5eb82e273cb659210abdc3701c2d7683a6d20095@40.87.63.239:30300"]
 port = 30300
+discovery=true
 [rpc]
 cors = "all"
-interface = "0.0.0.0"
+interface = "all"
 hosts = ["all"]
 port = 8540
 apis = ["web3", "eth", "net", "personal", "parity", "parity_set", "traces", "rpc", "parity_accounts"]

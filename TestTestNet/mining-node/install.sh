@@ -174,6 +174,7 @@ start_docker() {
 sudo docker run -d \\
     --name oracles-poa \\
     -p 30300:30300 \\
+    -p 30300:30300/udp \\
     -p 8080:8080 \\
     -p 8180:8180 \\
     -p 8540:8540 \\

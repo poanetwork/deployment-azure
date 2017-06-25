@@ -5,9 +5,10 @@ base_path = "parity"
 #keys_path = "parity/keys"
 [network]
 port = 30300
+discovery=true
 [rpc]
 cors = "all"
-interface = "0.0.0.0"
+interface = "all"
 hosts = ["all"]
 port = 8540
 apis = ["web3", "eth", "net", "personal", "parity", "parity_set", "traces", "rpc", "parity_accounts"]

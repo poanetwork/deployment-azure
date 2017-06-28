@@ -204,6 +204,34 @@ EOF
     echo "<===== install_netstats"
 }
 
+install_etherchain() {
+    echo "=====> install_etherchain"
+    git clone https://github.com/gobitfly/etherchain-light
+    git clone https://github.com/ethereum/solc-bin etherchain-light/utils/solc-bin
+    cd etherchain-light
+    npm install
+    cat > config.js <<EOF
+var web3 = require('web3');
+var net = require('net');
+
+var config = function () {
+    this.logFormat = "combined";
+    this.ipcPath = "/home/${ADMIN_USERNAME}/parity/jsonrpc.ipc";
+    this.provider = new web3.providers.IpcProvider(this.ipcPath, net);
+    this.bootstrapUrl = "https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/yeti/bootstrap.min.css";
+    this.names = {
+        "0xdd0bb0e2a1594240fed0c2f2c17c1e9ab4f87126": "Bootnode",
+    };
+}
+
+module.exports = config;
+EOF
+    cd ..
+    apt-get install -y dtach
+    dtach -n explorer bash -c "cd etherchain-light; PORT=4000 npm start > ../explorer.out 2> ../explorer.err"
+    echo "<===== install_etherchain"
+}
+
 start_docker() {
     echo "=====> start_docker"
     cat > rundocker.sh << EOF
@@ -290,6 +318,7 @@ main () {
 
     install_dashboard
     install_netstats
+    install_etherchain
 }
 
 main

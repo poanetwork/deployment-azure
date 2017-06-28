@@ -156,11 +156,11 @@ install_dashboard() {
 ]
 EOF
     echo "[\"${NETSTATS_SECRET}\"]" > ws_secret.json
-    apt-get install -y dtach
-    dtach -n dashboard bash -c "cd eth-netstats && npm start > ../dashboard.out 2> ../dashboard.err"
     #nohup npm start >nohup.out 2>nohup.err &
     #pm2 startOrRestart app.json
     cd ..
+    apt-get install -y dtach
+    dtach -n dashboard bash -c "cd eth-netstats && npm start > ../dashboard.out 2> ../dashboard.err"
     echo "<====== install_dashboard"
 }
 

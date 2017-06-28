@@ -299,6 +299,17 @@ EOF
     echo "<===== compile_source"
 }
 
+setup_autoupdate() {
+    echo "=====> setup_autoupdate"
+    docker pull itech/docker-run
+cat > /etc/cron.daily/docker-autoupdate << EOF
+#!/bin/sh
+sudo docker run --rm -v /var/run/docker.sock:/tmp/docker.sock itech/docker-run update 
+EOF
+    sudo chmod 755 /etc/cron.daily/docker-autoupdate
+    echo "<===== setup_autoupdate"
+}
+
 # MAIN
 main () {
     prepare_homedir
@@ -315,6 +326,8 @@ main () {
     start_docker
     #use_deb
     #compile_source
+
+    setup_autoupdate
 
     install_dashboard
     install_netstats

@@ -251,7 +251,7 @@ main () {
     setup_autoupdate
 
     install_netstats
-    #install_scripts
+    install_scripts
 }
 
 main

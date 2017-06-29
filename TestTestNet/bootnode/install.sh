@@ -36,6 +36,7 @@ OWNER_KEYPASS="${OWNER_KEYPASS}"
 NODE_FULLNAME="${NODE_FULLNAME:-Bootnode}"
 NODE_ADMIN_EMAIL="${NODE_ADMIN_EMAIL:-somebody@somehere}"
 ADMIN_USERNAME="${ADMIN_USERNAME}"
+HOME="${HOME:-/root}"
 
 prepare_homedir() {
     echo "=====> prepare_homedir"

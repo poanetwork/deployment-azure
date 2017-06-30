@@ -16,6 +16,10 @@ echo "===== external ip: ${EXT_IP}"
 echo "===== environmental variables:"
 printenv
 
+sudo su
+echo "===== environmental variables after sudo su:"
+printenv
+
 # script parameters
 INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
 INSTALL_DOCKER_IMAGE="parity/parity:v1.6.8"

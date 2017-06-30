@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -e
 set -u
 set -x
@@ -14,10 +14,6 @@ free -m
 EXT_IP="$(curl ifconfig.co)"
 echo "===== external ip: ${EXT_IP}"
 echo "===== environmental variables:"
-printenv
-
-sudo su
-echo "===== environmental variables after sudo su:"
 printenv
 
 # script parameters

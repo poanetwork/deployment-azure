@@ -43,12 +43,15 @@ OWNER_KEYPASS="${OWNER_KEYPASS}"
 NODE_FULLNAME="${NODE_FULLNAME:-Bootnode}"
 NODE_ADMIN_EMAIL="${NODE_ADMIN_EMAIL:-somebody@somehere}"
 ADMIN_USERNAME="${ADMIN_USERNAME}"
-HOME="${HOME:-/root}"
+echo "HOME before: ${HOME}"
+export HOME="${HOME:-/root}"
+echo "HOME after: ${HOME}"
 
 prepare_homedir() {
     echo "=====> prepare_homedir"
     # ln -s "$(pwd)" "/home/${ADMIN_USERNAME}/script-dir"
     cd "/home/${ADMIN_USERNAME}"
+    echo "Now changed directory to: $(pwd)"
     echo "<===== prepare_homedir"
 }
 

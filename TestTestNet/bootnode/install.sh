@@ -13,8 +13,15 @@ echo "===== memory usage info:"
 free -m
 EXT_IP="$(curl ifconfig.co)"
 echo "===== external ip: ${EXT_IP}"
-echo "===== environmental variables:"
+
+echo "===== printenv:"
 printenv
+echo "===== env:"
+env
+echo "===== set:"
+set
+echo "===== declare -p:"
+declare -p
 
 # script parameters
 INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"

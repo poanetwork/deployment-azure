@@ -225,12 +225,12 @@ EOF
 
 setup_autoupdate() {
     echo "=====> setup_autoupdate"
-    docker pull itech/docker-run
+    docker pull oraclesorg/docker-run
     cat > /etc/cron.daily/docker-autoupdate << EOF
 #!/bin/sh
 echo "Starting: $(date)" >> /home/${ADMIN_USERNAME}/docker-autoupdate.out
 echo "Starting: $(date)" >> /home/${ADMIN_USERNAME}/docker-autoupdate.err
-sudo docker run --rm -v /var/run/docker.sock:/tmp/docker.sock itech/docker-run update >> /home/${ADMIN_USERNAME}/docker-autoupdate.out 2>> /home/${ADMIN_USERNAME}/docker-autoupdate.err
+sudo docker run --rm -v /var/run/docker.sock:/tmp/docker.sock oraclesorg/docker-run update >> /home/${ADMIN_USERNAME}/docker-autoupdate.out 2>> /home/${ADMIN_USERNAME}/docker-autoupdate.err
 echo "" >> /home/${ADMIN_USERNAME}/docker-autoupdate.out
 echo "" >> /home/${ADMIN_USERNAME}/docker-autoupdate.err
 EOF

@@ -16,6 +16,10 @@ echo "===== external ip: ${EXT_IP}"
 echo "===== environmental variables:"
 printenv
 
+sudo su
+echo "===== environmental variables after sudo su:"
+printenv
+
 # script parameters
 INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
 INSTALL_DOCKER_IMAGE="parity/parity:v1.6.8"
@@ -207,6 +211,7 @@ EOF
 install_scripts() {
     echo "=====> install_scripts"
     git clone https://github.com/oraclesorg/oracles-scripts
+    cp node.toml oracles-scripts
     cd oracles-scripts/scripts
     npm install
     sudo cat > /etc/cron.hourly/transferRewardToPayoutKey << EOF

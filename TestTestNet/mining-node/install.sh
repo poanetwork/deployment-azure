@@ -25,7 +25,7 @@ GENESIS_JSON="spec.json"
 NODE_TOML="node.toml"
 NODE_PWD="node.pwd"
 
-#HOME="${HOME:-/root}"
+HOME="${HOME:-/root}"
 
 echo "===== will use docker version: ${INSTALL_DOCKER_VERSION}"
 echo "===== will use parity docker image: ${INSTALL_DOCKER_IMAGE}"

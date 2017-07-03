@@ -24,7 +24,8 @@ GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/m
 GENESIS_JSON="spec.json"
 NODE_TOML="node.toml"
 NODE_PWD="node.pwd"
-HOME="${HOME:-/root}"
+
+#HOME="${HOME:-/root}"
 
 echo "===== will use docker version: ${INSTALL_DOCKER_VERSION}"
 echo "===== will use parity docker image: ${INSTALL_DOCKER_IMAGE}"
@@ -44,6 +45,7 @@ prepare_homedir() {
     echo "=====> prepare_homedir"
     #ln -s "$(pwd)" "/home/${ADMIN_USERNAME}/script-dir"
     cd "/home/${ADMIN_USERNAME}"
+    mkdir -p logs
     echo "<===== prepare_homedir"
 }
 
@@ -144,6 +146,8 @@ install_netstats() {
         "name"                 : "node-app",
         "script"               : "app.js",
         "log_date_format"      : "YYYY-MM-DD HH:mm:SS Z",
+        "error_file"           : "/home/${ADMIN_USERNAME}/logs/dashboard.err",
+        "out_file"             : "/home/${ADMIN_USERNAME}/logs/dashboard.out",
         "merge_logs"           : false,
         "watch"                : false,
         "max_restarts"         : 100,
@@ -164,15 +168,21 @@ install_netstats() {
     }
 ]
 EOL
-    pm2 startOrRestart app.json
     cd ..
+    cat > netstats.start <<EOF
+cd eth-net-intelligence-api
+pm2 startOrRestart app.json
+cd ..
+EOF
+    chmod +x netstats.start
+    sudo -u root -E -H ./netstats.start
     echo "<===== install_netstats"
 }
 
 start_docker() {
     echo "=====> start_docker"
-    cat > rundocker.sh << EOF
-sudo docker run -d \\
+    cat > docker.start << EOF
+docker run -d \\
     --name oracles-poa \\
     -p 30300:30300 \\
     -p 30300:30300/udp \\
@@ -183,10 +193,12 @@ sudo docker run -d \\
     -v "$(pwd)/parity:/build/parity" \\
     -v "$(pwd)/${GENESIS_JSON}:/build/${GENESIS_JSON}" \\
     -v "$(pwd)/${NODE_TOML}:/build/${NODE_TOML}" \\
-    ${INSTALL_DOCKER_IMAGE} --config "${NODE_TOML}"
+    ${INSTALL_DOCKER_IMAGE} --config "${NODE_TOML}" > logs/docker.out 2> logs/docker.err
+container_id="\$(cat logs/docker.out)"
+ln -sf "/var/lib/docker/containers/\${container_id}/\${container_id}-json.log" logs/parity.log
 EOF
-    chmod +x rundocker.sh
-    ./rundocker.sh
+    chmod +x docker.start
+    ./docker.start
     echo "<===== start_docker"
 }
 
@@ -229,12 +241,13 @@ setup_autoupdate() {
     docker pull oraclesorg/docker-run
     cat > /etc/cron.daily/docker-autoupdate << EOF
 #!/bin/sh
-echo "Starting: $(date)" >> /home/${ADMIN_USERNAME}/docker-autoupdate.out
-echo "Starting: $(date)" >> /home/${ADMIN_USERNAME}/docker-autoupdate.err
-sudo docker run --rm -v /var/run/docker.sock:/tmp/docker.sock oraclesorg/docker-run update >> /home/${ADMIN_USERNAME}/docker-autoupdate.out 2>> /home/${ADMIN_USERNAME}/docker-autoupdate.err
-echo "" >> /home/${ADMIN_USERNAME}/docker-autoupdate.out
-echo "" >> /home/${ADMIN_USERNAME}/docker-autoupdate.err
-EOF
+outlog="/home/${ADMIN_USERNAME}/logs/docker-autoupdate.out"
+errlog="/home/${ADMIN_USERNAME}/logs/docker-autoupdate.err"
+echo "Starting: \$(date)" >> "\${outlog}"
+echo "Starting: \$(date)" >> "\${errlog}"
+sudo docker run --rm -v /var/run/docker.sock:/tmp/docker.sock oraclesorg/docker-run update >> "\${outlog}" 2>> "\${errlog}"
+echo "" >> "\${outlog}"
+echo "" >> "\${errlog}"
     sudo chmod 755 /etc/cron.daily/docker-autoupdate
     echo "<===== setup_autoupdate"
 }

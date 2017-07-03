@@ -17,7 +17,7 @@
 ssh-keygen -t rsa
 ```
 You should see something like this
-![Terminal](https://monosnap.com/file/agYPWeEXHwkwxBBpV0XDGBUPDiOmer)
+[[https://github.com/oraclesorg/test-templates/blob/master/Ceremony/gen_ssh_term.png|alt=sshterm]]
 
 ### Windows
 

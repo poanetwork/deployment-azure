@@ -181,7 +181,7 @@ EOF
 
 start_docker() {
     echo "=====> start_docker"
-    cat > docker.start << EOF
+    cat > docker.start <<EOF
 docker run -d \\
     --name oracles-poa \\
     -p 30300:30300 \\
@@ -222,7 +222,7 @@ install_scripts() {
     cp node.toml oracles-scripts
     cd oracles-scripts/scripts
     npm install
-    sudo cat > /etc/cron.hourly/transferRewardToPayoutKey << EOF
+    sudo cat > /etc/cron.hourly/transferRewardToPayoutKey <<EOF
 #!/bin/bash
 cd "$(pwd)"
 echo "Running transferRewardToPayoutKey at $(date)" >> transferRewardToPayoutKey.out
@@ -239,7 +239,7 @@ EOF
 setup_autoupdate() {
     echo "=====> setup_autoupdate"
     docker pull oraclesorg/docker-run
-    cat > /etc/cron.daily/docker-autoupdate << EOF
+    cat > /etc/cron.daily/docker-autoupdate <<EOF
 #!/bin/sh
 outlog="/home/${ADMIN_USERNAME}/logs/docker-autoupdate.out"
 errlog="/home/${ADMIN_USERNAME}/logs/docker-autoupdate.err"
@@ -248,6 +248,7 @@ echo "Starting: \$(date)" >> "\${errlog}"
 sudo docker run --rm -v /var/run/docker.sock:/tmp/docker.sock oraclesorg/docker-run update >> "\${outlog}" 2>> "\${errlog}"
 echo "" >> "\${outlog}"
 echo "" >> "\${errlog}"
+EOF
     sudo chmod 755 /etc/cron.daily/docker-autoupdate
     echo "<===== setup_autoupdate"
 }

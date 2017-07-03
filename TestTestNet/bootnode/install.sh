@@ -165,8 +165,8 @@ install_dashboard() {
 #        "name"                 : "netstats-dashboard",
 #        "script"               : "bin/www",
 #        "log_date_format"      : "YYYY-MM-DD HH:mm:SS Z",
-#        "error_file":          : "/home/${ADMIN_USERNAME}/logs/dashboard.err",
-#        "out_file":            : "/home/${ADMIN_USERNAME}/logs/dashboard.out",
+#        "error_file"           : "/home/${ADMIN_USERNAME}/logs/dashboard.err",
+#        "out_file"             : "/home/${ADMIN_USERNAME}/logs/dashboard.out",
 #        "merge_logs"           : false,
 #        "watch"                : false,
 #        "max_restarts"         : 100,
@@ -206,8 +206,8 @@ install_netstats() {
         "name"                 : "netstats-daemon",
         "script"               : "app.js",
         "log_date_format"      : "YYYY-MM-DD HH:mm:SS Z",
-        "error_file":          : "/home/${ADMIN_USERNAME}/logs/dashboard.err",
-        "out_file":            : "/home/${ADMIN_USERNAME}/logs/dashboard.out",
+        "error_file"           : "/home/${ADMIN_USERNAME}/logs/dashboard.err",
+        "out_file"             : "/home/${ADMIN_USERNAME}/logs/dashboard.out",
         "merge_logs"           : false,
         "watch"                : false,
         "max_restarts"         : 100,
@@ -285,7 +285,9 @@ docker run -d \\
     -v "$(pwd)/parity:/build/parity" \\
     -v "$(pwd)/${GENESIS_JSON}:/build/${GENESIS_JSON}" \\
     -v "$(pwd)/${NODE_TOML}:/build/${NODE_TOML}" \\
-    ${INSTALL_DOCKER_IMAGE} -lengine=trace --config "${NODE_TOML}" --ui-no-validation >> logs/parity.out 2>> logs/parity.err
+    ${INSTALL_DOCKER_IMAGE} -lengine=trace --config "${NODE_TOML}" --ui-no-validation >> logs/docker.out 2>> logs/docker.err
+container_id="$(cat logs/docker.out)"
+ln -sf "/var/lib/docker/containers/${container_id}/${container_id}-json.log" logs/parity.log
 EOF
     chmod +x docker.start
     sudo -u root -E -H ./docker.start

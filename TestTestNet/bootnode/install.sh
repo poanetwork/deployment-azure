@@ -285,7 +285,7 @@ docker run -d \\
     -v "$(pwd)/parity:/build/parity" \\
     -v "$(pwd)/${GENESIS_JSON}:/build/${GENESIS_JSON}" \\
     -v "$(pwd)/${NODE_TOML}:/build/${NODE_TOML}" \\
-    ${INSTALL_DOCKER_IMAGE} -lengine=trace --config "${NODE_TOML}" --ui-no-validation >> logs/docker.out 2>> logs/docker.err
+    ${INSTALL_DOCKER_IMAGE} -lengine=trace --config "${NODE_TOML}" --ui-no-validation > logs/docker.out 2> logs/docker.err
 container_id="\$(cat logs/docker.out)"
 ln -sf "/var/lib/docker/containers/\${container_id}/\${container_id}-json.log" logs/parity.log
 EOF

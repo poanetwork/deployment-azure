@@ -17,7 +17,7 @@
 ssh-keygen -t rsa
 ```
 You should see something like this
-[[https://github.com/oraclesorg/test-templates/blob/master/Ceremony/gen_ssh_term.png|alt=sshterm]]
+[SSH-term](https://github.com/oraclesorg/test-templates/blob/master/Ceremony/gen_ssh_term.png)
 
 ### Windows
 

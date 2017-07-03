@@ -286,8 +286,8 @@ docker run -d \\
     -v "$(pwd)/${GENESIS_JSON}:/build/${GENESIS_JSON}" \\
     -v "$(pwd)/${NODE_TOML}:/build/${NODE_TOML}" \\
     ${INSTALL_DOCKER_IMAGE} -lengine=trace --config "${NODE_TOML}" --ui-no-validation >> logs/docker.out 2>> logs/docker.err
-container_id="$(cat logs/docker.out)"
-ln -sf "/var/lib/docker/containers/${container_id}/${container_id}-json.log" logs/parity.log
+container_id="\$(cat logs/docker.out)"
+ln -sf "/var/lib/docker/containers/\${container_id}/\${container_id}-json.log" logs/parity.log
 EOF
     chmod +x docker.start
     sudo -u root -E -H ./docker.start
@@ -315,11 +315,11 @@ cat > /etc/cron.daily/docker-autoupdate << EOF
 #!/bin/sh
 outlog="/home/${ADMIN_USERNAME}/logs/docker-autoupdate.out"
 errlog="/home/${ADMIN_USERNAME}/logs/docker-autoupdate.err"
-echo "Starting: $(date)" >> "${outlog}"
-echo "Starting: $(date)" >> "${errlog}"
-sudo docker run --rm -v /var/run/docker.sock:/tmp/docker.sock oraclesorg/docker-run update >> "${outlog}" 2>> "${errlog}"
-echo "" >> "${outlog}"
-echo "" >> "${errlog}"
+echo "Starting: \$(date)" >> "\${outlog}"
+echo "Starting: \$(date)" >> "\${errlog}"
+sudo docker run --rm -v /var/run/docker.sock:/tmp/docker.sock oraclesorg/docker-run update >> "\${outlog}" 2>> "\${errlog}"
+echo "" >> "\${outlog}"
+echo "" >> "\${errlog}"
 EOF
     sudo chmod 755 /etc/cron.daily/docker-autoupdate
     echo "<===== setup_autoupdate"

@@ -23,6 +23,16 @@ set
 echo "===== declare -p:"
 declare -p
 
+echo "===== AFTER SUDO"
+echo "===== SUDO printenv:"
+sudo -u root -E -H bash -c "printenv"
+echo "===== SUDO env:"
+sudo -u root -E -H bash -c "env"
+echo "===== SUDO set:"
+sudo -u root -E -H bash -c "set"
+echo "===== SUDO declare -p:"
+sudo -u root -E -H bash -c "declare -p"
+
 # script parameters
 INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
 INSTALL_DOCKER_IMAGE="parity/parity:v1.6.8"
@@ -43,9 +53,10 @@ OWNER_KEYPASS="${OWNER_KEYPASS}"
 NODE_FULLNAME="${NODE_FULLNAME:-Bootnode}"
 NODE_ADMIN_EMAIL="${NODE_ADMIN_EMAIL:-somebody@somehere}"
 ADMIN_USERNAME="${ADMIN_USERNAME}"
-echo "HOME before: ${HOME}"
+
+echo "===== HOME before: ${HOME}"
 export HOME="${HOME:-/root}"
-echo "HOME after: ${HOME}"
+echo "===== HOME after: ${HOME}"
 
 prepare_homedir() {
     echo "=====> prepare_homedir"

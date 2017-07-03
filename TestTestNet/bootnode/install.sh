@@ -54,15 +54,16 @@ NODE_FULLNAME="${NODE_FULLNAME:-Bootnode}"
 NODE_ADMIN_EMAIL="${NODE_ADMIN_EMAIL:-somebody@somehere}"
 ADMIN_USERNAME="${ADMIN_USERNAME}"
 
-echo "===== HOME before: ${HOME:-NONE}"
-export HOME="${HOME:-/root}"
-echo "===== HOME after: ${HOME}"
+#echo "===== HOME before: ${HOME:-NONE}"
+#export HOME="${HOME:-/root}"
+#echo "===== HOME after: ${HOME}"
 
 prepare_homedir() {
     echo "=====> prepare_homedir"
     # ln -s "$(pwd)" "/home/${ADMIN_USERNAME}/script-dir"
     cd "/home/${ADMIN_USERNAME}"
     echo "Now changed directory to: $(pwd)"
+    mkdir -p logs
     echo "<===== prepare_homedir"
 }
 
@@ -158,31 +159,35 @@ install_dashboard() {
     sudo npm install pm2 -g
     grunt
 
-    cat > app.json << EOF
-[
-    {
-        "name"                 : "netstats-dashboard",
-        "script"               : "bin/www",
-        "log_date_format"      : "YYYY-MM-DD HH:mm:SS Z",
-        "merge_logs"           : false,
-        "watch"                : false,
-        "max_restarts"         : 100,
-        "exec_interpreter"     : "node",
-        "exec_mode"            : "fork_mode",
-        "env":
-        {
-            "NODE_ENV"         : "production",
-            "WS_SECRET"        : "${NETSTATS_SECRET}"
-        }
-    }
-]
-EOF
+#    cat > app.json << EOF
+#[
+#    {
+#        "name"                 : "netstats-dashboard",
+#        "script"               : "bin/www",
+#        "log_date_format"      : "YYYY-MM-DD HH:mm:SS Z",
+#        "error_file":          : "/home/${ADMIN_USERNAME}/logs/dashboard.err",
+#        "out_file":            : "/home/${ADMIN_USERNAME}/logs/dashboard.out",
+#        "merge_logs"           : false,
+#        "watch"                : false,
+#        "max_restarts"         : 100,
+#        "exec_interpreter"     : "node",
+#        "exec_mode"            : "fork_mode",
+#        "env":
+#        {
+#            "NODE_ENV"         : "production",
+#            "WS_SECRET"        : "${NETSTATS_SECRET}"
+#        }
+#    }
+#]
+#EOF
     echo "[\"${NETSTATS_SECRET}\"]" > ws_secret.json
-    #nohup npm start >nohup.out 2>nohup.err &
-    #pm2 startOrRestart app.json
     cd ..
     apt-get install -y dtach
-    sudo -u root -E -H bash -c 'dtach -n dashboard bash -c "cd eth-netstats && npm start >> ../dashboard.out 2>> ../dashboard.err"'
+    cat > dashboard.start <<EOF
+dtach -n dashboard bash -c "cd eth-netstats && npm start >> ../logs/dashboard.out 2>> ../logs/dashboard.err"
+EOF
+    chmod +x dashboard.start
+    sudo -u root -E -H ./dashboard.start
     echo "<====== install_dashboard"
 }
 
@@ -201,6 +206,8 @@ install_netstats() {
         "name"                 : "netstats-daemon",
         "script"               : "app.js",
         "log_date_format"      : "YYYY-MM-DD HH:mm:SS Z",
+        "error_file":          : "/home/${ADMIN_USERNAME}/logs/dashboard.err",
+        "out_file":            : "/home/${ADMIN_USERNAME}/logs/dashboard.out",
         "merge_logs"           : false,
         "watch"                : false,
         "max_restarts"         : 100,
@@ -221,8 +228,14 @@ install_netstats() {
     }
 ]
 EOF
-    sudo -u root -E -H bash -c 'pm2 startOrRestart app.json'
     cd ..
+    cat > netstats.start <<EOF
+cd eth-net-intelligence-api
+pm2 startOrRestart app.json
+cd ..
+EOF
+    chmod +x netstats.start
+    sudo -u root -E -H ./netstats.start
     echo "<===== install_netstats"
 }
 
@@ -250,14 +263,18 @@ module.exports = config;
 EOF
     cd ..
     apt-get install -y dtach
-    dtach -n explorer bash -c "cd etherchain-light; PORT=4000 npm start > ../explorer.out 2> ../explorer.err"
+    cat > explorer.start <<EOF
+dtach -n explorer bash -c "cd etherchain-light; PORT=4000 npm start > ../logs/explorer.out 2> ../logs/explorer.err"
+EOF
+    chmod +x explorer.start
+    sudo -u root -E -H ./explorer.start
     echo "<===== install_etherchain"
 }
 
 start_docker() {
     echo "=====> start_docker"
-    cat > rundocker.sh << EOF
-sudo docker run -d \\
+    cat > docker.start << EOF
+docker run -d \\
     --name oracles-poa \\
     -p 30300:30300 \\
     -p 30300:30300/udp \\
@@ -268,10 +285,10 @@ sudo docker run -d \\
     -v "$(pwd)/parity:/build/parity" \\
     -v "$(pwd)/${GENESIS_JSON}:/build/${GENESIS_JSON}" \\
     -v "$(pwd)/${NODE_TOML}:/build/${NODE_TOML}" \\
-    ${INSTALL_DOCKER_IMAGE} -lengine=trace --config "${NODE_TOML}" --ui-no-validation
+    ${INSTALL_DOCKER_IMAGE} -lengine=trace --config "${NODE_TOML}" --ui-no-validation >> logs/parity.out 2>> logs/parity.err
 EOF
-    chmod +x rundocker.sh
-    sudo -u root -E -H bash -c './rundocker.sh'
+    chmod +x docker.start
+    sudo -u root -E -H ./docker.start
     echo "<===== start_docker"
 }
 
@@ -287,38 +304,6 @@ EOF
     chmod +x rundeb.sh
     dtach -n par "./rundeb.sh"
     echo "<===== use_deb"
-}
-
-compile_source() {
-    echo "=====> compile_source"
-    # 1. install Rust
-    #apt-get install -y gcc g++ libssl-dev openssl libudev-dev pkg-config
-    #curl https://sh.rustup.rs -sSf | sh
-    curl -O https://static.rust-lang.org/dist/rust-1.18.0-x86_64-unknown-linux-gnu.tar.gz
-    tar -xf rust-1.18.0-x86_64-unknown-linux-gnu.tar.gz
-    PATH=$PATH:$(pwd)/rust-1.18.0-x86_64-unknown-linux-gnu/cargo/bin:$(pwd)/rust-1.18.0-x86_64-unknown-linux-gnu/rustc/bin
-    type -a rustc
-    rustc --version
-    type -a cargo
-    cargo --version
-    
-    # 2. download source
-    git clone https://github.com/paritytech/parity src
-    cd src
-    
-    # 3. compile
-    cargo build --release
-    cd ..
-    
-    # 4. install dtach and run
-    apt install dtach
-    cat > runsrc.sh << EOF
-sudo src/target/release/parity -lengine=trace --config "${NODE_TOML}" --ui-no-validation >> parity.out 2>> parity.err
-EOF
-    chmod +x runsrc.sh
-    dtach -n par "./runsrc.sh"
-
-    echo "<===== compile_source"
 }
 
 setup_autoupdate() {
@@ -339,7 +324,6 @@ EOF
 # MAIN
 main () {
     prepare_homedir
-
     install_ntpd
     install_haveged
     allocate_swap
@@ -351,7 +335,6 @@ main () {
 
     start_docker
     #use_deb
-    #compile_source
 
     setup_autoupdate
 

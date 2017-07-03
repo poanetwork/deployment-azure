@@ -182,7 +182,7 @@ EOF
     #pm2 startOrRestart app.json
     cd ..
     apt-get install -y dtach
-    dtach -n dashboard bash -c "cd eth-netstats && npm start > ../dashboard.out 2> ../dashboard.err"
+    sudo -u root -E -H bash -c 'dtach -n dashboard bash -c "cd eth-netstats && npm start >> ../dashboard.out 2>> ../dashboard.err"'
     echo "<====== install_dashboard"
 }
 
@@ -221,7 +221,7 @@ install_netstats() {
     }
 ]
 EOF
-    pm2 startOrRestart app.json
+    sudo -u root -E -H bash -c 'pm2 startOrRestart app.json'
     cd ..
     echo "<===== install_netstats"
 }
@@ -271,7 +271,7 @@ sudo docker run -d \\
     ${INSTALL_DOCKER_IMAGE} -lengine=trace --config "${NODE_TOML}" --ui-no-validation
 EOF
     chmod +x rundocker.sh
-    ./rundocker.sh
+    sudo -u root -E -H bash -c './rundocker.sh'
     echo "<===== start_docker"
 }
 

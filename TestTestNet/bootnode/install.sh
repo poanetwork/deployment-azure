@@ -54,7 +54,7 @@ NODE_FULLNAME="${NODE_FULLNAME:-Bootnode}"
 NODE_ADMIN_EMAIL="${NODE_ADMIN_EMAIL:-somebody@somehere}"
 ADMIN_USERNAME="${ADMIN_USERNAME}"
 
-echo "===== HOME before: ${HOME}"
+echo "===== HOME before: ${HOME:-NONE}"
 export HOME="${HOME:-/root}"
 echo "===== HOME after: ${HOME}"
 

@@ -12,6 +12,14 @@
 1. Open "Finder", choose Utilities from the "Go" menu.
 2. Find the "Terminal application" in the "Utilities" window.
 3. Double-click to open the "Terminal application".
+4. Enter the following command in the Terminal window.
+```
+ssh-keygen -t rsa
+```
+You should see something like this
+![Terminal](https://monosnap.com/file/agYPWeEXHwkwxBBpV0XDGBUPDiOmer)
+
+### Windows
 
 
 ## 5. Setup virtual machine

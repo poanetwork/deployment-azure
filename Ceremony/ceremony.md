@@ -13,7 +13,7 @@ SSH keys is a pair of cryptographic keys that will be used to access your virtua
 1. Open "Finder", choose Utilities from the "Go" menu.
 2. Find the "Terminal.app" in the "Utilities" window.
 3. Double-click to open the "Terminal.app".
-4. Enter the following command in the terminal window and hit ENTER 
+4. Enter the following command in the terminal window and hit ENTER
 ```
 ssh-keygen -t rsa
 ```
@@ -48,10 +48,10 @@ At this step, you should see a window similar to this (values will be different 
 10. **Mining Keypass**: Copy password from your _mining key_ obtained previously. Password is an 8 characters long sequence of letters and numbers. After pasting, the content of the field will be hidden, instead you'll see black dots.
 11. **Admin username**: Think up a login account name on your virtual machine. It may contain only lower case latin letters and numbers, also it should start with a letter. As an example, you can use a standard combination `first letter of your given name` + `your surname` (e.g. John Doe -> `jdoe`), or choose a neutral `azureuser`. This name will not be used in the Oracles-PoA network, and is only used to identify you when connecting to the virtual machine.
 
-12. **Ssh Public Key**: _On Mac OS X_: switch to the "Terminal" application opened on the previous step and paste the following command into the terminal, then hit ENTER  
+12. **Ssh Public Key**: _On Mac OS X_: switch to the "Terminal" application opened on the previous step and paste the following command into the terminal, then hit ENTER
 ```
 pbcopy < ~/.ssh/id_rsa.pub
-```  
+```
 This command will copy your public key to your clipboard. Then switch back to your browser and paste it into this field. Note that you should not copy anything in-between, otherwise your clipboard will be overwritten and you'll have to redo this step. After pasting check that the key starts with `ssh-rsa`.
 
 13. **Netstats Server**: This is the address of a server displaying usage info about the network. This address should have been provided to you with initial keys.
@@ -64,7 +64,7 @@ Second half of the fields should look similar to this (values will be different 
 
 17. Click "Purchase". In case of errors please double check that you have completed the steps above and all fields are filled with correct values. If the error persists you can file a bug report [here](https://github.com/oraclesorg/test-templates/issues/new). Please provide as detailed a description as possible, one or several screenshots, so that values in all fields will be visible to us. Also provide a screenshot with the error message.
 
-18. After that, you will be taken to your azure dashboard. Look for a box similar to this
-![Deployment in progress](https://raw.githubusercontent.com/oraclesorg/test-templates/master/Ceremony/deploy_new_deployment.png)
+18. After that, you will be taken to your azure dashboard. Look for a box similar to this  
+![Deployment in progress](https://raw.githubusercontent.com/oraclesorg/test-templates/master/Ceremony/deploy_new_deployment.png)  
 representing deployment process of the resource group. Do not close this windows and wait till the process is complete and you'll be automatically forwarded to a newly-created resource group page. At this moment you've successfully joined the Oracles-PoA network. You can close the window now. Later, when you login to your azure portal, you can find this box on your dashboard.
 

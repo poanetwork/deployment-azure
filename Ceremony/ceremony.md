@@ -2,8 +2,8 @@
 
 ## 1. Create azure account
 If you already have Microsoft Azure account, you should [login to it](https://login.microsoftonline.com/) and then skip this section.  
-To signup to Microsoft Azure follow [this link](https://account.azure.com/signup) and click "Create a new Microsoft account". Follow the steps of the registration process.  
-After it's complete, do not sign out.
+To signup to Microsoft Azure follow [this link](https://account.azure.com/signup) and click "Create a new Microsoft account". Follow the steps of the registration process. You will need to provide and verify your email address and your credit card information.  
+After registration is complete, do not sign out.
 
 ## 2. Generate SSH keys
 SSH keys is a pair of cryptographic keys that will be used to access your virtual machine. Each pair consists of a _public key_ and a _private key_. Both of them will be stored on your current laptop/PC in separate files. Public key will then be copied to the virtual machine and used to verify your identity when you try to access it. As a consequence, the first connection can be made only from your current laptop/PC. While public key may be shared with anybody, you should never share your private key. Later, if need be, you'll be able to create additional key pairs on your other devices and access the virtual machine from them as well.
@@ -23,6 +23,14 @@ ssh-keygen -t rsa
 7. This completes the SSH keys generation procedure and you should see the confirmation in the terminal window. Do not close Terminal just yet.
 
 ### Windows PC
+1. Download _PuTTy_ from its [official web page](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html). Under "Package files" select 32-bit or 64-bit version depending on your laptop/PC processor type and operating system edition. If unsure, download 32-bit version. After download is complete, double-click on the msi file and follow the installation steps.
+2. Open the PuTTYgen program.
+3. For "Type of key to generate", select "SSH-2 RSA".
+4. Click the "Generate" button.
+5. You'll need to randomly move your mouse in the area below the progress bar. These movements will be used to generate random numbers for the cryptographic functions. Continue until the progress bar is full.
+6. Type a passphrase (password) into the "Key passphrase" and "Confirm passphrase" fields. You can use this keypair without a passphrase, however, it is recommended that you provide a strong passphrase.
+7. Click the "Save private key" button, select the folder you want to save this file to and save it. Please note, that this file should be saved to a folder only you can access.
+8. Right-click in the text field labeled "Public key for pasting into OpenSSH authorized_keys file" and choose "Select All", then right-click again in the same text field and choose "Copy". Open notepad, paste the content of your clipboard and save the file. Note the folder you saved it to.
 
 ## 3. Virtual machine setup.
 This is the final step, on which you will create azure virtual machine from a template by filling in a number of fields with data obtained on previous steps. After virtual machine deployment is complete, it will automatically join the Oracles-PoA network and all corresponding activities (voting, payout) will become available to you.
@@ -47,11 +55,13 @@ At this step, you should see a window similar to this (values will be different 
 10. **Mining Keypass**: Copy password from your _mining key_ obtained previously. Password is an 8 characters long sequence of letters and numbers. After pasting, the content of the field will be hidden, instead you'll see black dots.
 11. **Admin username**: Think up a login account name on your virtual machine. It may contain only lower case latin letters and numbers, also it should start with a letter. As an example, you can use a standard combination `first letter of your given name` + `your surname` (e.g. John Doe -> `jdoe`), or choose a neutral `azureuser`. This name will not be used in the Oracles-PoA network, and is only used to identify you when connecting to the virtual machine.
 
-12. **Ssh Public Key**: _On Mac OS X_: switch to the "Terminal" application opened on the previous step and paste the following command into the terminal, then hit ENTER
+12. **Ssh Public Key**:  
+* _On Mac OS X_: switch to the "Terminal" application opened on the previous step and paste the following command into the terminal, then hit ENTER
 ```
 pbcopy < ~/.ssh/id_rsa.pub
 ```
-This command will copy your public key to your clipboard. Then switch back to your browser and paste it into this field. Note that you should not copy anything in-between, otherwise your clipboard will be overwritten and you'll have to redo this step. After pasting check that the key starts with `ssh-rsa`.
+This command will copy your public key to your clipboard. Then switch back to your browser and paste it into this field. Note that you should not copy anything in-between, otherwise your clipboard will be overwritten and you'll have to redo this step. After pasting check that the key starts with `ssh-rsa`.  
+* _On Windows_: open notepad application and open the file with the _public_ key you created on the previous step. Select its entire content and paste into this field. After pasting check that the key starts with `ssh-rsa`.
 
 13. **Netstats Server**: This is the address of a server displaying usage info about the network. This address should have been provided to you with initial keys.
 14. **Netstats Secret**: This is a secret code used to connect to the netstats server above. This code should have been provided to you as well.

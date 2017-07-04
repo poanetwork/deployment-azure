@@ -21,9 +21,15 @@ ssh-keygen -t rsa
 
 5. You'll be prompted to indicate where to store the keys. Accept the default location by hitting ENTER.
 6. Next you'll be prompted for a passphrase (password). You can just hit ENTER to use this keypair without a passphrase, however, it is recommended that you provide a strong passphrase.
-7. This completes the generation procedure and you should see the confirmation in the terminal window. Do not close Terminal just yet.
+7. This completes the SSH keys generation procedure and you should see the confirmation in the terminal window. Do not close Terminal just yet.
 
 ### Windows PC
 
-
 ## 5. Virtual machine setup.
+This is the final step, on which you will create azure virtual machine from a template by filling in a number of fields with data obtained on previous steps. After virtual machine deployment is complete, it will automatically join the Oracles-PoA network and all corresponding activities (voting, payout) will become available to you.
+
+1. Click on the "Deploy to Azure" button below. This will launch the template wizard
+
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Foraclesorg%2Ftest-templates%2Fmaster%2FTestTestNet%2Fmining-node%2Ftemplate.json" target=_blank>![Deploy to Azure](http://azuredeploy.net/deploybutton.png)</a>
+
+2. 

@@ -10,13 +10,13 @@
 
 ### MacOS X
 1. Open "Finder", choose Utilities from the "Go" menu.
-2. Find the "Terminal application" in the "Utilities" window.
-3. Double-click to open the "Terminal application".
+2. Find the "Terminal.app" in the "Utilities" window.
+3. Double-click to open the "Terminal.app".
 4. Enter the following command in the Terminal window.
 ```
 ssh-keygen -t rsa
 ```
-You should see something like this
+At this moment you should see something like this
 ![SSH-term](https://raw.githubusercontent.com/oraclesorg/test-templates/master/Ceremony/gen_ssh_term.png)
 
 ### Windows

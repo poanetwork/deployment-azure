@@ -21,7 +21,7 @@ ssh-keygen -t rsa
 
 5. You'll be prompted to indicate where to store the keys. Accept the default location by hitting ENTER.
 6. Next you'll be prompted for a passphrase (password). You can just hit ENTER to use this keypair without a passphrase, however, it is recommended that you provide a strong passphrase.
-7. This completes the generation procedure and you see the confirmation in the terminal window. Do not close Terminal just yet.
+7. This completes the generation procedure and you should see the confirmation in the terminal window. Do not close Terminal just yet.
 
 ### Windows PC
 

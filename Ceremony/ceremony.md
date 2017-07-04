@@ -16,21 +16,24 @@ SSH keys is a pair of cryptographic keys that will be used to access your virtua
 ```
 ssh-keygen -t rsa
 ```
-![SSH-term](https://raw.githubusercontent.com/oraclesorg/test-templates/master/Ceremony/gen_ssh_term.png).
+![SSH-term](https://raw.githubusercontent.com/oraclesorg/test-templates/master/Ceremony/gen_ssh_term.png)
 
 5. You'll be prompted to indicate where to store the keys. Accept the default location by hitting ENTER.
 6. Next you'll be prompted for a passphrase (password). You can just hit ENTER to use this keypair without a passphrase, however, it is recommended that you provide a strong passphrase.
 7. This completes the SSH keys generation procedure and you should see the confirmation in the terminal window. Do not close Terminal just yet.
 
 ### Windows PC
-1. Download _PuTTy_ from its [official web page](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html). Under "Package files" select 32-bit or 64-bit version depending on your laptop/PC processor type and operating system edition. If unsure, download 32-bit version. After download is complete, double-click on the msi file and follow the installation steps.
+1. Download _PuTTY_ from its [official web page](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html). Under "Package files" select 32-bit or 64-bit version depending on your laptop/PC processor type and operating system edition. If unsure, download 32-bit version. After download is complete, double-click on the msi file and follow the installation steps.
 2. Open the PuTTYgen program.
-3. For "Type of key to generate", select "SSH-2 RSA".
+3. For "Type of key to generate", select RSA, for "Number of bits in a generated key" leave default value `2048`. 
 4. Click the "Generate" button.
 5. You'll need to randomly move your mouse in the area below the progress bar. These movements will be used to generate random numbers for the cryptographic functions. Continue until the progress bar is full.
 6. Type a passphrase (password) into the "Key passphrase" and "Confirm passphrase" fields. You can use this keypair without a passphrase, however, it is recommended that you provide a strong passphrase.
-7. Click the "Save private key" button, select the folder you want to save this file to and save it. Please note, that this file should be saved to a folder only you can access.
-8. Right-click in the text field labeled "Public key for pasting into OpenSSH authorized_keys file" and choose "Select All", then right-click again in the same text field and choose "Copy". Open notepad, paste the content of your clipboard and save the file. Note the folder you saved it to.
+![PuTTY](https://raw.githubusercontent.com/oraclesorg/test-templates/master/Ceremony/Putty.png)
+
+7. Click the "Save private key" button, select the folder you want to save this file to, enter filename, e.g. "private.ppk" and save the fule. Please note, that this file should be saved to a folder only you can access.
+8. Click the "Save public key" button, select the folder you want to save this file to, enter filename, e.g. "public.ppk" and save the file.
+9. Do not close PuTTY just yet.
 
 ## 3. Virtual machine setup.
 This is the final step, on which you will create azure virtual machine from a template by filling in a number of fields with data obtained on previous steps. After virtual machine deployment is complete, it will automatically join the Oracles-PoA network and all corresponding activities (voting, payout) will become available to you.
@@ -61,7 +64,7 @@ At this step, you should see a window similar to this (values will be different 
 pbcopy < ~/.ssh/id_rsa.pub
 ```
 This command will copy your public key to your clipboard. Then switch back to your browser and paste it into this field. Note that you should not copy anything in-between, otherwise your clipboard will be overwritten and you'll have to redo this step. After pasting check that the key starts with `ssh-rsa`.  
-* _On Windows_: open notepad application and open the file with the _public_ key you created on the previous step. Select its entire content and paste into this field. After pasting check that the key starts with `ssh-rsa`.
+* _On Windows_: Switch back to PuTTY and right-click in the text field labeled "Public key for pasting into OpenSSH authorized_keys file", choose "Select All", then right-click again in the same text field and choose "Copy". Paste selected text into this field. After pasting check that the key starts with `ssh-rsa`.
 
 13. **Netstats Server**: This is the address of a server displaying usage info about the network. This address should have been provided to you with initial keys.
 14. **Netstats Secret**: This is a secret code used to connect to the netstats server above. This code should have been provided to you as well.

@@ -34,24 +34,36 @@ This is the final step, on which you will create azure virtual machine from a te
 2. You should see a window similar to this, preselected fields (subscription, location) may be different from yours.
 ![wizard-1a](https://raw.githubusercontent.com/oraclesorg/test-templates/master/Ceremony/deploy_wizard1a.png)  
 Double-check address bar that you are connected to `https://portal.azure.com` and that secure connection sign is present (e.g. 🔒, exact representation may differ by browser).
-3. Select the azure subsciption you want to use.
-4. Choose "Create new" Resource group and input a name for the resource group. This name will be displayed on your azure dashboard, it will not be used in the Oracles-PoA network, so choose a name that would make it clear _to you_ what this resource group represents. However, Azure imposes certain restrictions on a resource group `name`: it can only include upper case and lower case latin letters, numbers (e.g. _a_, _B_, _Z_, _5_, ...), periods, underscores, hyphens and parenthesis, cannot contain spaces (` `) and cannot end in a period. An example of a correct `name` is `oracles-poa`. After you've typed in the name in the input, make sure a green check mark ✓ appears on the right.
-5. Select (from available to you) a location to where the virtual machine will be deployed.
-
-6. **Node Full Name** Enter your real full name. This will be displayed in the Oracles-PoA network statistic page and visible to other users of the network.
+3. **Subscription**: Select the azure subsciption you want to link virtual machine to.
+4. **Resource group**: Choose "Create new" Resource group and input a name for the resource group. This name will be displayed on your azure dashboard, it will not be used in the Oracles-PoA network, so choose a name that would make it clear _to you_ what this resource group represents. However, Azure imposes certain restrictions on a resource group name: it can only include upper case and lower case latin letters, numbers (e.g. _a_, _B_, _5_), periods, underscores, hyphens and parenthesis, cannot contain spaces (` `) and cannot end in a period. An example of a correct name is `oracles-poa`. After you've typed in the name, make sure a green check mark ✓ appears on the right.
+5. **Location** Select a location to where the virtual machine will be deployed.
+6. **Node Full Name** Enter your real full name. This will be displayed in the Oracles-PoA network usage info page and visible to other users of the network.
 7. **Node Admin Email**: Enter your email address.
-8. **Mining Address**: Copy address of your _mining key_ obtained previously (address starts with `0x`, the rest consists of numbers `0-9` and letters `a-f`, giving 42 symbols in total, an example of an address is `0x09a548bdbafae302c5dd7f47b43d751baf20b77d`)
-9. **Mining Keyfile**: Open key file of your _mining key_ obtained previously in a text editor (e.g. "TextEdit.app"). The content of this file should consist of keys in double-quotes `"` separated from values by semicolons `:`, put inside curly brackets `{...}`. Select this file's _entire content_, including all curly brackets, copy it and paste into this field. When you paste it, the actual content will not be displayed, because it is treated as a secured password, instead you'll see black dots.
+8. **Mining Address**: Copy address of your _mining key_ obtained previously. Address starts with `0x`, the rest consists of numbers `0-9` and letters `a-f`, giving 42 characters in total length, an example of a valid address is `0x09a548bdbafae302c5dd7f47b43d751baf20b77d`.
+9. **Mining Keyfile**: Open key file of your _mining key_ obtained previously in a text editor (e.g. "TextEdit.app"). The content of this file should consist of words in double-quotes `"` separated from other words or numbers by semicolons `:`, nested into curly brackets `{...}`. Select this file's _entire content_, including all curly brackets, copy it and paste into this field. When you paste it, the actual content will not be displayed, because it is treated as a secured password, instead you'll see black dots.
 
-At this step, you should see a window similar to this (values in the inputs will be different in your case)
+At this step, you should see a window similar to this (values will be different in your case)
 ![wizard-1](https://raw.githubusercontent.com/oraclesorg/test-templates/master/Ceremony/deploy_wizard1.png)
 
-10. **Mining Keypass**: Copy password from your _mining key_ obtained previously. Password is an 8 characters long sequence of letters and numbers. The content of the input will be hidden, instead you'll see black dots.
+10. **Mining Keypass**: Copy password from your _mining key_ obtained previously. Password is an 8 characters long sequence of letters and numbers. After pasting, the content of the field will be hidden, instead you'll see black dots.
+11. **Admin username**: Think up a login account name on your virtual machine. It may contain only lower case latin letters and numbers, also it should start with a letter. As an example, you can use a standard combination `first letter of your given name` + `your surname` (e.g. John Doe -> `jdoe`), or choose a neutral `azureuser`. This name will not be used in the Oracles-PoA network, and is only used to identify you when connecting to the virtual machine.
 
-11. **Admin username**: Think up a login account name on your virtual machine. It may contain only lower case latin letters and numbers, also it should start with a letter. As an example, you can use a standard combination `first letter of your given name` + `your surname` (e.g. John Doe -> `jdoe`), or use a neutral `azureuser`. This name will not be used in the Oracles-PoA network, and is only used to identify you when connecting to the virtual machine.
-
-12. **Ssh Public Key**: _On Mac OS X_: switch to the "Terminal" application opened on the previous step and paste the following command into the terminal, then hit ENTER.
+12. **Ssh Public Key**: _On Mac OS X_: switch to the "Terminal" application opened on the previous step and paste the following command into the terminal, then hit ENTER.  
 ```
 pbcopy < ~/.ssh/id_rsa.pub
-```
-This command will copy your private key to your clipboard. Then switch back to your browser and paste it into this field. Note that you should not copy anything in-between, otherwise it will overwrite your clipboard and you'll have to retry this step.
+```  
+This command will copy your private key to your clipboard. Then switch back to your browser and paste it into this field. Note that you should not copy anything in-between, otherwise your clipboard will get overwritten and you'll have to redo this step. After pasting check that the key starts with `ssh-rsa`.
+13. **Netstats Server**: This is the address of a server displaying usage info about the network. This address should have been provided to you with initial keys.
+14. **Netstats Secret**: This is a secret code used to connect to the netstats server above. This code should have been provided to you as well.
+15. Carefully read "Terms and conditions" section provided by Azure and click "I agree" checkbox below if you do agree.
+16. Check "Pin to dashboard" checkbox at the bottom of the page. This will put virtual machine on your azure dashboard, making it easy to access.
+
+Second half of the fields should look similar to this (values will be different in your case)
+![wizard-2](https://raw.githubusercontent.com/oraclesorg/test-templates/master/Ceremony/deploy_wizard2.png)
+
+17. Click "Purchase". In case of errors please double check that you have completed the steps above and all fields are filled with correct values. If the error persists you can file a bug report [here](https://github.com/oraclesorg/test-templates/issues/new). Please provide as detailed a description as possible, one or several screenshots, so that values in all fields will be visible to us. Also provide a screenshot with the error message.
+
+18. After that, you will be taken to your azure dashboard. Look for a box similar to this
+![Deployment in progress](https://raw.githubusercontent.com/oraclesorg/test-templates/master/Ceremony/deploy_new_deployment.png)
+representing deployment process of the resource group. Do not close this windows and wait till the process is complete and you'll be automatically forwarded to a newly-created resource group page. At this moment you've successfully joined the Oracles-PoA network. You can close the window now. Later, when you login to your azure portal, you can find this box on your dashboard.
+

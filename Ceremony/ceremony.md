@@ -48,11 +48,12 @@ At this step, you should see a window similar to this (values will be different 
 10. **Mining Keypass**: Copy password from your _mining key_ obtained previously. Password is an 8 characters long sequence of letters and numbers. After pasting, the content of the field will be hidden, instead you'll see black dots.
 11. **Admin username**: Think up a login account name on your virtual machine. It may contain only lower case latin letters and numbers, also it should start with a letter. As an example, you can use a standard combination `first letter of your given name` + `your surname` (e.g. John Doe -> `jdoe`), or choose a neutral `azureuser`. This name will not be used in the Oracles-PoA network, and is only used to identify you when connecting to the virtual machine.
 
-12. **Ssh Public Key**: _On Mac OS X_: switch to the "Terminal" application opened on the previous step and paste the following command into the terminal, then hit ENTER.  
+12. **Ssh Public Key**: _On Mac OS X_: switch to the "Terminal" application opened on the previous step and paste the following command into the terminal, then hit ENTER  
 ```
 pbcopy < ~/.ssh/id_rsa.pub
 ```  
-This command will copy your private key to your clipboard. Then switch back to your browser and paste it into this field. Note that you should not copy anything in-between, otherwise your clipboard will get overwritten and you'll have to redo this step. After pasting check that the key starts with `ssh-rsa`.
+This command will copy your public key to your clipboard. Then switch back to your browser and paste it into this field. Note that you should not copy anything in-between, otherwise your clipboard will be overwritten and you'll have to redo this step. After pasting check that the key starts with `ssh-rsa`.
+
 13. **Netstats Server**: This is the address of a server displaying usage info about the network. This address should have been provided to you with initial keys.
 14. **Netstats Secret**: This is a secret code used to connect to the netstats server above. This code should have been provided to you as well.
 15. Carefully read "Terms and conditions" section provided by Azure and click "I agree" checkbox below if you do agree.

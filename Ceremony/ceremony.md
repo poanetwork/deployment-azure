@@ -1,12 +1,11 @@
-# Steps to join Oracles-PoA network
+# Steps to deploy azure virtual machine to join Oracles-PoA network
 
-## 1. Obtain initial key
+## 1. Create azure account
+If you already have Microsoft Azure account, you should [login to it](https://login.microsoftonline.com/) and then skip this section.  
+To signup to Microsoft Azure follow [this link](https://account.azure.com/signup) and click "Create a new Microsoft account". Follow the steps of the registration process.  
+After it's complete, do not sign out.
 
-## 2. Exchange initial key for mining, voting key and payout keys
-
-## 3. Create azure account
-
-## 4. Generate SSH keys
+## 2. Generate SSH keys
 SSH keys is a pair of cryptographic keys that will be used to access your virtual machine. Each pair consists of a _public key_ and a _private key_. Both of them will be stored on your current laptop/PC in separate files. Public key will then be copied to the virtual machine and used to verify your identity when you try to access it. As a consequence, the first connection can be made only from your current laptop/PC. While public key may be shared with anybody, you should never share your private key. Later, if need be, you'll be able to create additional key pairs on your other devices and access the virtual machine from them as well.
 
 ### Mac OS X
@@ -25,7 +24,7 @@ ssh-keygen -t rsa
 
 ### Windows PC
 
-## 5. Virtual machine setup.
+## 3. Virtual machine setup.
 This is the final step, on which you will create azure virtual machine from a template by filling in a number of fields with data obtained on previous steps. After virtual machine deployment is complete, it will automatically join the Oracles-PoA network and all corresponding activities (voting, payout) will become available to you.
 
 1. Hold <kbd>cmd ⌘</kbd> (on Mac OS X) or <kbd>CTRL</kbd> (on Windows PC) and click on the "Deploy to Azure" button below. This will open a separate browser tab, lead you to azure portal and launch "Custom deployment" wizard (alternatively, you can right-click on the button and select "Open in New Tab")  
@@ -66,5 +65,5 @@ Second half of the fields should look similar to this (values will be different 
 
 18. After that, you will be taken to your azure dashboard. Look for a box similar to this  
 ![Deployment in progress](https://raw.githubusercontent.com/oraclesorg/test-templates/master/Ceremony/deploy_new_deployment.png)  
-representing deployment process of the resource group. Do not close this windows and wait till the process is complete and you'll be automatically forwarded to a newly-created resource group page. At this moment you've successfully joined the Oracles-PoA network. You can close the window now. Later, when you login to your azure portal, you can find this box on your dashboard.
-
+representing deployment process of the resource group. Do not close this windows and wait till the process is complete and you'll be automatically forwarded to a newly-created resource group page. At this moment you've successfully joined the Oracles-PoA network!  
+You can close the window now. Later, when you login to your azure portal, you can find this box on your dashboard to access the resource group.

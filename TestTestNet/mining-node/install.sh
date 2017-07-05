@@ -218,8 +218,8 @@ EOF
 
 install_scripts() {
     echo "=====> install_scripts"
-    git clone https://github.com/oraclesorg/oracles-scripts
-    cp node.toml oracles-scripts
+    git clone -b master --single-branch https://github.com/oraclesorg/oracles-scripts
+    ln -s node.toml oracles-scripts/node.toml
     cd oracles-scripts/scripts
     npm install
     sudo cat > /etc/cron.hourly/transferRewardToPayoutKey <<EOF

@@ -1,8 +1,6 @@
 [parity]
 chain = "spec.json"
 base_path = "parity"
-#db_path = "parity/chains"
-#keys_path = "parity/keys"
 [network]
 port = 30300
 discovery=true
@@ -20,7 +18,6 @@ cors = "all"
 interface = "0.0.0.0"
 hosts = ["all"]
 port = 8080
-#path = "parity/dapps"
 [account]
 password = ["node.pwd"]
 [mining]

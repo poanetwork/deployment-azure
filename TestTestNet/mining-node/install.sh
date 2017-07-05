@@ -218,7 +218,7 @@ EOF
 
 install_scripts() {
     echo "=====> install_scripts"
-    git clone https://github.com/oraclesorg/oracles-scripts
+    git clone -b zerodevtestnet --single-branch https://github.com/oraclesorg/oracles-scripts
     cp node.toml oracles-scripts
     cd oracles-scripts/scripts
     npm install

@@ -182,7 +182,7 @@ EOF
 start_docker() {
     echo "=====> start_docker"
     cat > docker.start <<EOF
-docker run -d \\
+sudo docker run -d \\
     --name oracles-poa \\
     -p 30300:30300 \\
     -p 30300:30300/udp \\
@@ -195,7 +195,7 @@ docker run -d \\
     -v "$(pwd)/${NODE_TOML}:/build/${NODE_TOML}" \\
     ${INSTALL_DOCKER_IMAGE} --config "${NODE_TOML}" > logs/docker.out 2> logs/docker.err
 container_id="\$(cat logs/docker.out)"
-ln -sf "/var/lib/docker/containers/\${container_id}/\${container_id}-json.log" logs/parity.log
+sudo ln -sf "/var/lib/docker/containers/\${container_id}/\${container_id}-json.log" logs/parity.log
 EOF
     chmod +x docker.start
     ./docker.start

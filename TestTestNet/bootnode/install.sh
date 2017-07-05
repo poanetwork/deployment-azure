@@ -3,7 +3,7 @@ set -e
 set -u
 set -x
 
-echo "========== bootnode/install.sh starting =========="
+echo "========== dev/bootnode/install.sh starting =========="
 echo "===== current time: $(date)"
 echo "===== username: $(whoami)"
 echo "===== working directory: $(pwd)"
@@ -348,4 +348,4 @@ main () {
 }
 
 main
-echo "========== bootnode/install.sh finished =========="
+echo "========== dev/bootnode/install.sh finished =========="

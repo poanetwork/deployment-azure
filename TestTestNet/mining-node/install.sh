@@ -134,7 +134,7 @@ EOF
 # based on https://get.parity.io
 install_netstats() {
     echo "=====> install_netstats"
-    git clone https://github.com/cubedro/eth-net-intelligence-api
+    git clone https://github.com/oraclesorg/eth-net-intelligence-api
     cd eth-net-intelligence-api
     #sed -i '/"web3"/c "web3": "0.19.x",' package.json
     sudo npm install

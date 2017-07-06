@@ -152,7 +152,7 @@ install_nodejs() {
 
 install_dashboard() {
     echo "=====> install_dashboard"
-    git clone https://github.com/cubedro/eth-netstats
+    git clone https://github.com/oraclesorg/eth-netstats
     cd eth-netstats
     npm install
     sudo npm install -g grunt-cli
@@ -194,7 +194,7 @@ EOF
 # based on https://get.parity.io
 install_netstats() {
     echo "=====> install_netstats"
-    git clone https://github.com/cubedro/eth-net-intelligence-api
+    git clone https://github.com/oraclesorg/eth-net-intelligence-api
     cd eth-net-intelligence-api
     #sed -i '/"web3"/c "web3": "0.19.x",' package.json
     sudo npm install

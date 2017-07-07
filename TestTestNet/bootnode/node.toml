@@ -1,4 +1,4 @@
-# dev branch
+# TestTestNet-2 branch
 [parity]
 chain = "spec.json"
 base_path = "parity"

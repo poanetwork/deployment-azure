@@ -3,7 +3,7 @@ set -e
 set -u
 set -x
 
-echo "========== dev/mining-node/install.sh starting =========="
+echo "========== TestTestNet-2/mining-node/install.sh starting =========="
 echo "===== current time: $(date)"
 echo "===== username: $(whoami)"
 echo "===== working directory: $(pwd)"
@@ -19,7 +19,7 @@ printenv
 # script parameters
 INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
 INSTALL_DOCKER_IMAGE="parity/parity:v1.6.8"
-INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/dev/TestTestNet/mining-node"
+INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/TestTestNet-2/TestTestNet/mining-node"
 GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/devtestnet/spec.json"
 GENESIS_JSON="spec.json"
 NODE_TOML="node.toml"
@@ -218,7 +218,7 @@ EOF
 
 install_scripts() {
     echo "=====> install_scripts"
-    git clone -b master --single-branch https://github.com/oraclesorg/oracles-scripts
+    git clone -b devtestnet --single-branch https://github.com/oraclesorg/oracles-scripts
     ln -s node.toml oracles-scripts/node.toml
     cd oracles-scripts/scripts
     npm install
@@ -275,4 +275,4 @@ main () {
 }
 
 main
-echo "========== dev/mining-node/install.sh finished =========="
+echo "========== TestTestNet-2/mining-node/install.sh finished =========="

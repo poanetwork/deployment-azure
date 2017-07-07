@@ -255,6 +255,8 @@ EOF
 
 # MAIN
 main () {
+    sudo apt-get update
+
     prepare_homedir
 
     install_ntpd

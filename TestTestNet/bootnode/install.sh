@@ -3,7 +3,7 @@ set -e
 set -u
 set -x
 
-echo "========== dev/bootnode/install.sh starting =========="
+echo "========== TestTestNet-2/bootnode/install.sh starting =========="
 echo "===== current time: $(date)"
 echo "===== username: $(whoami)"
 echo "===== working directory: $(pwd)"
@@ -327,7 +327,7 @@ EOF
 
 # MAIN
 main () {
-    sudo apt-update
+    sudo apt-get update
 
     prepare_homedir
     install_ntpd
@@ -350,4 +350,4 @@ main () {
 }
 
 main
-echo "========== dev/bootnode/install.sh finished =========="
+echo "========== TestTestNet-2/bootnode/install.sh finished =========="

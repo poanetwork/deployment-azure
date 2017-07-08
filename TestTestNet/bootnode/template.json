@@ -226,7 +226,7 @@
                 ]
             },
             "protectedSettings": {
-                "commandToExecute": "[concat('chmod +x install.sh; ADMIN_USERNAME=\"', variables('adminUsername'), '\" NETSTATS_SECRET=\"', variables('netstatsSecret'), '\" OWNER_KEYFILE=\"', variables('ownerKeyFile'), '\" OWNER_KEYPASS=\"', variables('ownerKeypass'), '\" NODE_FULLNAME=\"', variables('nodeFullName'), '\" NODE_ADMIN_EMAIL=\"', variables('nodeAdminEmail'), '\" ./install.sh')]"
+                "commandToExecute": "[concat('cp install.sh /home/', variables('adminUsername'), '/; cd /home/', variables('adminUsername'), '; chown ', variables('adminUsername'), ':', variables('adminUsername'), ' install.sh; chmod +x install.sh; ADMIN_USERNAME=\"', variables('adminUsername'), '\" NETSTATS_SECRET=\"', variables('netstatsSecret'), '\" OWNER_KEYFILE=\"', variables('ownerKeyFile'), '\" OWNER_KEYPASS=\"', variables('ownerKeypass'), '\" NODE_FULLNAME=\"', variables('nodeFullName'), '\" NODE_ADMIN_EMAIL=\"', variables('nodeAdminEmail'), '\" sudo -u ', variables('adminUsername'), ' -E -H ./install.sh')]"
             }
           }
         }

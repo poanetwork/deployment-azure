@@ -23,15 +23,15 @@ set
 echo "===== declare -p:"
 declare -p
 
-echo "===== AFTER SUDO"
-echo "===== SUDO printenv:"
-sudo -u root -E -H bash -c "printenv"
-echo "===== SUDO env:"
-sudo -u root -E -H bash -c "env"
-echo "===== SUDO set:"
-sudo -u root -E -H bash -c "set"
-echo "===== SUDO declare -p:"
-sudo -u root -E -H bash -c "declare -p"
+#echo "===== AFTER SUDO"
+#echo "===== SUDO printenv:"
+#sudo -u root -E -H bash -c "printenv"
+#echo "===== SUDO env:"
+#sudo -u root -E -H bash -c "env"
+#echo "===== SUDO set:"
+#sudo -u root -E -H bash -c "set"
+#echo "===== SUDO declare -p:"
+#sudo -u root -E -H bash -c "declare -p"
 
 # script parameters
 INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
@@ -55,7 +55,7 @@ NODE_ADMIN_EMAIL="${NODE_ADMIN_EMAIL:-somebody@somehere}"
 ADMIN_USERNAME="${ADMIN_USERNAME}"
 
 #echo "===== HOME before: ${HOME:-NONE}"
-export HOME="${HOME:-/root}"
+export HOME="${HOME:-/home/${ADMIN_USERNAME}}"
 #echo "===== HOME after: ${HOME}"
 
 prepare_homedir() {
@@ -187,7 +187,7 @@ install_dashboard() {
 dtach -n dashboard bash -c "cd eth-netstats && npm start >> ../logs/dashboard.out 2>> ../logs/dashboard.err"
 EOF
     chmod +x dashboard.start
-    sudo -u root -E -H ./dashboard.start
+    ./dashboard.start
     echo "<====== install_dashboard"
 }
 
@@ -235,7 +235,7 @@ pm2 startOrRestart app.json
 cd ..
 EOF
     chmod +x netstats.start
-    sudo -u root -E -H ./netstats.start
+    ./netstats.start
     echo "<===== install_netstats"
 }
 
@@ -294,7 +294,7 @@ pm2 startOrRestart app.json
 cd ..
 EOF
     chmod +x explorer.start
-    sudo -u root -E -H ./explorer.start
+    sudo ./explorer.start
     echo "<===== install_chain_explorer"
 }
 
@@ -314,10 +314,10 @@ docker run -d \\
     -v "$(pwd)/${NODE_TOML}:/build/${NODE_TOML}" \\
     ${INSTALL_DOCKER_IMAGE} -lengine=trace --config "${NODE_TOML}" --ui-no-validation > logs/docker.out 2> logs/docker.err
 container_id="\$(cat logs/docker.out)"
-ln -sf "/var/lib/docker/containers/\${container_id}/\${container_id}-json.log" logs/parity.log
+sudo ln -sf "/var/lib/docker/containers/\${container_id}/\${container_id}-json.log" logs/parity.log
 EOF
     chmod +x docker.start
-    sudo -u root -E -H ./docker.start
+    ./docker.start
     echo "<===== start_docker"
 }
 

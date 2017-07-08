@@ -182,7 +182,7 @@ install_dashboard() {
 #EOF
     echo "[\"${NETSTATS_SECRET}\"]" > ws_secret.json
     cd ..
-    apt-get install -y dtach
+    sudo apt-get install -y dtach
     cat > dashboard.start <<EOF
 dtach -n dashboard bash -c "cd eth-netstats && npm start >> ../logs/dashboard.out 2>> ../logs/dashboard.err"
 EOF

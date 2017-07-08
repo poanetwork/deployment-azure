@@ -239,11 +239,11 @@ EOF
     echo "<===== install_netstats"
 }
 
-install_etherchain() {
-    echo "=====> install_etherchain"
-    git clone https://github.com/gobitfly/etherchain-light
-    git clone https://github.com/ethereum/solc-bin etherchain-light/utils/solc-bin
-    cd etherchain-light
+install_chain_explorer() {
+    echo "=====> install_chain_explorer"
+    git clone https://github.com/oraclesorg/chain-explorer
+    git clone https://github.com/ethereum/solc-bin chain-explorer/utils/solc-bin
+    cd chain-explorer
     npm install
     cat > config.js <<EOF
 var web3 = require('web3');
@@ -261,14 +261,41 @@ var config = function () {
 
 module.exports = config;
 EOF
+#    sudo apt-get install -y dtach
+#    cat > explorer.start <<EOF
+#dtach -n explorer bash -c "cd chain-explorer; PORT=4000 npm start > ../logs/explorer.out 2> ../logs/explorer.err"
+#EOF
+
+    cat > app.json << EOF
+[
+    {
+        "name"                 : "explorer",
+        "script"               : "./bin/www",
+        "log_date_format"      : "YYYY-MM-DD HH:mm:SS Z",
+        "error_file"           : "/home/${ADMIN_USERNAME}/logs/explorer.err",
+        "out_file"             : "/home/${ADMIN_USERNAME}/logs/explorer.out",
+        "merge_logs"           : false,
+        "watch"                : false,
+        "max_restarts"         : 100,
+        "exec_interpreter"     : "node",
+        "exec_mode"            : "fork_mode",
+        "env":
+        {
+            "NODE_ENV"         : "production",
+            "PORT":            : 4000,
+        }
+    }
+]
+EOF
     cd ..
-    apt-get install -y dtach
     cat > explorer.start <<EOF
-dtach -n explorer bash -c "cd etherchain-light; PORT=4000 npm start > ../logs/explorer.out 2> ../logs/explorer.err"
+cd chain-explorer
+pm2 startOrRestart app.json
+cd ..
 EOF
     chmod +x explorer.start
     sudo -u root -E -H ./explorer.start
-    echo "<===== install_etherchain"
+    echo "<===== install_chain_explorer"
 }
 
 start_docker() {
@@ -346,7 +373,7 @@ main () {
 
     install_dashboard
     install_netstats
-    install_etherchain
+    install_chain_explorer
 }
 
 main

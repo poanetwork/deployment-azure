@@ -301,7 +301,7 @@ EOF
 start_docker() {
     echo "=====> start_docker"
     cat > docker.start << EOF
-docker run -d \\
+sudo docker run -d \\
     --name oracles-poa \\
     -p 30300:30300 \\
     -p 30300:30300/udp \\
@@ -338,16 +338,16 @@ EOF
 setup_autoupdate() {
     echo "=====> setup_autoupdate"
     sudo docker pull oraclesorg/docker-run
-    sudo cat > /etc/cron.daily/docker-autoupdate << EOF
+    sudo bash -c "cat > /etc/cron.daily/docker-autoupdate << EOF
 #!/bin/sh
-outlog="/home/${ADMIN_USERNAME}/logs/docker-autoupdate.out"
-errlog="/home/${ADMIN_USERNAME}/logs/docker-autoupdate.err"
-echo "Starting: \$(date)" >> "\${outlog}"
-echo "Starting: \$(date)" >> "\${errlog}"
-sudo docker run --rm -v /var/run/docker.sock:/tmp/docker.sock oraclesorg/docker-run update >> "\${outlog}" 2>> "\${errlog}"
-echo "" >> "\${outlog}"
-echo "" >> "\${errlog}"
-EOF
+outlog='/home/${ADMIN_USERNAME}/logs/docker-autoupdate.out'
+errlog='/home/${ADMIN_USERNAME}/logs/docker-autoupdate.err'
+echo \"Starting: \\\$(date)\" >> \"\\\${outlog}\"
+echo \"Starting: \\\$(date)\" >> \"\\\${errlog}\"
+sudo docker run --rm -v /var/run/docker.sock:/tmp/docker.sock oraclesorg/docker-run update >> \"\\\${outlog}\" 2>> \"\\\${errlog}\"
+echo \"\" >> \"\\\${outlog}\"
+echo \"\" >> \"\\\${errlog}\"
+EOF"
     sudo chmod 755 /etc/cron.daily/docker-autoupdate
     echo "<===== setup_autoupdate"
 }

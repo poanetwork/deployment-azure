@@ -338,7 +338,7 @@ EOF
 setup_autoupdate() {
     echo "=====> setup_autoupdate"
     sudo docker pull oraclesorg/docker-run
-cat > /etc/cron.daily/docker-autoupdate << EOF
+    sudo cat > /etc/cron.daily/docker-autoupdate << EOF
 #!/bin/sh
 outlog="/home/${ADMIN_USERNAME}/logs/docker-autoupdate.out"
 errlog="/home/${ADMIN_USERNAME}/logs/docker-autoupdate.err"

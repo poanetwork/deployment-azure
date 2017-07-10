@@ -90,7 +90,7 @@ When you connect you will find yourself in the home directory of the admin user 
 
 ![ls_home](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Docs/ls_home.png)
 
-* `install.sh` is the installation file
+* `install.sh` is the installation file. In general, you should not attempt to rerun it, as it will fail due to duplicate installation of several services.
 * all `*.start` files are used to start/restart services. You can inspect the details by running `cat dashboard.start` and similar commands.  
 * `chain-explorer` is listening on 4000 port (http://ip_address:4000). It displays the list of most recent blocks and transactions. It is run via pm2.
 * `eth-net-intelligence-api` is listening on 3000 port, it displays statistics about the network (nodes, peers per node, avg. block time, etc) it doesn't work under pm2, so is started via dtach.

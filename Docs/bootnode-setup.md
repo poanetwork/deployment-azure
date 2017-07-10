@@ -76,7 +76,7 @@ Second half of the fields should look similar to this (values will be different 
 ![Deployment in progress](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Docs/deploy_new_deployment.png)  
 representing deployment process of the resource group. Do not close this windows and wait till the process is complete and you'll be automatically forwarded to a newly-created resource group page.  
 This is a list of resources that should have been deployed:
-
+![resources](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Docs/deployed-resources.png)  
 Click on the Virtual Machine from this list, wait till the page with details is opened and copy IP address (e.g. `8.8.8.8`).
 
 ## 4. Post-installation
@@ -84,5 +84,5 @@ After the deployment process is complete, you should login to the virtual machin
 ```
 ssh $ADMIN_USERNAME@$IP_ADDRESS
 ```
-instead of `$ADMIN_USERNAME` substitute the admin username you have provided at the previous step (e.g. `azureuser`); instead of `$IP_ADDRESS` substitute actual IP adress of the virtual machine.  
-You will be prompted to enter your ssh-keypair password, if you provided it when generating keys.
+instead of `$ADMIN_USERNAME` substitute the admin username you have provided at the previous step (e.g. `azureuser`); instead of `$IP_ADDRESS` substitute actual IP adress of the virtual machine. Note to keep the `@` between username and IP address (e.g.`ssh azureuser@8.8.8.8`). You will be prompted to enter your ssh password, if you provided it while generating ssh keypair.
+

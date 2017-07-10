@@ -91,13 +91,27 @@ When you connect you will find yourself in the home directory of the admin user 
 ![ls_home](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Docs/ls_home.png)
 
 * `install.sh` is the installation file. In general, you should not attempt to rerun it, as it will fail due to duplicate installation of several services.
-* all `*.start` files are used to start/restart services. You can inspect the details by running `cat dashboard.start` and similar commands.  
-* `chain-explorer` is listening on 4000 port (http://ip_address:4000). It displays the list of most recent blocks and transactions. It is run via pm2.
-* `eth-net-intelligence-api` is listening on 3000 port, it displays statistics about the network (nodes, peers per node, avg. block time, etc) it doesn't work under pm2, so is started via dtach.
-* `eth-netstats` is a service used to _send_ statistics to the dashboard. it is also run via pm2.
-* `node.pwd`, `node.toml` and `spec.json` are network and node configuration files used by parity.
-* `parity` folder is the data directory of the network, used by parity.
-* you can inspect `cat docker.start` to see how the port forwarding and volume mounting is performed from docker container to the node.
+* all `*.start` files are used to start/restart individual services. You can inspect the details by running `cat dashboard.start` etc. You can invoke them simply by running 
+```
+./dashboard.start
+```
+* `chain-explorer` is listening on 4000 port (e.g. http://8.8.8.8:4000). It displays the list of most recent blocks and transactions. It is run via [pm2](https://github.com/Unitech/pm2).
+* `eth-netstats` is listening on 3000 (e.g. http://8.8.8.8:3000) port, it displays a dashboard with statistics about the network (nodes, peers per node, avg. block time, etc) It doesn't work under pm2, so is started via [dtach](http://dtach.sourceforge.net/).
+* `eth-net-intelligence-api` is a service used to _send_ statistics to the dashboard. it is also run via [pm2](https://github.com/Unitech/pm2).
+* `node.pwd`, `node.toml` and `spec.json` are network and node configuration files used by Parity.
+* `parity` folder is data directory of the Parity. All files related to the blockchain (including account keys) are stored in it.
+* you can inspect `cat docker.start` to see how the port forwarding and volume mounting is configured.
 * to run any command related to docker you should prefix it with `sudo`, e.g. to check running docker containers run `sudo docker ps`.
-* logs are aggregated in `logs` folder
+* logs are aggregated in `logs` folder:
+
 ![ls_logs](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Docs/ls_logs.png)
+
+`chain-explorer` and `eth-netstats` are run via pm2. You can check documentation [here](https://github.com/Unitech/pm2). The simplest commands are
+* `pm2 list` - to list running services and check their status
+
+![pm2_list](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Docs/pm2_list.png)
+
+* `pm2 restart all` - to restart all services. Note that it takes few seconds to a minute for the services to reconnect and become fully operational after restart.
+
+`dashboard` is run via dtach. You can check documentation [here](http://dtach.sourceforge.net/). The simplest command to connect to the running process is `dtach -a dashboard`. You can then stop it with `CTRL+C` and run `./dashboard.start` to start it again.
+

@@ -128,7 +128,7 @@ This is an example output:
 ![grep_enode](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Docs/grep_enode.png)
 
 copy enode url address, its format is `enode://<128 hex characters>@ip_address:30300`.  
-In repository, open file `TestTestNet/mining-node/node.toml` and replace the value in `bootnodes` parameter with the url above like so:
+In repository, open file [`TestTestNet/mining-node/node.toml`](https://github.com/oraclesorg/test-templates/blob/dev/TestTestNet/mining-node/node.toml) and replace the value in `bootnodes` parameter with the url above like so:
 ```
 ...
 bootnodes=["enode://<128 hex characters>@ip_address:30300"]

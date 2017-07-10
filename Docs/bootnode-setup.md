@@ -142,7 +142,7 @@ It is important to note, that each deployment pulls some files from external rep
 * chain explorer is pulled from [this repo](https://github.com/oraclesorg/chain-explorer)
 * eth-net-intelligence-api is using this [repo](https://github.com/oraclesorg/eth-net-intelligence-api)
 * eth-netstats dashboard is pulled from [eth-netstats](https://github.com/oraclesorg/eth-netstats)
-* docker image is pulled from [docker hub](https://hub.docker.com/r/oraclesorg/docker-run/), which uses [this repo](https://github.com/oraclesorg/docker-run) to rebuild the image
+* docker image used to periodically auto-update the container is pulled from [docker hub](https://hub.docker.com/r/oraclesorg/docker-run/), which uses [this repo](https://github.com/oraclesorg/docker-run) to rebuild the image
 
 There are other repositories involved in the workflow:
 * [metamask plugin](https://github.com/oraclesorg/metamask-plugin)

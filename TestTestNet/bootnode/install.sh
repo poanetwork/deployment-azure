@@ -290,7 +290,7 @@ EOF
     cd ..
     cat > explorer.start <<EOF
 cd chain-explorer
-pm2 startOrRestart app.json
+sudo -u root -H pm2 startOrRestart app.json
 cd ..
 EOF
     chmod +x explorer.start

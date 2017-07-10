@@ -36,7 +36,7 @@ ssh-keygen -t rsa
 9. Do not close PuTTY just yet.
 
 ## 3. Virtual machine setup.
-This is the final step, on which you will create azure virtual machine from a template by filling in a number of fields with data obtained on previous steps. After virtual machine deployment is complete, it will automatically start new Oracles-PoA network.
+On this step you will create azure virtual machine from a template by filling in a number of fields with data obtained on previous steps. After virtual machine deployment is complete, it will automatically start new Oracles-PoA network.
 
 1. Hold <kbd>cmd ⌘</kbd> (on Mac OS X) or <kbd>CTRL</kbd> (on Windows PC) and click on the "Deploy to Azure" button below. This will open a separate browser tab, lead you to azure portal and launch "Custom deployment" wizard (alternatively, you can right-click on the button and select "Open in New Tab")  
 [![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Foraclesorg%2Ftest-templates%2Fdev%2FTestTestNet%2Fbootnode%2Ftemplate.json)
@@ -74,4 +74,15 @@ Second half of the fields should look similar to this (values will be different 
 
 16. After that, you will be taken to your azure dashboard. Look for a box similar to this  
 ![Deployment in progress](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Ceremony/deploy_new_deployment.png)  
-representing deployment process of the resource group. Do not close this windows and wait till the process is complete and you'll be automatically forwarded to a newly-created resource group page. At this moment you've successfully created new Oracles-PoA network!  
+representing deployment process of the resource group. Do not close this windows and wait till the process is complete and you'll be automatically forwarded to a newly-created resource group page.  
+This is a list of resources that should have been deployed:
+
+Click on the Virtual Machine from this list, wait till the page with details is opened and copy IP address (e.g. `8.8.8.8`).
+
+## 4. Post-installation
+After the deployment process is complete, open your  you should login to the virtual machine by typing
+```
+ssh $ADMIN_USERNAME@$IP_ADDRESS
+```
+instead of `$ADMIN_USERNAME` substitute the admin username you have provided at the previous step (e.g. `azureuser`); instead of `$IP_ADDRESS` substitute actual IP adress of the virtual machine.  
+You will be prompted to enter your ssh-keypair password, if you provided it when generating keys.

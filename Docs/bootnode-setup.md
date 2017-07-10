@@ -119,7 +119,7 @@ When you connect to the virtual machine you will find yourself in the home direc
 
 ### Change bootnodes enode for miners
 Next important step is to find the public url of the bootnode and set it as `bootnodes` parameter for the miners.  
-To do this, grep it from parity log file:
+Simplest way to do this is to grep it from parity log file:
 ```
 sudo fgrep --color=auto enode logs/parity.log
 ```

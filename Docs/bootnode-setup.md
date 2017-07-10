@@ -86,11 +86,13 @@ ssh $ADMIN_USERNAME@$IP_ADDRESS
 ```
 instead of `$ADMIN_USERNAME` substitute the admin username you have provided at the previous step (e.g. `azureuser`); instead of `$IP_ADDRESS` substitute actual IP adress of the virtual machine. Note to keep the `@` in-between username and IP address (e.g.`ssh azureuser@8.8.8.8`). You will be prompted to enter your ssh password, if you provided it while generating ssh keypair.
 
-When you connect you will find yourself in the home directory of the admin user (e.g. `/home/azureuser`). This is the listing of this directory:
+### Have a look around
+When you connect to the virtual machine you will find yourself in the home directory of the admin user (e.g. `/home/azureuser`). This is the listing of this directory:
 
 ![ls_home](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Docs/ls_home.png)
 
 * `install.sh` is the installation file. In general, you should not attempt to rerun it, as it will fail due to duplicate installation of several services.
+* DApps should be available at 8180 port (e.g. http://8.8.8.8:8180).
 * all `*.start` files are used to start/restart individual services. You can inspect the details by running `cat dashboard.start` etc. You can invoke them simply by running 
 ```
 ./dashboard.start
@@ -115,3 +117,21 @@ When you connect you will find yourself in the home directory of the admin user 
 
 `dashboard` is run via dtach. You can check documentation [here](http://dtach.sourceforge.net/). The simplest command to connect to the running process is `dtach -a dashboard`. You can then stop it with `CTRL+C` and run `./dashboard.start` to start it again.
 
+### Change bootnodes enode for miners
+Next important step is to find the public url of the bootnode and set it as `bootnodes` parameter for the miners.  
+To do this, grep it from parity log file:
+```
+sudo fgrep --color=auto enode logs/parity.log
+```
+This is an example output:
+
+![grep_enode](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Docs/grep_enode.png)
+
+copy enode url address, its format is `enode://<128 hex characters>@ip_address:30300`.  
+In repository, open file `TestTestNet/mining-node/node.toml` and replace the value in `bootnodes` parameter with the url above like so:
+```
+...
+bootnodes=["enode://<128 hex characters>@ip_address:30300"]
+...
+```
+Save the file, commit it  and push to github. 

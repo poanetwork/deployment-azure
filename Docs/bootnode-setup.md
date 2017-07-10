@@ -97,9 +97,9 @@ When you connect to the virtual machine you will find yourself in the home direc
 ```
 ./dashboard.start
 ```
-* `chain-explorer` is listening on 4000 port (e.g. http://8.8.8.8:4000). It displays the list of most recent blocks and transactions. It is run via [pm2](https://github.com/Unitech/pm2).
-* `eth-netstats` is listening on 3000 (e.g. http://8.8.8.8:3000) port, it displays a dashboard with statistics about the network (nodes, peers per node, avg. block time, etc) It doesn't work under pm2, so is started via [dtach](http://dtach.sourceforge.net/).
-* `eth-net-intelligence-api` is a service used to _send_ statistics to the dashboard. it is also run via [pm2](https://github.com/Unitech/pm2).
+* `chain-explorer` is listening on 4000 port (e.g. http://8.8.8.8:4000). It displays the list of most recent blocks and transactions. It is run via [pm2](https://github.com/Unitech/pm2) under `root` (because is has to access files created by docker).
+* `eth-netstats` is listening on 3000 (e.g. http://8.8.8.8:3000) port, it displays a dashboard with statistics about the network (nodes, peers per node, avg. block time, etc). It doesn't work under pm2, so is started via [dtach](http://dtach.sourceforge.net/). 
+* `eth-net-intelligence-api` is a service used to _send_ statistics to the dashboard. It is also run via [pm2](https://github.com/Unitech/pm2), but under normal user.
 * `node.pwd`, `node.toml` and `spec.json` are network and node configuration files used by Parity.
 * `parity` folder is data directory of the Parity. All files related to the blockchain (including account keys) are stored in it.
 * you can inspect `cat docker.start` to see how the port forwarding and volume mounting is configured.
@@ -108,14 +108,15 @@ When you connect to the virtual machine you will find yourself in the home direc
 
 ![ls_logs](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Docs/ls_logs.png)
 
-`chain-explorer` and `eth-netstats` are run via pm2. You can check documentation [here](https://github.com/Unitech/pm2). The simplest commands are
-* `pm2 list` - to list running services and check their status
+`chain-explorer`/`eth-netstats` are run via pm2. You can check documentation [here](https://github.com/Unitech/pm2). The simplest commands are
+* `pm2 list`/`sudo -u root -H pm2 list` - to list running services and check their status
+![pm2_list_azureuser](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Docs/pm2_list_azureuser.png)
+![pm2_list_root](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Docs/pm2_list_root.png)
 
-![pm2_list](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Docs/pm2_list.png)
+* `pm2 restart all`/`sudo -u root -H pm2 restart all` - to restart services. Note that it takes few seconds to a minute for the services to reconnect and become fully operational after restart.
 
-* `pm2 restart all` - to restart all services. Note that it takes few seconds to a minute for the services to reconnect and become fully operational after restart.
-
-`dashboard` is run via dtach. You can check documentation [here](http://dtach.sourceforge.net/). The simplest command to connect to the running process is `dtach -a dashboard`. You can then stop it with `CTRL+C` and run `./dashboard.start` to start it again.
+`dashboard` is run via dtach. You can check documentation [here](http://dtach.sourceforge.net/). The simplest command to connect to the running process is `dtach -a dashboard`. You can then stop it with `CTRL+C` and run `./dashboard.start` to start it again.  
+You can check its status in `logs/dashboard.err` and `logs/dashboard.out`.
 
 ### Change bootnodes enode for miners
 Next important step is to find the public url of the bootnode and set it as `bootnodes` parameter for the miners.  

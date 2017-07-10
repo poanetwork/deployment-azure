@@ -93,10 +93,7 @@ When you connect to the virtual machine you will find yourself in the home direc
 
 * `install.sh` is the installation file. In general, you should not attempt to rerun it, as it will fail due to duplicate installation of several services.
 * DApps should be available at 8180 port (e.g. http://8.8.8.8:8180).
-* all `*.start` files are used to start/restart individual services. You can inspect the details by running `cat dashboard.start` etc. You can invoke them simply by running 
-```
-./dashboard.start
-```
+* all `*.start` files are used to start/restart individual services. You can inspect the details by running `cat dashboard.start` etc. You can invoke them simply by running `./dashboard.start`.
 * `chain-explorer` is listening on 4000 port (e.g. http://8.8.8.8:4000). It displays the list of most recent blocks and transactions. It is run via [pm2](https://github.com/Unitech/pm2) under `root` (because is has to access files created by docker).
 * `eth-netstats` is listening on 3000 (e.g. http://8.8.8.8:3000) port, it displays a dashboard with statistics about the network (nodes, peers per node, avg. block time, etc). It doesn't work under pm2, so is started via [dtach](http://dtach.sourceforge.net/). 
 * `eth-net-intelligence-api` is a service used to _send_ statistics to the dashboard. It is also run via [pm2](https://github.com/Unitech/pm2), but under normal user.
@@ -136,3 +133,22 @@ bootnodes=["enode://<128 hex characters>@ip_address:30300"]
 ...
 ```
 Save the file, commit it  and push to github. 
+
+### Warnings
+It is important to note, that each deployment pulls some files from external repositories:
+
+* spec.json (_aka_ genesis.json) and currency transferring scripts are pulled from [oracles-scripts](https://github.com/oraclesorg/oracles-scripts)
+* contract's constructor used in spec.json is the same as in [oracles-contract](https://github.com/oraclesorg/oracles-contract)
+* chain explorer is pulled from [this repo](https://github.com/oraclesorg/chain-explorer)
+* eth-net-intelligence-api is using this [repo](https://github.com/oraclesorg/eth-net-intelligence-api)
+* eth-netstats dashboard is pulled from [eth-netstats](https://github.com/oraclesorg/eth-netstats)
+* docker image is pulled from [docker hub](https://hub.docker.com/r/oraclesorg/docker-run/), which uses [this repo](https://github.com/oraclesorg/docker-run) to rebuild the image
+
+There are other repositories involved in the workflow:
+* [metamask plugin](https://github.com/oraclesorg/metamask-plugin)
+* DApps repositories: [voting](https://github.com/oraclesorg/oracles-dapps-voting), [key-generation](https://github.com/oraclesorg/oracles-dapps-keys-generation), [validators](https://github.com/oraclesorg/oracles-dapps-validators)
+* [faucet](https://github.com/oraclesorg/oracles-faucet)
+
+and other repositories https://github.com/oraclesorg
+
+Should a separate network be created, it is important that code from these repositories be inspected for any dependencies on the current network id (0xc0ffee = 12648430) or particular accounts (e.g. owner's account address is `0xdd0bb0e2a1594240fed0c2f2c17c1e9ab4f87126`).

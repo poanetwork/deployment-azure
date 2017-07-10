@@ -134,7 +134,7 @@ bootnodes=["enode://<128 hex characters>@ip_address:30300"]
 ```
 Save the file, commit it  and push to github. 
 
-### Warnings
+## 5. Warnings
 It is important to note, that each deployment pulls some files from external repositories:
 
 * spec.json (_aka_ genesis.json) and currency transferring scripts are pulled from [oracles-scripts](https://github.com/oraclesorg/oracles-scripts)

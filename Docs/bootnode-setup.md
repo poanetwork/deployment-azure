@@ -68,19 +68,19 @@ This command will copy your public key to your clipboard. Then switch back to yo
 14. Check "Pin to dashboard" checkbox at the bottom of the page. This will put virtual machine on your azure dashboard, making it easy to access.
 
 Second half of the fields should look similar to this (values will be different in your case)
-![wizard-2](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Ceremony/deployment2.png)
+![wizard-2](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Docs/deployment2.png)
 
 15. Click "Purchase". In case of errors please double check that you have completed the steps above and all fields are filled with correct values. If the error persists you can file a bug report [here](https://github.com/oraclesorg/test-templates/issues/new). Please provide as detailed a description as possible, one or several screenshots, so that values in all fields will be visible to us. Also provide a screenshot with the error message.
 
 16. After that, you will be taken to your azure dashboard. Look for a box similar to this  
-![Deployment in progress](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Ceremony/deploy_new_deployment.png)  
+![Deployment in progress](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Docs/deploy_new_deployment.png)  
 representing deployment process of the resource group. Do not close this windows and wait till the process is complete and you'll be automatically forwarded to a newly-created resource group page.  
 This is a list of resources that should have been deployed:
 
 Click on the Virtual Machine from this list, wait till the page with details is opened and copy IP address (e.g. `8.8.8.8`).
 
 ## 4. Post-installation
-After the deployment process is complete, open your  you should login to the virtual machine by typing
+After the deployment process is complete, you should login to the virtual machine by typing in terminal window
 ```
 ssh $ADMIN_USERNAME@$IP_ADDRESS
 ```

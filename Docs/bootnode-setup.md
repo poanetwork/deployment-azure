@@ -151,4 +151,4 @@ There are other repositories involved in the workflow:
 
 and other repositories https://github.com/oraclesorg
 
-Should a separate network be created, it is important that code from these repositories be inspected for any dependencies on the current network id (0xc0ffee = 12648430) or particular accounts (e.g. owner's account address is `0xdd0bb0e2a1594240fed0c2f2c17c1e9ab4f87126`).
+Should a separate network be created, it is important that code from these repositories be inspected for any dependencies on the current network id (`0xc0ffee == 12648430`) or particular accounts (e.g. owner's account address is `0xdd0bb0e2a1594240fed0c2f2c17c1e9ab4f87126`).

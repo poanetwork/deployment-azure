@@ -206,7 +206,7 @@ use_deb() {
     echo "=====> use_deb"
     curl -O http://d1h4xl4cr1h0mo.cloudfront.net/v1.6.8/x86_64-unknown-linux-gnu/parity_1.6.8_amd64.deb
     dpkg -i parity_1.6.8_amd64.deb
-    apt install dtach
+    sudo apt-get install dtach
     
     cat > rundeb.sh << EOF
 sudo parity --config "${NODE_TOML}" >> parity.out 2>> parity.err
@@ -222,7 +222,7 @@ install_scripts() {
     ln -s node.toml oracles-scripts/node.toml
     cd oracles-scripts/scripts
     npm install
-    sudo cat > /etc/cron.hourly/transferRewardToPayoutKey <<EOF
+    sudo bash -c "cat > /etc/cron.hourly/transferRewardToPayoutKey <<EOF
 #!/bin/bash
 cd "$(pwd)"
 echo "Running transferRewardToPayoutKey at $(date)" >> transferRewardToPayoutKey.out
@@ -230,7 +230,7 @@ echo "Running transferRewardToPayoutKey at $(date)" >> transferRewardToPayoutKey
 node transferRewardToPayoutKey.js >> transferRewardToPayoutKey.out 2>> transferRewardToPayoutKey.err
 echo "" >> transferRewardToPayoutKey.out
 echo "" >> transferRewardToPayoutKey.err
-EOF
+EOF"
     sudo chmod 755 /etc/cron.hourly/transferRewardToPayoutKey
     cd ../..
     echo "<===== install_scripts"
@@ -239,7 +239,7 @@ EOF
 setup_autoupdate() {
     echo "=====> setup_autoupdate"
     docker pull oraclesorg/docker-run
-    cat > /etc/cron.daily/docker-autoupdate <<EOF
+    sudo bash -c "cat > /etc/cron.daily/docker-autoupdate <<EOF
 #!/bin/sh
 outlog="/home/${ADMIN_USERNAME}/logs/docker-autoupdate.out"
 errlog="/home/${ADMIN_USERNAME}/logs/docker-autoupdate.err"
@@ -248,7 +248,7 @@ echo "Starting: \$(date)" >> "\${errlog}"
 sudo docker run --rm -v /var/run/docker.sock:/tmp/docker.sock oraclesorg/docker-run update >> "\${outlog}" 2>> "\${errlog}"
 echo "" >> "\${outlog}"
 echo "" >> "\${errlog}"
-EOF
+EOF"
     sudo chmod 755 /etc/cron.daily/docker-autoupdate
     echo "<===== setup_autoupdate"
 }

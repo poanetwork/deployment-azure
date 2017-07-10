@@ -80,9 +80,24 @@ This is a list of resources that should have been deployed:
 Click on the Virtual Machine from this list, wait till the page with details is opened and copy IP address (e.g. `8.8.8.8`).
 
 ## 4. Post-installation
-After the deployment process is complete, you should login to the virtual machine by typing in terminal window
+After the deployment process is complete, you should connect to the virtual machine by typing the following command in terminal window
 ```
 ssh $ADMIN_USERNAME@$IP_ADDRESS
 ```
-instead of `$ADMIN_USERNAME` substitute the admin username you have provided at the previous step (e.g. `azureuser`); instead of `$IP_ADDRESS` substitute actual IP adress of the virtual machine. Note to keep the `@` between username and IP address (e.g.`ssh azureuser@8.8.8.8`). You will be prompted to enter your ssh password, if you provided it while generating ssh keypair.
+instead of `$ADMIN_USERNAME` substitute the admin username you have provided at the previous step (e.g. `azureuser`); instead of `$IP_ADDRESS` substitute actual IP adress of the virtual machine. Note to keep the `@` in-between username and IP address (e.g.`ssh azureuser@8.8.8.8`). You will be prompted to enter your ssh password, if you provided it while generating ssh keypair.
 
+When you connect you will find yourself in the home directory of the admin user (e.g. `/home/azureuser`). This is the listing of this directory:
+
+![ls_home](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Docs/ls_home.png)
+
+* `install.sh` is the installation file
+* all `*.start` files are used to start/restart services. You can inspect the details by running `cat dashboard.start` and similar commands.  
+* `chain-explorer` is listening on 4000 port (http://ip_address:4000). It displays the list of most recent blocks and transactions. It is run via pm2.
+* `eth-net-intelligence-api` is listening on 3000 port, it displays statistics about the network (nodes, peers per node, avg. block time, etc) it doesn't work under pm2, so is started via dtach.
+* `eth-netstats` is a service used to _send_ statistics to the dashboard. it is also run via pm2.
+* `node.pwd`, `node.toml` and `spec.json` are network and node configuration files used by parity.
+* `parity` folder is the data directory of the network, used by parity.
+* you can inspect `cat docker.start` to see how the port forwarding and volume mounting is performed from docker container to the node.
+* to run any command related to docker you should prefix it with `sudo`, e.g. to check running docker containers run `sudo docker ps`.
+* logs are aggregated in `logs` folder
+![ls_logs](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Docs/ls_logs.png)

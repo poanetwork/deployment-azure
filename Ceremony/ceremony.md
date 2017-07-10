@@ -16,7 +16,7 @@ SSH keys is a pair of cryptographic keys that will be used to access your virtua
 ```
 ssh-keygen -t rsa
 ```
-![SSH-term](https://raw.githubusercontent.com/oraclesorg/test-templates/master/Ceremony/gen_ssh_term.png)
+![SSH-term](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Ceremony/gen_ssh_term.png)
 
 5. You'll be prompted to indicate where to store the keys. Accept the default location by hitting ENTER.
 6. Next you'll be prompted for a passphrase (password). You can just hit ENTER to use this keypair without a passphrase, however, it is recommended that you provide a strong passphrase.
@@ -29,7 +29,7 @@ ssh-keygen -t rsa
 4. Click the "Generate" button.
 5. You'll need to randomly move your mouse in the area below the progress bar. These movements will be used to generate random numbers for the cryptographic functions. Continue until the progress bar is full.
 6. Type a passphrase (password) into the "Key passphrase" and "Confirm passphrase" fields. You can use this keypair without a passphrase, however, it is recommended that you provide a strong passphrase.
-![PuTTY](https://raw.githubusercontent.com/oraclesorg/test-templates/master/Ceremony/Putty.png)
+![PuTTY](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Ceremony/Putty.png)
 
 7. Click the "Save private key" button, select the folder you want to save this file to, enter filename, e.g. "private.ppk" and save the fule. Please note, that this file should be saved to a folder only you can access.
 8. Click the "Save public key" button, select the folder you want to save this file to, enter filename, e.g. "public.ppk" and save the file.
@@ -39,10 +39,10 @@ ssh-keygen -t rsa
 This is the final step, on which you will create azure virtual machine from a template by filling in a number of fields with data obtained on previous steps. After virtual machine deployment is complete, it will automatically join the Oracles-PoA network and all corresponding activities (voting, payout) will become available to you.
 
 1. Hold <kbd>cmd ⌘</kbd> (on Mac OS X) or <kbd>CTRL</kbd> (on Windows PC) and click on the "Deploy to Azure" button below. This will open a separate browser tab, lead you to azure portal and launch "Custom deployment" wizard (alternatively, you can right-click on the button and select "Open in New Tab")  
-[![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Foraclesorg%2Ftest-templates%2Fmaster%2FTestTestNet%2Fmining-node%2Ftemplate.json)
+[![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Foraclesorg%2Ftest-templates%2Fdev%2FTestTestNet%2Fmining-node%2Ftemplate.json)
 
 2. You should see a window similar to this, preselected fields (subscription, location) may be different from yours.
-![wizard-1a](https://raw.githubusercontent.com/oraclesorg/test-templates/master/Ceremony/deploy_wizard1a.png)  
+![wizard-1a](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Ceremony/deploy_wizard1a.png)  
 Double-check address bar that you are connected to `https://portal.azure.com` and that secure connection sign is present (e.g. 🔒, exact representation may differ by browser).
 3. **Subscription**: Select the azure subsciption you want to link virtual machine to.
 4. **Resource group**: Choose "Create new" Resource group and input a name for the resource group. This name will be displayed on your azure dashboard, it will not be used in the Oracles-PoA network, so choose a name that would make it clear _to you_ what this resource group represents. However, Azure imposes certain restrictions on a resource group name: it can only include upper case and lower case latin letters, numbers (e.g. _a_, _B_, _5_), periods, underscores, hyphens and parenthesis, cannot contain spaces (` `) and cannot end in a period. An example of a correct name is `oracles-poa`. After you've typed in the name, make sure a green check mark ✓ appears on the right.
@@ -53,7 +53,7 @@ Double-check address bar that you are connected to `https://portal.azure.com` an
 9. **Mining Keyfile**: Open key file of your _mining key_ obtained previously in a text editor (e.g. "TextEdit.app" on Mac OS X or Notepad on Windows). The content of this file should consist of words in double-quotes `"` separated from other words or numbers by semicolons `:`, nested into curly brackets `{...}`. Select this file's _entire content_, including all curly brackets, copy it and paste into this field. When you paste it, the actual content will not be displayed, because it is treated as a secured password, instead you'll see black dots.
 
 At this step, you should see a window similar to this (values will be different in your case)
-![wizard-1](https://raw.githubusercontent.com/oraclesorg/test-templates/master/Ceremony/deploy_wizard1.png)
+![wizard-1](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Ceremony/deploy_wizard1.png)
 
 10. **Mining Keypass**: Copy password from your _mining key_ obtained previously. Password is an 8 characters long sequence of letters and numbers. After pasting, the content of the field will be hidden, instead you'll see black dots.
 11. **Admin username**: Think up a login account name on your virtual machine. It may contain only lower case latin letters and numbers, also it should start with a letter. As an example, you can use a standard combination `first letter of your given name` + `your surname` (e.g. John Doe -> `jdoe`), or choose a neutral `azureuser`. This name will not be used in the Oracles-PoA network, and is only used to identify you when connecting to the virtual machine.
@@ -72,11 +72,11 @@ This command will copy your public key to your clipboard. Then switch back to yo
 16. Check "Pin to dashboard" checkbox at the bottom of the page. This will put virtual machine on your azure dashboard, making it easy to access.
 
 Second half of the fields should look similar to this (values will be different in your case)
-![wizard-2](https://raw.githubusercontent.com/oraclesorg/test-templates/master/Ceremony/deploy_wizard2.png)
+![wizard-2](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Ceremony/deploy_wizard2.png)
 
 17. Click "Purchase". In case of errors please double check that you have completed the steps above and all fields are filled with correct values. If the error persists you can file a bug report [here](https://github.com/oraclesorg/test-templates/issues/new). Please provide as detailed a description as possible, one or several screenshots, so that values in all fields will be visible to us. Also provide a screenshot with the error message.
 
 18. After that, you will be taken to your azure dashboard. Look for a box similar to this  
-![Deployment in progress](https://raw.githubusercontent.com/oraclesorg/test-templates/master/Ceremony/deploy_new_deployment.png)  
+![Deployment in progress](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Ceremony/deploy_new_deployment.png)  
 representing deployment process of the resource group. Do not close this windows and wait till the process is complete and you'll be automatically forwarded to a newly-created resource group page. At this moment you've successfully joined the Oracles-PoA network!  
 You can close the window now. Later, when you login to your azure portal, you can find this box on your dashboard to access the resource group.

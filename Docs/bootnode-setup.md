@@ -115,7 +115,7 @@ When you connect to the virtual machine you will find yourself in the home direc
 
 * `pm2 restart all`/`sudo -u root -H pm2 restart all` - to restart services. Note that it takes few seconds to a minute for the services to reconnect and become fully operational after restart.
 
-`dashboard` is run via dtach. You can check documentation [here](http://dtach.sourceforge.net/). The simplest command to connect to the running process is `dtach -a dashboard`. You can then stop it with `CTRL+C` and run `./dashboard.start` to start it again.  
+`dashboard` is run via dtach. You can check documentation [here](http://dtach.sourceforge.net/). The simplest command to connect to the running process is `dtach -a dashboard` (should be run from home directory!). You can then stop it with `CTRL+C` and run `./dashboard.start` to start it again.  
 You can check its status in `logs/dashboard.err` and `logs/dashboard.out`.
 
 ### Change bootnodes enode for miners

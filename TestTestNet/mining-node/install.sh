@@ -49,6 +49,13 @@ prepare_homedir() {
     echo "<===== prepare_homedir"
 }
 
+add_user_to_docker_group() {
+    # based on https://askubuntu.com/questions/477551/how-can-i-use-docker-without-sudo
+    sudo groupadd docker
+    sudo gpasswd -a "${ADMIN_USER}" docker
+    newgrp docker
+}
+
 install_ntpd() {
     echo "=====> install_ntpd"
     sudo timedatectl set-ntp no
@@ -258,7 +265,8 @@ main () {
     sudo apt-get update
 
     prepare_homedir
-
+    add_user_to_docker_group
+    
     install_ntpd
     install_haveged
     allocate_swap

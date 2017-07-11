@@ -69,13 +69,13 @@ prepare_homedir() {
 
 add_user_to_docker_group() {
     # based on https://askubuntu.com/questions/477551/how-can-i-use-docker-without-sudo
-    echo "=====> add_user_to_docker_group"
-    sudo groupadd docker
-    sudo gpasswd -a "${ADMIN_USERNAME}" docker
-    newgrp docker
-    echo "===== Groups: "
-    groups
-    echo "<===== add_user_to_docker_group"
+    #echo "=====> add_user_to_docker_group"
+    #sudo groupadd docker
+    #sudo gpasswd -a "${ADMIN_USERNAME}" docker
+    #newgrp docker
+    #echo "===== Groups: "
+    #groups
+    #echo "<===== add_user_to_docker_group"
 }
 
 install_ntpd() {
@@ -127,7 +127,7 @@ install_docker_ce() {
 
 pull_image_and_configs() {
     echo "=====> pull_image_and_configs"
-    docker pull ${INSTALL_DOCKER_IMAGE}
+    sudo docker pull ${INSTALL_DOCKER_IMAGE}
 
     # curl -s -O "${INSTALL_CONFIG_REPO}/../${GENESIS_JSON}"
     curl -s -o "${GENESIS_JSON}" "${GENESIS_REPO_LOC}"
@@ -312,7 +312,7 @@ EOF
 start_docker() {
     echo "=====> start_docker"
     cat > docker.start << EOF
-docker run -d \\
+sudo docker run -d \\
     --name oracles-poa \\
     -p 30300:30300 \\
     -p 30300:30300/udp \\
@@ -348,14 +348,14 @@ EOF
 
 setup_autoupdate() {
     echo "=====> setup_autoupdate"
-    docker pull oraclesorg/docker-run
+    sudo docker pull oraclesorg/docker-run
     sudo bash -c "cat > /etc/cron.daily/docker-autoupdate << EOF
 #!/bin/sh
 outlog='/home/${ADMIN_USERNAME}/logs/docker-autoupdate.out'
 errlog='/home/${ADMIN_USERNAME}/logs/docker-autoupdate.err'
 echo \"Starting: \\\$(date)\" >> \"\\\${outlog}\"
 echo \"Starting: \\\$(date)\" >> \"\\\${errlog}\"
-docker run --rm -v /var/run/docker.sock:/tmp/docker.sock oraclesorg/docker-run update >> \"\\\${outlog}\" 2>> \"\\\${errlog}\"
+sudo docker run --rm -v /var/run/docker.sock:/tmp/docker.sock oraclesorg/docker-run update >> \"\\\${outlog}\" 2>> \"\\\${errlog}\"
 echo \"\" >> \"\\\${outlog}\"
 echo \"\" >> \"\\\${errlog}\"
 EOF"

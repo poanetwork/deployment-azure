@@ -70,7 +70,7 @@ prepare_homedir() {
 add_user_to_docker_group() {
     # based on https://askubuntu.com/questions/477551/how-can-i-use-docker-without-sudo
     sudo groupadd docker
-    sudo gpasswd -a "${ADMIN_USER}" docker
+    sudo gpasswd -a "${ADMIN_USERNAME}" docker
     newgrp docker
 }
 

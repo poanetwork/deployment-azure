@@ -134,6 +134,18 @@ bootnodes=["enode://<128 hex characters>@ip_address:30300"]
 ```
 Save the file, commit it  and push to github. 
 
+### Generate initial keys for first users
+Connect to the virtual machine, `cd scripts` and run the following command to generate initial keys
+```
+node ./generateInitialKey.js
+```
+
+Navigate to the DApps url in your browser (http://ip_address:8180) and confirm initial transactions to the newly created accounts. You should be asked to do this twice during the generation process.
+
+In the end, the script should print out the address, password and save private key to `initialKeysDemo` folder.
+
+These are the keys you'll have to distribute among your initial notaries.
+
 ## 5. Warnings
 It is important to note, that each deployment pulls some files from external repositories:
 
@@ -143,6 +155,7 @@ It is important to note, that each deployment pulls some files from external rep
 * eth-net-intelligence-api is using this [repo](https://github.com/oraclesorg/eth-net-intelligence-api)
 * eth-netstats dashboard is pulled from [eth-netstats](https://github.com/oraclesorg/eth-netstats)
 * docker image used to periodically auto-update the container is pulled from [docker hub](https://hub.docker.com/r/oraclesorg/docker-run/), which uses [this repo](https://github.com/oraclesorg/docker-run) to rebuild the image
+* initial keys are generate using [this script](https://github.com/oraclesorg/oracles-initial-keys), which has a `config.json` file with contract definition in it.
 
 There are other repositories involved in the workflow:
 * [metamask plugin](https://github.com/oraclesorg/metamask-plugin)

@@ -363,6 +363,15 @@ EOF"
     echo "<===== setup_autoupdate"
 }
 
+download_initial_keys_script() {
+    echo "=====> download_initial_keys_script"
+    git clone https://github.com/oraclesorg/oracles-initial-keys
+    cd oracles-initial-keys
+    npm install
+    cd ..
+    echo "<===== download_initial_keys_script"
+}
+
 # MAIN
 main () {
     sudo apt-get update
@@ -386,6 +395,8 @@ main () {
     install_dashboard
     install_netstats
     install_chain_explorer
+    
+    download_initial_keys_script
 }
 
 main

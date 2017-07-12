@@ -143,6 +143,7 @@ node ./generateInitialKey.js
 Navigate to the DApps url in your browser (http://ip_address:8180) and confirm initial transactions to the newly created accounts. You should be asked to do this twice during the generation process.
 
 In the end, the script should print out the address, password and save private key to `initialKeysDemo` folder.
+![initial_keys_generated](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Docs/initial_keys_generated.png)
 
 These are the keys you'll have to distribute among your initial notaries.
 

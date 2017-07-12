@@ -1,8 +1,8 @@
 # Steps to deploy azure virtual machine to join Oracles-PoA network
 
 ## 1. Create azure account
-If you already have Microsoft Azure account, you should [login to it](https://login.microsoftonline.com/) and then skip this section.  
-To signup to Microsoft Azure follow [this link](https://account.azure.com/signup) and click "Create a new Microsoft account". Follow the steps of the registration process. You will need to provide and verify your email address and your credit card information.  
+If you already have Microsoft Azure account, you should [login](https://azure.microsoft.com/en-us/features/azure-portal/) and then skip this section.  
+To signup to Microsoft Azure follow the link above and click "New to Azure". Follow the steps of the registration process. You will need to provide and verify your email address and your credit card information.  
 After registration is complete, do not sign out.
 
 ## 2. Generate SSH keys
@@ -78,5 +78,5 @@ Second half of the fields should look similar to this (values will be different 
 
 18. After that, you will be taken to your azure dashboard. Look for a box similar to this  
 ![Deployment in progress](https://raw.githubusercontent.com/oraclesorg/test-templates/dev/Ceremony/deploy_new_deployment.png)  
-representing deployment process of the resource group. Do not close this windows and wait till the process is complete and you'll be automatically forwarded to a newly-created resource group page. At this moment you've successfully joined the Oracles-PoA network!  
+representing deployment process of the resource group. Do not close this window and wait till the process is complete and you'll be automatically forwarded to a newly-created resource group page. At this moment you've successfully joined the Oracles-PoA network!  
 You can close the window now. Later, when you login to your azure portal, you can find this box on your dashboard to access the resource group.

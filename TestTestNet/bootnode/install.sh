@@ -71,12 +71,14 @@ add_user_to_docker_group() {
     # based on https://askubuntu.com/questions/477551/how-can-i-use-docker-without-sudo
     echo "=====> add_user_to_docker_group"
     sudo groupadd docker
-    sudo gpasswd -a "${ADMIN_USERNAME}" docker
+    #sudo gpasswd -a "${ADMIN_USERNAME}" docker
+    sudo usermod -aG docker "${ADMIN_USERNAME}"
     # based on https://superuser.com/a/345051
     orig_group_id=$(id -gn)
     echo "===== orig_group_id = ${orig_group_id}"
     newgrp docker
     newgrp "${orig_group_id}"
+    #su - ${ADMIN_USERNAME}
 
     echo "===== Groups: "
     groups

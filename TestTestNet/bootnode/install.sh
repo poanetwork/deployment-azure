@@ -76,10 +76,10 @@ add_user_to_docker_group() {
     # based on https://superuser.com/a/345051
     #orig_group_id=$(id -gn)
     #echo "===== orig_group_id = ${orig_group_id}"
-    #newgrp docker
+    newgrp docker
+    newgrp -
     #newgrp "${orig_group_id}"
-    su - ${ADMIN_USERNAME}
-
+    
     echo "===== Groups: "
     groups
     echo "<===== add_user_to_docker_group"

@@ -72,7 +72,11 @@ add_user_to_docker_group() {
     echo "=====> add_user_to_docker_group"
     sudo groupadd docker
     sudo gpasswd -a "${ADMIN_USERNAME}" docker
+    # based on https://superuser.com/a/345051
+    orig_group_id=$(id -g)
+    echo "===== orig_group_id = ${orig_group_id}"
     newgrp docker
+    newgrp "${orig_group_id}"
     echo "===== Groups: "
     groups
     echo "<===== add_user_to_docker_group"
@@ -377,7 +381,7 @@ main () {
     sudo apt-get update
 
     prepare_homedir
-    #add_user_to_docker_group
+    add_user_to_docker_group
     install_ntpd
     install_haveged
     allocate_swap

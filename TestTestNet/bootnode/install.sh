@@ -74,11 +74,11 @@ add_user_to_docker_group() {
     #sudo gpasswd -a "${ADMIN_USERNAME}" docker
     sudo usermod -aG docker "${ADMIN_USERNAME}"
     # based on https://superuser.com/a/345051
-    orig_group_id=$(id -gn)
-    echo "===== orig_group_id = ${orig_group_id}"
-    newgrp docker
-    newgrp "${orig_group_id}"
-    #su - ${ADMIN_USERNAME}
+    #orig_group_id=$(id -gn)
+    #echo "===== orig_group_id = ${orig_group_id}"
+    #newgrp docker
+    #newgrp "${orig_group_id}"
+    su - ${ADMIN_USERNAME}
 
     echo "===== Groups: "
     groups

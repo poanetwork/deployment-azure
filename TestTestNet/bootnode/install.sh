@@ -384,7 +384,7 @@ main () {
     sudo apt-get update
 
     prepare_homedir
-    add_user_to_docker_group
+    #add_user_to_docker_group
     install_ntpd
     install_haveged
     allocate_swap

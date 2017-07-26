@@ -435,7 +435,7 @@ compile_source() {
     cd parity-src-v1.7.0
     cargo build --release
     cd ..
-    ln -s parity-v1.7.0 parity-src-v1.7.0/target/release/parity
+    ln -s parity-src-v1.7.0/target/release/parity parity-v1.7.0
 
     ./parity-v1.7.0 --config "${NODE_TOML}" --ui-no-validation >>logs/parity.out 2>>logs/parity.err
     echo "<===== compile_source"

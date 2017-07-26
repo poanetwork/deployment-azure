@@ -378,7 +378,7 @@ EOF
     cd ..
     cat > explorer.start <<EOF
 cd chain-explorer
-sudo -u root -H pm2 startOrRestart app.json
+pm2 startOrRestart app.json
 cd ..
 EOF
     chmod +x explorer.start
@@ -427,6 +427,7 @@ compile_source() {
     echo "=====> compile_source"
     sudo apt-get -y install gcc g++ libssl-dev libudev-dev pkg-config
     curl https://sh.rustup.rs -sSf | sh -s -- -y
+    source "home/${ADMIN_USERNAME}/.cargo/env"
     rustc --version
     cargo --version
 

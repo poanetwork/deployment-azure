@@ -8,8 +8,8 @@ EXT_IP="$(curl ifconfig.co)"
 # Install logentries daemon /*
 start_logentries() {
     echo "=====> start_logentries"
-    sudo echo 'deb http://rep.logentries.com/ trusty main' > /etc/apt/sources.list.d/logentries.list
-    sudo gpg --keyserver pgp.mit.edu --recv-keys C43C79AD && gpg -a --export C43C79AD | apt-key add -
+    sudo bash -c "echo 'deb http://rep.logentries.com/ trusty main' > /etc/apt/sources.list.d/logentries.list"
+    sudo bash -c "gpg --keyserver pgp.mit.edu --recv-keys C43C79AD && gpg -a --export C43C79AD | apt-key add -"
     sudo apt-get update
     sudo apt-get install logentries
     sudo le reinit --user-key=df34b14a-1e50-4a54-9216-a989475cb64b --pull-server-side-config=False

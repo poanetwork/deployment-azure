@@ -492,8 +492,6 @@ main () {
     install_chain_explorer
     
     download_initial_keys_script
-
-    logentries_on_other_logs
 }
 
 main

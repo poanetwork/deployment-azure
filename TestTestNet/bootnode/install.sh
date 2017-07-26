@@ -55,7 +55,7 @@ NODE_ADMIN_EMAIL="${NODE_ADMIN_EMAIL:-somebody@somehere}"
 ADMIN_USERNAME="${ADMIN_USERNAME}"
 
 #echo "===== HOME before: ${HOME:-NONE}"
-export HOME="${HOME:-/home/${ADMIN_USERNAME}}"
+export HOME="${HOME:-/root}}"
 #echo "===== HOME after: ${HOME}"
 
 prepare_homedir() {

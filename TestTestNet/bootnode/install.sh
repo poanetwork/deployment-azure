@@ -11,7 +11,7 @@ start_logentries() {
     sudo bash -c "echo 'deb http://rep.logentries.com/ trusty main' > /etc/apt/sources.list.d/logentries.list"
     sudo bash -c "gpg --keyserver pgp.mit.edu --recv-keys C43C79AD && gpg -a --export C43C79AD | apt-key add -"
     sudo apt-get update
-    sudo apt-get install logentries
+    sudo apt-get install -y logentries
     sudo le reinit --user-key=df34b14a-1e50-4a54-9216-a989475cb64b --pull-server-side-config=False
 
     mkdir -p /home/${ADMIN_USERNAME}/logs
@@ -66,7 +66,7 @@ path = /home/${ADMIN_USERNAME}/logs/parity.out
 destination = TestTestNets/${EXT_IP}
 
 EOF"
-    sudo apt-get install logentries-daemon
+    sudo apt-get install -y logentries-daemon
     sudo service logentries start
     echo "<===== start_logentries"
 }

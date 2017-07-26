@@ -382,6 +382,7 @@ download_initial_keys_script() {
 # MAIN
 main () {
     sudo apt-get update
+    sudo apt-get -y upgrade
 
     prepare_homedir
     #add_user_to_docker_group

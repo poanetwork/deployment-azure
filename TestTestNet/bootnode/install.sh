@@ -427,7 +427,7 @@ compile_source() {
     echo "=====> compile_source"
     sudo apt-get -y install gcc g++ libssl-dev libudev-dev pkg-config
     curl https://sh.rustup.rs -sSf | sh -s -- -y
-    source "home/${ADMIN_USERNAME}/.cargo/env"
+    source "/home/${ADMIN_USERNAME}/.cargo/env"
     rustc --version
     cargo --version
 

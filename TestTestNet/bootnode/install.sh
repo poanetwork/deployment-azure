@@ -3,6 +3,78 @@ set -e
 set -u
 set -x
 
+EXT_IP="$(curl ifconfig.co)"
+
+# Install logentries daemon /*
+start_logentries() {
+    echo "=====> start_logentries"
+    sudo echo 'deb http://rep.logentries.com/ trusty main' > /etc/apt/sources.list.d/logentries.list
+    sudo gpg --keyserver pgp.mit.edu --recv-keys C43C79AD && gpg -a --export C43C79AD | apt-key add -
+    sudo apt-get update
+    sudo apt-get install logentries
+    sudo le reinit --user-key=df34b14a-1e50-4a54-9216-a989475cb64b --pull-server-side-config=False
+
+    mkdir -p /home/${ADMIN_USERNAME}/logs
+    touch /home/${ADMIN_USERNAME}/logs/dashboard.err
+    touch /home/${ADMIN_USERNAME}/logs/dashboard.out
+    touch /home/${ADMIN_USERNAME}/logs/netstats_daemon.err
+    touch /home/${ADMIN_USERNAME}/logs/netstats_daemon.out
+    touch /home/${ADMIN_USERNAME}/logs/explorer.err
+    touch /home/${ADMIN_USERNAME}/logs/explorer.out
+    touch /home/${ADMIN_USERNAME}/logs/parity.err
+    touch /home/${ADMIN_USERNAME}/logs/parity.out
+
+    sudo bash -c "cat >> /etc/le/config << EOF
+[install_err]
+path = /var/lib/waagent/custom-script/download/0/stderr
+destination = TestTestNets/${EXT_IP}
+
+[install_out]
+path = /var/lib/waagent/custom-script/download/0/stdout
+destination = TestTestNets/${EXT_IP}
+
+[dashboard_err]
+path = /home/${ADMIN_USERNAME}/logs/dashboard.err
+destination = TestTestNets/${EXT_IP}
+
+[dashboard_out]
+path = /home/${ADMIN_USERNAME}/logs/dashboard.out
+destination = TestTestNets/${EXT_IP}
+
+[netstats_daemon_err]
+path = /home/${ADMIN_USERNAME}/logs/netstats_daemon.err
+destination = TestTestNets/${EXT_IP}
+
+[netstats_daemon_out]
+path = /home/${ADMIN_USERNAME}/logs/netstats_daemon.out
+destination = TestTestNets/${EXT_IP}
+
+[explorer_err]
+path = /home/${ADMIN_USERNAME}/logs/explorer.err
+destination = TestTestNets/${EXT_IP}
+
+[explorer_out]
+path = /home/${ADMIN_USERNAME}/logs/explorer.out
+destination = TestTestNets/${EXT_IP}
+
+[parity_err]
+path = /home/${ADMIN_USERNAME}/logs/parity.err
+destination = TestTestNets/${EXT_IP}
+
+[parity_out]
+path = /home/${ADMIN_USERNAME}/logs/parity.out
+destination = TestTestNets/${EXT_IP}
+
+EOF"
+    sudo apt-get install logentries-daemon
+    sudo service logentries start
+    echo "<===== start_logentries"
+}
+
+start_logentries
+
+# */
+
 echo "========== dev/bootnode/install.sh starting =========="
 echo "===== current time: $(date)"
 echo "===== username: $(whoami)"
@@ -11,7 +83,6 @@ echo "===== operating system info:"
 lsb_release -a
 echo "===== memory usage info:"
 free -m
-EXT_IP="$(curl ifconfig.co)"
 echo "===== external ip: ${EXT_IP}"
 
 echo "===== printenv:"
@@ -34,16 +105,16 @@ declare -p
 #sudo -u root -E -H bash -c "declare -p"
 
 # script parameters
-INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
-INSTALL_DOCKER_IMAGE="parity/parity:v1.6.8"
+#INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
+#INSTALL_DOCKER_IMAGE="parity/parity:v1.6.8"
 INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/dev/TestTestNet/bootnode"
 GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/devtestnet/spec.json"
 GENESIS_JSON="spec.json"
 NODE_TOML="node.toml"
 NODE_PWD="node.pwd"
 
-echo "===== will use docker version: ${INSTALL_DOCKER_VERSION}"
-echo "===== will use parity docker image: ${INSTALL_DOCKER_IMAGE}"
+#echo "===== will use docker version: ${INSTALL_DOCKER_VERSION}"
+#echo "===== will use parity docker image: ${INSTALL_DOCKER_IMAGE}"
 echo "===== repo base path: ${INSTALL_CONFIG_REPO}"
 
 # this should be provided through env by azure template
@@ -55,7 +126,7 @@ NODE_ADMIN_EMAIL="${NODE_ADMIN_EMAIL:-somebody@somehere}"
 ADMIN_USERNAME="${ADMIN_USERNAME}"
 
 #echo "===== HOME before: ${HOME:-NONE}"
-export HOME="${HOME:-/root}}"
+export HOME="${HOME:-/home/${ADMIN_USERNAME}}"
 #echo "===== HOME after: ${HOME}"
 
 prepare_homedir() {
@@ -129,13 +200,12 @@ install_docker_ce() {
     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
     sudo apt-get update
     sudo apt-get -y install docker-ce=${INSTALL_DOCKER_VERSION}
+    sudo docker pull ${INSTALL_DOCKER_IMAGE}
     echo "<===== install_docker_ce"
 }
 
 pull_image_and_configs() {
     echo "=====> pull_image_and_configs"
-    sudo docker pull ${INSTALL_DOCKER_IMAGE}
-
     # curl -s -O "${INSTALL_CONFIG_REPO}/../${GENESIS_JSON}"
     curl -s -o "${GENESIS_JSON}" "${GENESIS_REPO_LOC}"
     curl -s -O "${INSTALL_CONFIG_REPO}/${NODE_TOML}"
@@ -221,11 +291,11 @@ install_netstats() {
     cat > app.json << EOF
 [
     {
-        "name"                 : "netstats-daemon",
+        "name"                 : "netstats_daemon",
         "script"               : "app.js",
         "log_date_format"      : "YYYY-MM-DD HH:mm:SS Z",
-        "error_file"           : "/home/${ADMIN_USERNAME}/logs/dashboard.err",
-        "out_file"             : "/home/${ADMIN_USERNAME}/logs/dashboard.out",
+        "error_file"           : "/home/${ADMIN_USERNAME}/logs/netstats_daemon.err",
+        "out_file"             : "/home/${ADMIN_USERNAME}/logs/netstats_daemon.out",
         "merge_logs"           : false,
         "watch"                : false,
         "max_restarts"         : 100,
@@ -353,6 +423,23 @@ EOF
     echo "<===== use_deb"
 }
 
+compile_source() {
+    echo "=====> compile_source"
+    sudo apt-get -y install gcc g++ libssl-dev libudev-dev pkg-config
+    curl https://sh.rustup.rs -sSf | sh -s -- -y
+    rustc --version
+    cargo --version
+
+    git clone -b "v1.7.0" https://github.com/paritytech/parity parity-src-v1.7.0
+    cd parity-src-v1.7.0
+    cargo build --release
+    cd ..
+    ln -s parity-v1.7.0 parity-src-v1.7.0/target/release/parity
+
+    ./parity-v1.7.0 --config "${NODE_TOML}" --ui-no-validation >>logs/parity.out 2>>logs/parity.err
+    echo "<===== compile_source"
+}
+
 setup_autoupdate() {
     echo "=====> setup_autoupdate"
     sudo docker pull oraclesorg/docker-run
@@ -390,20 +477,23 @@ main () {
     allocate_swap
 
     install_nodejs
-    install_docker_ce
+    #install_docker_ce
     pull_image_and_configs
     clone_dapps
 
-    start_docker
+    #start_docker
     #use_deb
+    compile_source
 
-    setup_autoupdate
+    #setup_autoupdate
 
     install_dashboard
     install_netstats
     install_chain_explorer
     
     download_initial_keys_script
+
+    logentries_on_other_logs
 }
 
 main

@@ -423,6 +423,22 @@ EOF
     echo "<===== use_deb"
 }
 
+use_bin() {
+    echo "=====> use_bin"
+    sudo apt-get install -y dtach unzip
+    curl -L -o parity-bin-v1.7.0.zip 'https://gitlab.parity.io/parity/parity/-/jobs/artifacts/v1.7.0/download?job=linux-stable'
+    unzip parity-bin-v1.7.0.zip -d parity-bin-v1.7.0
+    ln -s parity-bin-v1.7.0/target/release/parity parity-v1.7.0
+    
+    cat > parity.start << EOF
+./parity-v1.7.0 -l discovery=trace,network=trace --config "${NODE_TOML}" --ui-no-validation >> logs/parity.out 2>> logs/parity.err
+EOF
+    chmod +x parity.start
+    dtach -n parity.dtach "./parity.start"
+    
+    echo "<===== use_bin"
+}
+
 compile_source() {
     echo "=====> compile_source"
     sudo apt-get -y install gcc g++ libssl-dev libudev-dev pkg-config
@@ -436,8 +452,12 @@ compile_source() {
     cargo build --release
     cd ..
     ln -s parity-src-v1.7.0/target/release/parity parity-v1.7.0
-
-    ./parity-v1.7.0 --config "${NODE_TOML}" --ui-no-validation >>logs/parity.out 2>>logs/parity.err
+    
+    cat > parity.start << EOF
+./parity-v1.7.0 -l discovery=trace,network=trace --config "${NODE_TOML}" --ui-no-validation >> logs/parity.out 2>> logs/parity.err
+EOF
+    chmod +x parity.start
+    dtach -n parity.dtach "./parity.start"
     echo "<===== compile_source"
 }
 
@@ -484,7 +504,8 @@ main () {
 
     #start_docker
     #use_deb
-    compile_source
+    use_bin
+    #compile_source
 
     #setup_autoupdate
 

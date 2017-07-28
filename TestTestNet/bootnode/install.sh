@@ -272,7 +272,7 @@ install_dashboard() {
     cd ..
     sudo apt-get install -y dtach
     cat > dashboard.start <<EOF
-dtach -n dashboard bash -c "cd eth-netstats && npm start >> ../logs/dashboard.out 2>> ../logs/dashboard.err"
+dtach -n dashboard.dtach bash -c "cd eth-netstats && npm start >> ../logs/dashboard.out 2>> ../logs/dashboard.err"
 EOF
     chmod +x dashboard.start
     ./dashboard.start
@@ -285,7 +285,7 @@ install_netstats() {
     git clone https://github.com/oraclesorg/eth-net-intelligence-api
     cd eth-net-intelligence-api
     #sed -i '/"web3"/c "web3": "0.19.x",' package.json
-    sudo npm install
+    npm install
     sudo npm install pm2 -g
 
     cat > app.json << EOF
@@ -333,6 +333,7 @@ install_chain_explorer() {
     git clone https://github.com/ethereum/solc-bin chain-explorer/utils/solc-bin
     cd chain-explorer
     npm install
+    sudo npm install pm2 -g
     cat > config.js <<EOF
 var web3 = require('web3');
 var net = require('net');
@@ -426,16 +427,15 @@ EOF
 use_bin() {
     echo "=====> use_bin"
     sudo apt-get install -y dtach unzip
-    curl -L -o parity-bin-v1.7.0.zip 'https://gitlab.parity.io/parity/parity/-/jobs/artifacts/v1.7.0/download?job=linux-stable'
+    curl -L -o parity-bin-v1.7.0.zip 'https://gitlab.parity.io/parity/parity/-/jobs/61863/artifacts/download'
     unzip parity-bin-v1.7.0.zip -d parity-bin-v1.7.0
     ln -s parity-bin-v1.7.0/target/release/parity parity-v1.7.0
     
     cat > parity.start << EOF
-./parity-v1.7.0 -l discovery=trace,network=trace --config "${NODE_TOML}" --ui-no-validation >> logs/parity.out 2>> logs/parity.err
+dtach -n parity.dtach bash -c "./parity-v1.7.0 -l discovery=trace,network=trace --config ${NODE_TOML} --ui-no-validation >> logs/parity.out 2>> logs/parity.err"
 EOF
     chmod +x parity.start
-    dtach -n parity.dtach "./parity.start"
-    
+    ./parity.start 
     echo "<===== use_bin"
 }
 

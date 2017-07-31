@@ -108,7 +108,7 @@ declare -p
 #INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
 #INSTALL_DOCKER_IMAGE="parity/parity:v1.6.8"
 INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/dev/TestTestNet/bootnode"
-GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/devtestnet/spec.json"
+GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/master/spec.json"
 GENESIS_JSON="spec.json"
 NODE_TOML="node.toml"
 NODE_PWD="node.pwd"

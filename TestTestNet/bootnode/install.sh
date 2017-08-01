@@ -413,7 +413,7 @@ EOF
 use_deb() {
     echo "=====> use_deb"
     curl -LO 'http://parity-downloads-mirror.parity.io/v1.7.0/x86_64-unknown-linux-gnu/parity_1.7.0_amd64.deb'
-    dpkg -i parity_1.7.0_amd64.deb
+    sudo dpkg -i parity_1.7.0_amd64.deb
     sudo apt-get install dtach
     
     cat > parity.start << EOF

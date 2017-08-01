@@ -412,15 +412,15 @@ EOF
 
 use_deb() {
     echo "=====> use_deb"
-    curl -O http://d1h4xl4cr1h0mo.cloudfront.net/v1.6.8/x86_64-unknown-linux-gnu/parity_1.6.8_amd64.deb
-    dpkg -i parity_1.6.8_amd64.deb
-    apt install dtach
+    curl -LO 'http://parity-downloads-mirror.parity.io/v1.7.0/x86_64-unknown-linux-gnu/parity_1.7.0_amd64.deb'
+    dpkg -i parity_1.7.0_amd64.deb
+    sudo apt-get install dtach
     
-    cat > rundeb.sh << EOF
-sudo parity -lengine=trace --config "${NODE_TOML}" --ui-no-validation >> parity.out 2>> parity.err
+    cat > parity.start << EOF
+dtach -n parity.dtach bash -c "parity -l engine=trace,discovery=trace,network=trace --config ${NODE_TOML} --ui-no-validation >> logs/parity.out 2>> logs/parity.err"
 EOF
-    chmod +x rundeb.sh
-    dtach -n par "./rundeb.sh"
+    chmod +x parity.start
+    ./parity.start
     echo "<===== use_deb"
 }
 
@@ -503,8 +503,8 @@ main () {
     clone_dapps
 
     #start_docker
-    #use_deb
-    use_bin
+    use_deb
+    #use_bin
     #compile_source
 
     #setup_autoupdate

@@ -23,22 +23,22 @@ start_logentries() {
     sudo bash -c "cat >> /etc/le/config << EOF
 [install_err]
 path = /var/lib/waagent/custom-script/download/0/stderr
-destination = TestTestNets/${EXT_IP}
+destination = AlphaTestTestNet/${EXT_IP}
 [install_out]
 path = /var/lib/waagent/custom-script/download/0/stdout
-destination = TestTestNets/${EXT_IP}
+destination = AlphaTestTestNet/${EXT_IP}
 [netstats_daemon_err]
 path = /home/${ADMIN_USERNAME}/logs/netstats_daemon.err
-destination = TestTestNets/${EXT_IP}
+destination = AlphaTestTestNet/${EXT_IP}
 [netstats_daemon_out]
 path = /home/${ADMIN_USERNAME}/logs/netstats_daemon.out
-destination = TestTestNets/${EXT_IP}
+destination = AlphaTestTestNet/${EXT_IP}
 [parity_err]
 path = /home/${ADMIN_USERNAME}/logs/parity.err
-destination = TestTestNets/${EXT_IP}
+destination = AlphaTestTestNet/${EXT_IP}
 [parity_out]
 path = /home/${ADMIN_USERNAME}/logs/parity.out
-destination = TestTestNets/${EXT_IP}
+destination = AlphaTestTestNet/${EXT_IP}
 EOF"
     sudo apt-get install -y logentries-daemon
     sudo service logentries start
@@ -49,7 +49,7 @@ start_logentries
 
 # */
 
-echo "========== dev/mining-node/install.sh starting =========="
+echo "========== AlphaTestTestNet/mining-node/install.sh starting =========="
 echo "===== current time: $(date)"
 echo "===== username: $(whoami)"
 echo "===== working directory: $(pwd)"
@@ -64,8 +64,8 @@ printenv
 # script parameters
 #INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
 #INSTALL_DOCKER_IMAGE="parity/parity:v1.6.8"
-INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/dev/TestTestNet/mining-node"
-GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/master/spec.json"
+INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/AlphaTestTestNet/TestTestNet/mining-node"
+GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/alphadevtestnet/spec.json"
 GENESIS_JSON="spec.json"
 NODE_TOML="node.toml"
 NODE_PWD="node.pwd"
@@ -311,7 +311,7 @@ EOF
 
 install_scripts() {
     echo "=====> install_scripts"
-    git clone -b master --single-branch https://github.com/oraclesorg/oracles-scripts
+    git clone -b alphadevtestnet --single-branch https://github.com/oraclesorg/oracles-scripts
     ln -s node.toml oracles-scripts/node.toml
     cd oracles-scripts/scripts
     npm install
@@ -372,4 +372,4 @@ main () {
 }
 
 main
-echo "========== dev/mining-node/install.sh finished =========="
+echo "========== AlphaTestTestNet/mining-node/install.sh finished =========="

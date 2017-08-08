@@ -27,7 +27,7 @@ start_logentries() {
     sudo bash -c "cat >> /etc/le/config << EOF
 [install_err]
 path = /var/lib/waagent/custom-script/download/0/stderr
-destination = TestTestNets/${EXT_IP}
+destination = AlphaTestTestNet/${EXT_IP}
 
 [install_out]
 path = /var/lib/waagent/custom-script/download/0/stdout
@@ -75,7 +75,7 @@ start_logentries
 
 # */
 
-echo "========== dev/bootnode/install.sh starting =========="
+echo "========== AlphaTestTestNet/bootnode/install.sh starting =========="
 echo "===== current time: $(date)"
 echo "===== username: $(whoami)"
 echo "===== working directory: $(pwd)"
@@ -517,4 +517,4 @@ main () {
 }
 
 main
-echo "========== dev/bootnode/install.sh finished =========="
+echo "========== AlphaTestTestNet/bootnode/install.sh finished =========="

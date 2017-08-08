@@ -31,39 +31,39 @@ destination = TestTestNets/${EXT_IP}
 
 [install_out]
 path = /var/lib/waagent/custom-script/download/0/stdout
-destination = TestTestNets/${EXT_IP}
+destination = AlphaTestTestNet/${EXT_IP}
 
 [dashboard_err]
 path = /home/${ADMIN_USERNAME}/logs/dashboard.err
-destination = TestTestNets/${EXT_IP}
+destination = AlphaTestTestNet/${EXT_IP}
 
 [dashboard_out]
 path = /home/${ADMIN_USERNAME}/logs/dashboard.out
-destination = TestTestNets/${EXT_IP}
+destination = AlphaTestTestNet/${EXT_IP}
 
 [netstats_daemon_err]
 path = /home/${ADMIN_USERNAME}/logs/netstats_daemon.err
-destination = TestTestNets/${EXT_IP}
+destination = AlphaTestTestNet/${EXT_IP}
 
 [netstats_daemon_out]
 path = /home/${ADMIN_USERNAME}/logs/netstats_daemon.out
-destination = TestTestNets/${EXT_IP}
+destination = AlphaTestTestNet/${EXT_IP}
 
 [explorer_err]
 path = /home/${ADMIN_USERNAME}/logs/explorer.err
-destination = TestTestNets/${EXT_IP}
+destination = AlphaTestTestNet/${EXT_IP}
 
 [explorer_out]
 path = /home/${ADMIN_USERNAME}/logs/explorer.out
-destination = TestTestNets/${EXT_IP}
+destination = AlphaTestTestNet/${EXT_IP}
 
 [parity_err]
 path = /home/${ADMIN_USERNAME}/logs/parity.err
-destination = TestTestNets/${EXT_IP}
+destination = AlphaTestTestNet/${EXT_IP}
 
 [parity_out]
 path = /home/${ADMIN_USERNAME}/logs/parity.out
-destination = TestTestNets/${EXT_IP}
+destination = AlphaTestTestNet/${EXT_IP}
 
 EOF"
     sudo apt-get install -y logentries-daemon
@@ -107,8 +107,8 @@ declare -p
 # script parameters
 #INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
 #INSTALL_DOCKER_IMAGE="parity/parity:v1.6.8"
-INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/dev/TestTestNet/bootnode"
-GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/master/spec.json"
+INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/AlphaTestTestNet/TestTestNet/bootnode"
+GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/alphadevtestnet/spec.json"
 GENESIS_JSON="spec.json"
 NODE_TOML="node.toml"
 NODE_PWD="node.pwd"

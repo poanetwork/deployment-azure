@@ -323,7 +323,7 @@ install_scripts() {
     ln -s ../node.toml oracles-scripts/node.toml
     cd oracles-scripts/scripts
     npm install
-    sudo bash -c "cat > /etc/cron.hourly/transferRewardToPayoutKey <<EOF
+    sudo bash -c "cat > /etc/cron.daily/transferRewardToPayoutKey <<EOF
 #!/bin/bash
 cd "$(pwd)"
 echo "Starting at \$(date)" >> "/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out"
@@ -332,7 +332,7 @@ node transferRewardToPayoutKey.js >> "/home/${ADMIN_USERNAME}/logs/transferRewar
 echo "" >> "/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out"
 echo "" >> "/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err"
 EOF"
-    sudo chmod 755 /etc/cron.hourly/transferRewardToPayoutKey
+    sudo chmod 755 /etc/cron.daily/transferRewardToPayoutKey
     cd ../..
     echo "<===== install_scripts"
 }

@@ -1,9 +1,9 @@
-# dev branch
+# AlphaTestTestNet branch
 [parity]
 chain = "spec.json"
 base_path = "parity"
 [network]
-bootnodes=["enode://0e61be1dccfca9050d47b973b8c49420bc8431a1aad56d85d0f95dff487398f0e5c773c4cbb6c2d54238528727d1039f59fcbb77409378dc46ec5fbaee5f1f74@13.90.94.0:30300"]
+bootnodes=["enode://7b0a753b3596f4b7edcc085496dc8935e750c32d80787da44f901d7ea51fa100ab93b0cdb3382fdcbeaff0c400fa6d14b001a831958f2faed56a50ca7824076d@40.114.46.5:30300"]
 port = 30300
 discovery=true
 [rpc]

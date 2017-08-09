@@ -1,4 +1,4 @@
-# dev branch
+# AlphaTestTestNet branch
 [parity]
 chain = "spec.json"
 base_path = "parity"

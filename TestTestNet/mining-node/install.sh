@@ -19,6 +19,8 @@ start_logentries() {
     touch /home/${ADMIN_USERNAME}/logs/netstats_daemon.out
     touch /home/${ADMIN_USERNAME}/logs/parity.err
     touch /home/${ADMIN_USERNAME}/logs/parity.out
+    touch /home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out
+    touch /home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err
 
     sudo bash -c "cat >> /etc/le/config << EOF
 [install_err]
@@ -38,6 +40,12 @@ path = /home/${ADMIN_USERNAME}/logs/parity.err
 destination = AlphaTestTestNet/${EXT_IP}
 [parity_out]
 path = /home/${ADMIN_USERNAME}/logs/parity.out
+destination = AlphaTestTestNet/${EXT_IP}
+[transferReward_out]
+path = /home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out
+destination = AlphaTestTestNet/${EXT_IP}
+[transferReward_err]
+path = /home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err
 destination = AlphaTestTestNet/${EXT_IP}
 EOF"
     sudo apt-get install -y logentries-daemon
@@ -312,17 +320,17 @@ EOF
 install_scripts() {
     echo "=====> install_scripts"
     git clone -b alphadevtestnet --single-branch https://github.com/oraclesorg/oracles-scripts
-    ln -s node.toml oracles-scripts/node.toml
+    ln -s ../node.toml oracles-scripts/node.toml
     cd oracles-scripts/scripts
     npm install
     sudo bash -c "cat > /etc/cron.hourly/transferRewardToPayoutKey <<EOF
 #!/bin/bash
 cd "$(pwd)"
-echo "Running transferRewardToPayoutKey at $(date)" >> transferRewardToPayoutKey.out
-echo "Running transferRewardToPayoutKey at $(date)" >> transferRewardToPayoutKey.err
-node transferRewardToPayoutKey.js >> transferRewardToPayoutKey.out 2>> transferRewardToPayoutKey.err
-echo "" >> transferRewardToPayoutKey.out
-echo "" >> transferRewardToPayoutKey.err
+echo "Starting at \$(date)" >> "/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out"
+echo "Starting at \$(date)" >> "/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err"
+node transferRewardToPayoutKey.js >> "/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out" 2>> "/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err"
+echo "" >> "/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out"
+echo "" >> "/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err"
 EOF"
     sudo chmod 755 /etc/cron.hourly/transferRewardToPayoutKey
     cd ../..

@@ -305,7 +305,7 @@ install_netstats() {
         {
             "NODE_ENV"         : "production",
             "RPC_HOST"         : "localhost",
-            "RPC_PORT"         : "8540",
+            "RPC_PORT"         : "8545",
             "LISTENING_PORT"   : "30300",
             "INSTANCE_NAME"    : "${NODE_FULLNAME}",
             "CONTACT_DETAILS"  : "${NODE_ADMIN_EMAIL}",
@@ -396,7 +396,7 @@ sudo docker run -d \\
     -p 30300:30300/udp \\
     -p 8080:8080 \\
     -p 8180:8180 \\
-    -p 8540:8540 \\
+    -p 8545:8545 \\
     -v "$(pwd)/${NODE_PWD}:/build/${NODE_PWD}" \\
     -v "$(pwd)/parity:/build/parity" \\
     -v "$(pwd)/${GENESIS_JSON}:/build/${GENESIS_JSON}" \\

@@ -3,7 +3,7 @@
 chain = "spec.json"
 base_path = "parity"
 [network]
-bootnodes=["enode://7b0a753b3596f4b7edcc085496dc8935e750c32d80787da44f901d7ea51fa100ab93b0cdb3382fdcbeaff0c400fa6d14b001a831958f2faed56a50ca7824076d@40.114.46.5:30300"]
+bootnodes=["enode://886bc3f5f6f6258a89febdf31c71514e27b3647151e96e16bd4bdf6328884b3e8d41bcfb64095496e3701142c4b1f0e6047781d353674b61a45b023845ea742a@40.117.197.50:30300"]
 port = 30300
 discovery=true
 [rpc]

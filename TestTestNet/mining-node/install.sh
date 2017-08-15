@@ -326,11 +326,11 @@ install_scripts() {
     sudo bash -c "cat > /etc/cron.hourly/transferRewardToPayoutKey <<EOF
 #!/bin/bash
 cd "$(pwd)"
-echo "Starting at \$(date)" >> "/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out"
-echo "Starting at \$(date)" >> "/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err"
-node transferRewardToPayoutKey.js >> "/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out" 2>> "/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err"
-echo "" >> "/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out"
-echo "" >> "/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err"
+echo \"Starting at \\\$(date)\" >> \"/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out\"
+echo \"Starting at \\\$(date)\" >> \"/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err\"
+node transferRewardToPayoutKey.js >> \"/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out\" 2>> \"/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err\"
+echo \"\" >> \"/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out\"
+echo \"\" >> \"/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err\"
 EOF"
     sudo chmod 755 /etc/cron.hourly/transferRewardToPayoutKey
     cd ../..

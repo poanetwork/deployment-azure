@@ -62,7 +62,7 @@
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
     "ubuntuOSVersion": "16.04.0-LTS",
-    "dnsLabelPrefix": "[concat(resourceGroup().name, uniqueString(parameters('miningAddress')))]",
+    "dnsLabelPrefix": "[concat(resourceGroup().name, uniqueString(parameters('nodeFullName')))]",
     "adminUsername": "[parameters('adminUsername')]",
     "sshPublicKey": "[parameters('sshPublicKey')]",
     "nodeFullName": "[parameters('nodeFullName')]",

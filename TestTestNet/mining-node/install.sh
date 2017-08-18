@@ -273,7 +273,7 @@ use_deb() {
     sudo apt-get install dtach
     
     cat > parity.start << EOF
-dtach -n parity.dtach bash -c "parity -l engine=trace,discovery=trace,network=trace --config ${NODE_TOML} --ui-no-validation >> logs/parity.out 2>> logs/parity.err"
+dtach -n parity.dtach bash -c "parity -l engine=trace,discovery=trace,network=trace --config ${NODE_TOML} >> logs/parity.out 2>> logs/parity.err"
 EOF
     chmod +x parity.start
     ./parity.start
@@ -288,7 +288,7 @@ use_bin() {
     ln -s parity-bin-v1.7.0/target/release/parity parity-v1.7.0
     
     cat > parity.start << EOF
-dtach -n parity.dtach bash -c "./parity-v1.7.0 -l discovery=trace,network=trace --config ${NODE_TOML} --ui-no-validation >> logs/parity.out 2>> logs/parity.err"
+dtach -n parity.dtach bash -c "./parity-v1.7.0 -l discovery=trace,network=trace --config ${NODE_TOML} >> logs/parity.out 2>> logs/parity.err"
 EOF
     chmod +x parity.start
     ./parity.start 
@@ -310,7 +310,7 @@ compile_source() {
     ln -s parity-src-v1.7.0/target/release/parity parity-v1.7.0
     
     cat > parity.start << EOF
-./parity-v1.7.0 -l discovery=trace,network=trace --config "${NODE_TOML}" --ui-no-validation >> logs/parity.out 2>> logs/parity.err
+./parity-v1.7.0 -l discovery=trace,network=trace --config "${NODE_TOML}" >> logs/parity.out 2>> logs/parity.err
 EOF
     chmod +x parity.start
     dtach -n parity.dtach "./parity.start"

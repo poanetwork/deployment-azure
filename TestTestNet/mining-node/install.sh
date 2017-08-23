@@ -19,6 +19,7 @@ start_logentries() {
     touch /home/${ADMIN_USERNAME}/logs/netstats_daemon.out
     touch /home/${ADMIN_USERNAME}/logs/parity.err
     touch /home/${ADMIN_USERNAME}/logs/parity.out
+    touch /home/${ADMIN_USERNAME}/logs/parity.log
     touch /home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out
     touch /home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err
 
@@ -40,6 +41,9 @@ path = /home/${ADMIN_USERNAME}/logs/parity.err
 destination = AlphaTestTestNet/${EXT_IP}
 [parity_out]
 path = /home/${ADMIN_USERNAME}/logs/parity.out
+destination = AlphaTestTestNet/${EXT_IP}
+[parity_log]
+path = /home/${ADMIN_USERNAME}/logs/parity.log
 destination = AlphaTestTestNet/${EXT_IP}
 [transferReward_out]
 path = /home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out
@@ -99,6 +103,7 @@ prepare_homedir() {
     #ln -s "$(pwd)" "/home/${ADMIN_USERNAME}/script-dir"
     cd "/home/${ADMIN_USERNAME}"
     mkdir -p logs
+    mkdir -p logs/old
     echo "<===== prepare_homedir"
 }
 
@@ -181,6 +186,9 @@ pull_image_and_configs() {
     curl -s -O "${INSTALL_CONFIG_REPO}/${NODE_TOML}"
     sed -i "/\[network\]/a nat=\"extip:${EXT_IP}\"" ${NODE_TOML}
     cat >> ${NODE_TOML} <<EOF
+[misc]
+logging="engine=trace,network=trace,discovery=trace"
+log_file = "/home/${ADMIN_USERNAME}/logs/parity.log"
 [account]
 password = ["${NODE_PWD}"]
 unlock = ["${MINING_ADDRESS}"]
@@ -243,6 +251,66 @@ EOF
     echo "<===== install_netstats"
 }
 
+install_netstats_via_systemd() {
+    echo "=====> install_netstats_via_systemd"
+    git clone https://github.com/oraclesorg/eth-net-intelligence-api
+    cd eth-net-intelligence-api
+    #sed -i '/"web3"/c "web3": "0.19.x",' package.json
+    npm install
+    sudo npm install pm2 -g
+
+    cat > app.json << EOL
+[
+    {
+        "name"                 : "netstats_daemon",
+        "script"               : "app.js",
+        "log_date_format"      : "YYYY-MM-DD HH:mm:SS Z",
+        "error_file"           : "/home/${ADMIN_USERNAME}/logs/netstats_daemon.err",
+        "out_file"             : "/home/${ADMIN_USERNAME}/logs/netstats_daemon.out",
+        "merge_logs"           : false,
+        "watch"                : false,
+        "max_restarts"         : 100,
+        "exec_interpreter"     : "node",
+        "exec_mode"            : "fork_mode",
+        "env":
+        {
+            "NODE_ENV"         : "production",
+            "RPC_HOST"         : "localhost",
+            "RPC_PORT"         : "8545",
+            "LISTENING_PORT"   : "30300",
+            "INSTANCE_NAME"    : "${NODE_FULLNAME}",
+            "CONTACT_DETAILS"  : "${NODE_ADMIN_EMAIL}",
+            "WS_SERVER"        : "http://${NETSTATS_SERVER}:3000",
+            "WS_SECRET"        : "${NETSTATS_SECRET}",
+            "VERBOSITY"        : 2
+        }
+    }
+]
+EOL
+    cd ..
+    sudo bash -c "cat > /etc/systemd/system/oracles-netstats.service <<EOF
+[Unit]
+Description=oracles netstats service
+After=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+
+User=${ADMIN_USERNAME}
+Group=${ADMIN_USERNAME}
+Environment=MYVAR=myval
+WorkingDirectory=/home/${ADMIN_USERNAME}/eth-net-intelligence-api
+ExecStart=/usr/bin/pm2 startOrRestart app.json
+
+[Install]
+WantedBy=multi-user.target
+EOF"
+    sudo systemctl enable oracles-netstats
+    sudo systemctl start oracles-netstats
+    echo "<===== install_netstats_via_systemd"
+}
+
 start_docker() {
     echo "=====> start_docker"
     cat > docker.start <<EOF
@@ -278,6 +346,31 @@ EOF
     chmod +x parity.start
     ./parity.start
     echo "<===== use_deb"
+}
+
+use_deb_via_systemd() {
+    echo "=====> use_deb_via_systemd"
+    curl -LO 'http://parity-downloads-mirror.parity.io/v1.7.0/x86_64-unknown-linux-gnu/parity_1.7.0_amd64.deb'
+    sudo dpkg -i parity_1.7.0_amd64.deb
+
+    sudo bash -c "cat > /etc/systemd/system/oracles-parity.service <<EOF
+[Unit]
+Description=oracles parity service
+After=network.target
+
+[Service]
+User=${ADMIN_USERNAME}
+Group=${ADMIN_USERNAME}
+WorkingDirectory=/home/${ADMIN_USERNAME}
+ExecStart=/usr/bin/parity --config=node.toml
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF"
+    sudo systemctl enable oracles-parity
+    sudo systemctl start oracles-parity
+    echo "<===== use_deb_via_systemd"
 }
 
 use_bin() {
@@ -354,6 +447,34 @@ EOF"
     echo "<===== setup_autoupdate"
 }
 
+configure_logrotate() {
+    echo "=====> configure_logrotate"
+    
+    sudo bash -c "cat > /etc/logrotate.d/oracles.conf << EOF
+/home/${ADMIN_USERNAME}/logs/*.log {
+    rotate 10
+    size 200M
+    missingok
+    compress
+    copytruncate
+    dateext
+    dateformat %Y-%m-%d-%s
+    olddir old
+}
+
+/home/${ADMIN_USERNAME}/.pm2/pm2.log {
+    su ${ADMIN_USERNAME} ${ADMIN_USERNAME}
+    rotate 10
+    size 200M
+    missingok
+    compress
+    copytruncate
+    dateext
+    dateformat %Y-%m-%d-%s
+}"
+    echo "<===== configure_logrotate"
+}
+
 # MAIN
 main () {
     sudo apt-get update
@@ -370,13 +491,16 @@ main () {
     pull_image_and_configs
 
     #start_docker
-    use_deb
+    #use_deb
+    use_deb_via_systemd
     #use_bin
     
     #setup_autoupdate
 
-    install_netstats
+    #install_netstats
+    install_netstats_via_systemd
     install_scripts
+    configure_logrotate
 }
 
 main

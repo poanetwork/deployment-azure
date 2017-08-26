@@ -74,16 +74,16 @@
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
     "ubuntuOSVersion": "16.04.0-LTS",
-    "dnsLabelPrefix": "[concat(resourceGroup().name, uniqueString(parameters('miningAddress')))]",
-    "adminUsername": "[parameters('adminUsername')]",
-    "sshPublicKey": "[parameters('sshPublicKey')]",
-    "nodeFullName": "[parameters('nodeFullName')]",
-    "nodeAdminEmail": "[parameters('nodeAdminEmail')]",
-    "miningAddress": "[parameters('miningAddress')]",
-    "miningKeyfile": "[base64(string(parameters('miningKeyfile')))]",
-    "miningKeypass": "[parameters('miningKeypass')]",
-    "netstatsServer": "[parameters('netstatsServer')]",
-    "netstatsSecret": "[parameters('netstatsSecret')]"
+    "dnsLabelPrefix": "[toLower(concat(resourceGroup().name, uniqueString(parameters('miningAddress'))))]",
+    "adminUsername": "[trim(toLower(parameters('adminUsername')))]",
+    "sshPublicKey": "[trim(parameters('sshPublicKey'))]",
+    "nodeFullName": "[trim(parameters('nodeFullName'))]",
+    "nodeAdminEmail": "[trim(parameters('nodeAdminEmail'))]",
+    "miningAddress": "[trim(parameters('miningAddress'))]",
+    "miningKeyfile": "[trim(base64(string(parameters('miningKeyfile'))))]",
+    "miningKeypass": "[trim(parameters('miningKeypass'))]",
+    "netstatsServer": "[trim(parameters('netstatsServer'))]",
+    "netstatsSecret": "[trim(parameters('netstatsSecret'))]"
   },
   "resources": [
     {

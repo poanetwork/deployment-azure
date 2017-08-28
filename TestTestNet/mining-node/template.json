@@ -80,7 +80,7 @@
     "nodeFullName": "[trim(parameters('nodeFullName'))]",
     "nodeAdminEmail": "[trim(parameters('nodeAdminEmail'))]",
     "miningAddress": "[trim(parameters('miningAddress'))]",
-    "miningKeyfile": "[trim(base64(string(parameters('miningKeyfile'))))]",
+    "miningKeyfile": "[base64(trim(string(parameters('miningKeyfile'))))]",
     "miningKeypass": "[trim(parameters('miningKeypass'))]",
     "netstatsServer": "[trim(parameters('netstatsServer'))]",
     "netstatsSecret": "[trim(parameters('netstatsSecret'))]"

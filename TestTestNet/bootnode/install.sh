@@ -416,7 +416,7 @@ User=${ADMIN_USERNAME}
 Group=${ADMIN_USERNAME}
 Environment=MYVAR=myval
 WorkingDirectory=/home/${ADMIN_USERNAME}/eth-net-intelligence-api
-ExecStart=/usr/bin/pm2 startOrRestart app.json
+ExecStart=/bin/bash -c "/usr/bin/pm2 ping; /usr/bin/pm2 startOrRestart app.json"
 [Install]
 WantedBy=multi-user.target
 EOF"
@@ -546,7 +546,7 @@ User=${ADMIN_USERNAME}
 Group=${ADMIN_USERNAME}
 Environment=MYVAR=myval
 WorkingDirectory=/home/${ADMIN_USERNAME}/chain-explorer
-ExecStart=/usr/bin/pm2 startOrRestart app.json
+ExecStart=/bin/bash -c "/usr/bin/pm2 ping; /usr/bin/pm2 startOrRestart app.json"
 [Install]
 WantedBy=multi-user.target
 EOF"

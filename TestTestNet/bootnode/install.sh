@@ -290,6 +290,36 @@ EOF
     echo "<====== install_dashboard"
 }
 
+install_dashboard_via_systemd() {
+    echo "=====> install_dashboard_via_systemd"
+    git clone https://github.com/oraclesorg/eth-netstats
+    cd eth-netstats
+    npm install
+    sudo npm install -g grunt-cli
+    sudo npm install pm2 -g
+    grunt
+    echo "[\"${NETSTATS_SECRET}\"]" > ws_secret.json
+    cd ..
+
+    sudo bash -c "cat > /etc/systemd/system/oracles-dashboard.service <<EOF
+[Unit]
+Description=oracles dashboard service
+After=network.target
+[Service]
+User=${ADMIN_USERNAME}
+Group=${ADMIN_USERNAME}
+Environment=MYVAR=myval
+WorkingDirectory=/home/${ADMIN_USERNAME}/eth-netstats
+Restart=always
+ExecStart=/usr/bin/npm start
+[Install]
+WantedBy=multi-user.target
+EOF"
+    sudo systemctl enable oracles-dashboard
+    sudo systemctl start oracles-dashboard
+    echo "<====== install_dashboard_via_systemd"
+}
+
 # based on https://get.parity.io
 install_netstats() {
     echo "=====> install_netstats"
@@ -453,6 +483,76 @@ EOF
     chmod +x explorer.start
     sudo ./explorer.start
     echo "<===== install_chain_explorer"
+}
+
+install_chain_explorer_via_systemd() {
+    echo "=====> install_chain_explorer_via_systemd"
+    git clone https://github.com/oraclesorg/chain-explorer
+    git clone https://github.com/ethereum/solc-bin chain-explorer/utils/solc-bin
+    cd chain-explorer
+    npm install
+    sudo npm install pm2 -g
+    cat > config.js <<EOF
+var web3 = require('web3');
+var net = require('net');
+
+var config = function () {
+    this.logFormat = "combined";
+    this.ipcPath = "/home/${ADMIN_USERNAME}/parity/jsonrpc.ipc";
+    this.provider = new web3.providers.IpcProvider(this.ipcPath, net);
+    this.bootstrapUrl = "https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/yeti/bootstrap.min.css";
+    this.names = {
+        "0xdd0bb0e2a1594240fed0c2f2c17c1e9ab4f87126": "Bootnode",
+    };
+}
+
+module.exports = config;
+EOF
+#    sudo apt-get install -y dtach
+#    cat > explorer.start <<EOF
+#dtach -n explorer bash -c "cd chain-explorer; PORT=4000 npm start > ../logs/explorer.out 2> ../logs/explorer.err"
+#EOF
+
+    cat > app.json << EOF
+[
+    {
+        "name"                 : "explorer",
+        "script"               : "./bin/www",
+        "log_date_format"      : "YYYY-MM-DD HH:mm:SS Z",
+        "error_file"           : "/home/${ADMIN_USERNAME}/logs/explorer.err",
+        "out_file"             : "/home/${ADMIN_USERNAME}/logs/explorer.out",
+        "merge_logs"           : false,
+        "watch"                : false,
+        "max_restarts"         : 100,
+        "exec_interpreter"     : "node",
+        "exec_mode"            : "fork_mode",
+        "env":
+        {
+            "NODE_ENV"         : "production",
+            "PORT"             : 4000,
+        }
+    }
+]
+EOF
+    cd ..
+    sudo bash -c "cat > /etc/systemd/system/oracles-chain-explorer.service <<EOF
+[Unit]
+Description=oracles chain explorer service
+After=network.target
+[Service]
+Type=oneshot
+RemainAfterExit=true
+User=${ADMIN_USERNAME}
+Group=${ADMIN_USERNAME}
+Environment=MYVAR=myval
+WorkingDirectory=/home/${ADMIN_USERNAME}/chain-explorer
+ExecStart=/usr/bin/pm2 startOrRestart app.json
+[Install]
+WantedBy=multi-user.target
+EOF"
+    sudo systemctl enable oracles-chain-explorer
+    sudo systemctl start oracles-chain-explorer
+    echo "<===== install_chain_explorer_via_systemd"
 }
 
 start_docker() {
@@ -628,13 +728,15 @@ main () {
 
     #setup_autoupdate
 
-    install_dashboard
+    #install_dashboard
+    install_dashboard_via_systemd
     #install_netstats
     install_netstats_via_systemd
-    install_chain_explorer
-    
+    #install_chain_explorer
+    install_chain_explorer_via_systemd
+
     configure_logrotate
-    
+
     download_initial_keys_script
 }
 

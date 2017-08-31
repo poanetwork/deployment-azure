@@ -750,6 +750,7 @@ main () {
 
     #install_dashboard
     install_dashboard_via_systemd
+    start_pm2_via_systemd
     #install_netstats
     install_netstats_via_systemd
     #install_chain_explorer

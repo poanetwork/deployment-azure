@@ -249,6 +249,28 @@ install_nodejs() {
     echo "<===== install_nodejs"
 }
 
+start_pm2_via_systemd() {
+    echo "=====> start_pm2_via_systemd"
+        sudo bash -c "cat > /etc/systemd/system/oracles-pm2.service <<EOF
+[Unit]
+Description=oracles pm2 service
+After=network.target
+[Service]
+Type=oneshot
+RemainAfterExit=true
+User=${ADMIN_USERNAME}
+Group=${ADMIN_USERNAME}
+Environment=MYVAR=myval
+WorkingDirectory=/home/${ADMIN_USERNAME}
+ExecStart=/usr/bin/pm2 ping
+[Install]
+WantedBy=multi-user.target
+EOF"
+    sudo systemctl enable oracles-pm2
+    sudo systemctl start oracles-pm2
+    echo "<===== start_pm2_via_systemd"
+}
+
 install_dashboard() {
     echo "=====> install_dashboard"
     git clone https://github.com/oraclesorg/eth-netstats
@@ -408,7 +430,7 @@ EOL
     sudo bash -c "cat > /etc/systemd/system/oracles-netstats.service <<EOF
 [Unit]
 Description=oracles netstats service
-After=network.target
+After=oracles-pm2.service
 [Service]
 Type=oneshot
 RemainAfterExit=true
@@ -416,7 +438,7 @@ User=${ADMIN_USERNAME}
 Group=${ADMIN_USERNAME}
 Environment=MYVAR=myval
 WorkingDirectory=/home/${ADMIN_USERNAME}/eth-net-intelligence-api
-ExecStart=/bin/bash -c \"/usr/bin/pm2 ping; /usr/bin/pm2 startOrRestart app.json\"
+ExecStart=/usr/bin/pm2 startOrRestart app.json
 [Install]
 WantedBy=multi-user.target
 EOF"
@@ -538,7 +560,7 @@ EOF
     sudo bash -c "cat > /etc/systemd/system/oracles-chain-explorer.service <<EOF
 [Unit]
 Description=oracles chain explorer service
-After=network.target
+After=oracles-pm2.service
 [Service]
 Type=oneshot
 RemainAfterExit=true
@@ -546,7 +568,7 @@ User=${ADMIN_USERNAME}
 Group=${ADMIN_USERNAME}
 Environment=MYVAR=myval
 WorkingDirectory=/home/${ADMIN_USERNAME}/chain-explorer
-ExecStart=/bin/bash -c \"/usr/bin/pm2 ping; /usr/bin/pm2 startOrRestart app.json\"
+ExecStart=/usr/bin/pm2 startOrRestart app.json
 [Install]
 WantedBy=multi-user.target
 EOF"
@@ -730,6 +752,8 @@ main () {
 
     #install_dashboard
     install_dashboard_via_systemd
+    
+    start_pm2_via_systemd
     #install_netstats
     install_netstats_via_systemd
     #install_chain_explorer

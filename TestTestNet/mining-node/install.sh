@@ -12,7 +12,7 @@ start_logentries() {
     sudo bash -c "gpg --keyserver pgp.mit.edu --recv-keys C43C79AD && gpg -a --export C43C79AD | apt-key add -"
     sudo apt-get update
     sudo apt-get install -y logentries
-    sudo le reinit --user-key=df34b14a-1e50-4a54-9216-a989475cb64b --pull-server-side-config=False
+    sudo le reinit --user-key=0665901a-e843-41c5-82c1-2cc4b39f0b21 --pull-server-side-config=False
 
     mkdir -p /home/${ADMIN_USERNAME}/logs
     touch /home/${ADMIN_USERNAME}/logs/netstats_daemon.err

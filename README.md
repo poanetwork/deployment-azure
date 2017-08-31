@@ -1,4 +1,4 @@
-## (DEV) Test TestNet
+## Test TestNet
 ### Mining node
 *(Haven't you forgotten to change* `bootnodes`*?)*
 

@@ -62,14 +62,14 @@
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
     "ubuntuOSVersion": "16.04.0-LTS",
-    "dnsLabelPrefix": "[concat(resourceGroup().name, uniqueString(parameters('nodeFullName')))]",
-    "adminUsername": "[parameters('adminUsername')]",
-    "sshPublicKey": "[parameters('sshPublicKey')]",
-    "nodeFullName": "[parameters('nodeFullName')]",
-    "nodeAdminEmail": "[parameters('nodeAdminEmail')]",
-    "ownerKeyFile": "[base64(string(parameters('ownerKeyFile')))]",
-    "ownerKeypass": "[parameters('ownerKeypass')]",
-    "netstatsSecret": "[parameters('netstatsSecret')]"
+    "dnsLabelPrefix": "[concat('oracles-bn-', uniqueString(parameters('nodeFullName')))]",
+    "adminUsername": "[trim(toLower(parameters('adminUsername')))]",
+    "sshPublicKey": "[trim(parameters('sshPublicKey'))]",
+    "nodeFullName": "[trim(parameters('nodeFullName'))]",
+    "nodeAdminEmail": "[trim(parameters('nodeAdminEmail'))]",
+    "ownerKeyFile": "[base64(trim(string(parameters('ownerKeyFile'))))]",
+    "ownerKeypass": "[trim(parameters('ownerKeypass'))]",
+    "netstatsSecret": "[trim(parameters('netstatsSecret'))]"
   },
   "resources": [
     {

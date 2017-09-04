@@ -62,7 +62,7 @@
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
     "ubuntuOSVersion": "16.04.0-LTS",
-    "dnsLabelPrefix": "[concat('oracles-bn-', uniqueString(parameters('nodeFullName')))]",
+    "dnsLabelPrefix": "[concat('musereum-bn-', uniqueString(parameters('nodeFullName')))]",
     "adminUsername": "[trim(toLower(parameters('adminUsername')))]",
     "sshPublicKey": "[trim(parameters('sshPublicKey'))]",
     "nodeFullName": "[trim(parameters('nodeFullName'))]",

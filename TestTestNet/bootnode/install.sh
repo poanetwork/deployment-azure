@@ -717,7 +717,8 @@ configure_logrotate() {
     copytruncate
     dateext
     dateformat %Y-%m-%d-%s
-}"
+}
+EOF"
     echo "<===== configure_logrotate"
 }
 

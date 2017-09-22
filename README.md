@@ -1,6 +1,6 @@
 ## Oracles Azure VM Templates
 
-This part of Oracles Network.
+This is a part of Oracles Network.
 Please visit https://oracles.org for more details about the project.
 
 ### Current TestNet with real notaries

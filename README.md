@@ -4,7 +4,7 @@ This part of Oracles Network.
 Please visit https://oracles.org for more details about the project.
 
 ### Current TestNet with real notaries
-If you don't know what this means, please refer to [our wiki](https://github.com/oraclesorg/oracles-wiki) first.
+If you don't know what this means, please refer to [our wiki](https://github.com/oraclesorg/oracles-wiki).
 
 If you already have your mining key, you're familiar with the procedure of setting up a mining node and just need a link to the Azure template, please click below:
 

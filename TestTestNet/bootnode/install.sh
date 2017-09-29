@@ -28,47 +28,47 @@ start_logentries() {
     sudo bash -c "cat >> /etc/le/config << EOF
 [install_err]
 path = /var/lib/waagent/custom-script/download/0/stderr
-destination = TestTestNets/${EXT_IP}
+destination = dev-mainnet/${EXT_IP}
 
 [install_out]
 path = /var/lib/waagent/custom-script/download/0/stdout
-destination = TestTestNets/${EXT_IP}
+destination = dev-mainnet/${EXT_IP}
 
 [dashboard_err]
 path = /home/${ADMIN_USERNAME}/logs/dashboard.err
-destination = TestTestNets/${EXT_IP}
+destination = dev-mainnet/${EXT_IP}
 
 [dashboard_out]
 path = /home/${ADMIN_USERNAME}/logs/dashboard.out
-destination = TestTestNets/${EXT_IP}
+destination = dev-mainnet/${EXT_IP}
 
 [parity_log]
 path = /home/${ADMIN_USERNAME}/logs/parity.log
-destination = TestTestNets/${EXT_IP}
+destination = dev-mainnet/${EXT_IP}
 
 [netstats_daemon_err]
 path = /home/${ADMIN_USERNAME}/logs/netstats_daemon.err
-destination = TestTestNets/${EXT_IP}
+destination = dev-mainnet/${EXT_IP}
 
 [netstats_daemon_out]
 path = /home/${ADMIN_USERNAME}/logs/netstats_daemon.out
-destination = TestTestNets/${EXT_IP}
+destination = dev-mainnet/${EXT_IP}
 
 [explorer_err]
 path = /home/${ADMIN_USERNAME}/logs/explorer.err
-destination = TestTestNets/${EXT_IP}
+destination = dev-mainnet/${EXT_IP}
 
 [explorer_out]
 path = /home/${ADMIN_USERNAME}/logs/explorer.out
-destination = TestTestNets/${EXT_IP}
+destination = dev-mainnet/${EXT_IP}
 
 [parity_err]
 path = /home/${ADMIN_USERNAME}/logs/parity.err
-destination = TestTestNets/${EXT_IP}
+destination = dev-mainnet/${EXT_IP}
 
 [parity_out]
 path = /home/${ADMIN_USERNAME}/logs/parity.out
-destination = TestTestNets/${EXT_IP}
+destination = dev-mainnet/${EXT_IP}
 
 EOF"
     sudo apt-get install -y logentries-daemon
@@ -112,7 +112,7 @@ declare -p
 # script parameters
 #INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
 #INSTALL_DOCKER_IMAGE="parity/parity:v1.6.8"
-INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/dev/TestTestNet/bootnode"
+INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/dev/dev-mainnet/bootnode"
 GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/master/spec.json"
 GENESIS_JSON="spec.json"
 NODE_TOML="node.toml"
@@ -156,7 +156,7 @@ add_user_to_docker_group() {
     newgrp docker
     newgrp -
     #newgrp "${orig_group_id}"
-    
+
     echo "===== Groups: "
     groups
     echo "<===== add_user_to_docker_group"
@@ -605,7 +605,7 @@ use_deb() {
     curl -LO 'http://parity-downloads-mirror.parity.io/v1.7.0/x86_64-unknown-linux-gnu/parity_1.7.0_amd64.deb'
     sudo dpkg -i parity_1.7.0_amd64.deb
     sudo apt-get install dtach
-    
+
     cat > parity.start << EOF
 dtach -n parity.dtach bash -c "parity -l engine=trace,discovery=trace,network=trace --config ${NODE_TOML} --ui-no-validation >> logs/parity.out 2>> logs/parity.err"
 EOF
@@ -618,7 +618,7 @@ use_deb_via_systemd() {
     echo "=====> use_deb_via_systemd"
     curl -LO 'http://parity-downloads-mirror.parity.io/v1.7.0/x86_64-unknown-linux-gnu/parity_1.7.0_amd64.deb'
     sudo dpkg -i parity_1.7.0_amd64.deb
-    
+
     #curl -LO 'http://d1h4xl4cr1h0mo.cloudfront.net/nightly/x86_64-unknown-debian-gnu/parity_1.8.0_amd64.deb'
     #sudo dpkg -i parity_1.8.0_amd64.deb
 
@@ -646,12 +646,12 @@ use_bin() {
     curl -L -o parity-bin-v1.7.0.zip 'https://gitlab.parity.io/parity/parity/-/jobs/61863/artifacts/download'
     unzip parity-bin-v1.7.0.zip -d parity-bin-v1.7.0
     ln -s parity-bin-v1.7.0/target/release/parity parity-v1.7.0
-    
+
     cat > parity.start << EOF
 dtach -n parity.dtach bash -c "./parity-v1.7.0 -l discovery=trace,network=trace --config ${NODE_TOML} --ui-no-validation >> logs/parity.out 2>> logs/parity.err"
 EOF
     chmod +x parity.start
-    ./parity.start 
+    ./parity.start
     echo "<===== use_bin"
 }
 
@@ -668,7 +668,7 @@ compile_source() {
     cargo build --release
     cd ..
     ln -s parity-src-v1.7.0/target/release/parity parity-v1.7.0
-    
+
     cat > parity.start << EOF
 ./parity-v1.7.0 -l discovery=trace,network=trace --config "${NODE_TOML}" --ui-no-validation >> logs/parity.out 2>> logs/parity.err
 EOF
@@ -696,7 +696,7 @@ EOF"
 
 configure_logrotate() {
     echo "=====> configure_logrotate"
-    
+
     sudo bash -c "cat > /etc/logrotate.d/oracles.conf << EOF
 /home/${ADMIN_USERNAME}/logs/*.log {
     rotate 10
@@ -756,7 +756,7 @@ main () {
 
     #install_dashboard
     install_dashboard_via_systemd
-    
+
     start_pm2_via_systemd
     #install_netstats
     install_netstats_via_systemd

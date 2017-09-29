@@ -26,31 +26,31 @@ start_logentries() {
     sudo bash -c "cat >> /etc/le/config << EOF
 [install_err]
 path = /var/lib/waagent/custom-script/download/0/stderr
-destination = TestTestNets/${EXT_IP}
+destination = dev-mainnet/${EXT_IP}
 [install_out]
 path = /var/lib/waagent/custom-script/download/0/stdout
-destination = TestTestNets/${EXT_IP}
+destination = dev-mainnet/${EXT_IP}
 [netstats_daemon_err]
 path = /home/${ADMIN_USERNAME}/logs/netstats_daemon.err
-destination = TestTestNets/${EXT_IP}
+destination = dev-mainnet/${EXT_IP}
 [netstats_daemon_out]
 path = /home/${ADMIN_USERNAME}/logs/netstats_daemon.out
-destination = TestTestNets/${EXT_IP}
+destination = dev-mainnet/${EXT_IP}
 [parity_err]
 path = /home/${ADMIN_USERNAME}/logs/parity.err
-destination = TestTestNets/${EXT_IP}
+destination = dev-mainnet/${EXT_IP}
 [parity_out]
 path = /home/${ADMIN_USERNAME}/logs/parity.out
-destination = TestTestNets/${EXT_IP}
+destination = dev-mainnet/${EXT_IP}
 [parity_log]
 path = /home/${ADMIN_USERNAME}/logs/parity.log
-destination = TestTestNets/${EXT_IP}
+destination = dev-mainnet/${EXT_IP}
 [transferReward_out]
 path = /home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out
-destination = TestTestNets/${EXT_IP}
+destination = dev-mainnet/${EXT_IP}
 [transferReward_err]
 path = /home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err
-destination = TestTestNets/${EXT_IP}
+destination = dev-mainnet/${EXT_IP}
 EOF"
     sudo apt-get install -y logentries-daemon
     sudo service logentries start
@@ -339,7 +339,7 @@ use_deb() {
     curl -LO 'http://parity-downloads-mirror.parity.io/v1.7.0/x86_64-unknown-linux-gnu/parity_1.7.0_amd64.deb'
     sudo dpkg -i parity_1.7.0_amd64.deb
     sudo apt-get install dtach
-    
+
     cat > parity.start << EOF
 dtach -n parity.dtach bash -c "parity -l engine=trace,discovery=trace,network=trace --config ${NODE_TOML} >> logs/parity.out 2>> logs/parity.err"
 EOF
@@ -379,12 +379,12 @@ use_bin() {
     curl -L -o parity-bin-v1.7.0.zip 'https://gitlab.parity.io/parity/parity/-/jobs/61863/artifacts/download'
     unzip parity-bin-v1.7.0.zip -d parity-bin-v1.7.0
     ln -s parity-bin-v1.7.0/target/release/parity parity-v1.7.0
-    
+
     cat > parity.start << EOF
 dtach -n parity.dtach bash -c "./parity-v1.7.0 -l discovery=trace,network=trace --config ${NODE_TOML} >> logs/parity.out 2>> logs/parity.err"
 EOF
     chmod +x parity.start
-    ./parity.start 
+    ./parity.start
     echo "<===== use_bin"
 }
 
@@ -401,7 +401,7 @@ compile_source() {
     cargo build --release
     cd ..
     ln -s parity-src-v1.7.0/target/release/parity parity-v1.7.0
-    
+
     cat > parity.start << EOF
 ./parity-v1.7.0 -l discovery=trace,network=trace --config "${NODE_TOML}" >> logs/parity.out 2>> logs/parity.err
 EOF
@@ -449,7 +449,7 @@ EOF"
 
 configure_logrotate() {
     echo "=====> configure_logrotate"
-    
+
     sudo bash -c "cat > /etc/logrotate.d/oracles.conf << EOF
 /home/${ADMIN_USERNAME}/logs/*.log {
     rotate 10
@@ -482,7 +482,7 @@ main () {
 
     prepare_homedir
     #add_user_to_docker_group
-    
+
     install_ntpd
     install_haveged
     allocate_swap
@@ -495,7 +495,7 @@ main () {
     #use_deb
     use_deb_via_systemd
     #use_bin
-    
+
     #setup_autoupdate
 
     #install_netstats

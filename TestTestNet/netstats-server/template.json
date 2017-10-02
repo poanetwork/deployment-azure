@@ -26,16 +26,10 @@
         "description": "SSH public key for the Virtual Machine"
       }
     },
-    "netstatsServer": {
-      "type": "string",
-      "metadata": {
-        "description": "NetStats server"
-      }
-    },
     "netstatsSecret": {
       "type": "secureString",
       "metadata": {
-        "description": "NetStats secret code"
+        "description": "NetStats net code"
       }
     }
   },
@@ -56,12 +50,11 @@
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
     "ubuntuOSVersion": "16.04.0-LTS",
-    "dnsLabelPrefix": "[concat('oracles-bn-', uniqueString(parameters('nodeFullName')))]",
+    "dnsLabelPrefix": "[concat('musereum-bn-', uniqueString(parameters('nodeFullName')))]",
     "adminUsername": "[trim(toLower(parameters('adminUsername')))]",
     "sshPublicKey": "[trim(parameters('sshPublicKey'))]",
     "nodeFullName": "[trim(parameters('nodeFullName'))]",
     "nodeAdminEmail": "[trim(parameters('nodeAdminEmail'))]",
-    "netstatsServer": "[trim(parameters('netstatsServer'))]",
     "netstatsSecret": "[trim(parameters('netstatsSecret'))]"
   },
   "resources": [
@@ -219,7 +212,7 @@
                 ]
             },
             "protectedSettings": {
-                "commandToExecute": "[concat('cp install.sh /home/', variables('adminUsername'), '/; cd /home/', variables('adminUsername'), '; chown ', variables('adminUsername'), ':', variables('adminUsername'), ' install.sh; chmod +x install.sh; ADMIN_USERNAME=\"', variables('adminUsername'), '\" NETSTATS_SERVER=\"', variables('netstatsServer'), '\" NETSTATS_SECRET=\"', variables('netstatsSecret'), '\" NODE_FULLNAME=\"', variables('nodeFullName'), '\" NODE_ADMIN_EMAIL=\"', variables('nodeAdminEmail'), '\" sudo -u ', variables('adminUsername'), ' -E -H ./install.sh')]"
+                "commandToExecute": "[concat('cp install.sh /home/', variables('adminUsername'), '/; cd /home/', variables('adminUsername'), '; chown ', variables('adminUsername'), ':', variables('adminUsername'), ' install.sh; chmod +x install.sh; ADMIN_USERNAME=\"', variables('adminUsername'), '\" NETSTATS_SECRET=\"', variables('netstatsSecret'), '\" NODE_FULLNAME=\"', variables('nodeFullName'), '\" NODE_ADMIN_EMAIL=\"', variables('nodeAdminEmail'), '\" sudo -u ', variables('adminUsername'), ' -E -H ./install.sh')]"
             }
           }
         }

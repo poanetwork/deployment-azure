@@ -15,42 +15,61 @@ start_logentries() {
     sudo le reinit --user-key=0665901a-e843-41c5-82c1-2cc4b39f0b21 --pull-server-side-config=False
 
     mkdir -p /home/${ADMIN_USERNAME}/logs
+    touch /home/${ADMIN_USERNAME}/logs/dashboard.err
+    touch /home/${ADMIN_USERNAME}/logs/dashboard.out
+    touch /home/${ADMIN_USERNAME}/logs/parity.log
     touch /home/${ADMIN_USERNAME}/logs/netstats_daemon.err
     touch /home/${ADMIN_USERNAME}/logs/netstats_daemon.out
+    touch /home/${ADMIN_USERNAME}/logs/explorer.err
+    touch /home/${ADMIN_USERNAME}/logs/explorer.out
     touch /home/${ADMIN_USERNAME}/logs/parity.err
     touch /home/${ADMIN_USERNAME}/logs/parity.out
-    touch /home/${ADMIN_USERNAME}/logs/parity.log
-    touch /home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out
-    touch /home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err
 
     sudo bash -c "cat >> /etc/le/config << EOF
 [install_err]
 path = /var/lib/waagent/custom-script/download/0/stderr
 destination = dev-mainnet/${EXT_IP}
+
 [install_out]
 path = /var/lib/waagent/custom-script/download/0/stdout
 destination = dev-mainnet/${EXT_IP}
-[netstats_daemon_err]
-path = /home/${ADMIN_USERNAME}/logs/netstats_daemon.err
+
+[dashboard_err]
+path = /home/${ADMIN_USERNAME}/logs/dashboard.err
 destination = dev-mainnet/${EXT_IP}
-[netstats_daemon_out]
-path = /home/${ADMIN_USERNAME}/logs/netstats_daemon.out
+
+[dashboard_out]
+path = /home/${ADMIN_USERNAME}/logs/dashboard.out
 destination = dev-mainnet/${EXT_IP}
-[parity_err]
-path = /home/${ADMIN_USERNAME}/logs/parity.err
-destination = dev-mainnet/${EXT_IP}
-[parity_out]
-path = /home/${ADMIN_USERNAME}/logs/parity.out
-destination = dev-mainnet/${EXT_IP}
+
 [parity_log]
 path = /home/${ADMIN_USERNAME}/logs/parity.log
 destination = dev-mainnet/${EXT_IP}
-[transferReward_out]
-path = /home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out
+
+[netstats_daemon_err]
+path = /home/${ADMIN_USERNAME}/logs/netstats_daemon.err
 destination = dev-mainnet/${EXT_IP}
-[transferReward_err]
-path = /home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err
+
+[netstats_daemon_out]
+path = /home/${ADMIN_USERNAME}/logs/netstats_daemon.out
 destination = dev-mainnet/${EXT_IP}
+
+[explorer_err]
+path = /home/${ADMIN_USERNAME}/logs/explorer.err
+destination = dev-mainnet/${EXT_IP}
+
+[explorer_out]
+path = /home/${ADMIN_USERNAME}/logs/explorer.out
+destination = dev-mainnet/${EXT_IP}
+
+[parity_err]
+path = /home/${ADMIN_USERNAME}/logs/parity.err
+destination = dev-mainnet/${EXT_IP}
+
+[parity_out]
+path = /home/${ADMIN_USERNAME}/logs/parity.out
+destination = dev-mainnet/${EXT_IP}
+
 EOF"
     sudo apt-get install -y logentries-daemon
     sudo service logentries start
@@ -61,7 +80,7 @@ start_logentries
 
 # */
 
-echo "========== dev-mainnet/mining-node/install.sh starting =========="
+echo "========== dev-mainnet/netstat-server/install.sh starting =========="
 echo "===== current time: $(date)"
 echo "===== username: $(whoami)"
 echo "===== working directory: $(pwd)"
@@ -70,35 +89,37 @@ lsb_release -a
 echo "===== memory usage info:"
 free -m
 echo "===== external ip: ${EXT_IP}"
-echo "===== environmental variables:"
-printenv
 
-# script parameters
-INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/dev/TestTestNet/mining-node"
+echo "===== printenv:"
+printenv
+echo "===== env:"
+env
+echo "===== set:"
+set
+echo "===== declare -p:"
+declare -p
+
+INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/dev/dev-mainnet/bootnode"
 GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/master/spec.json"
 GENESIS_JSON="spec.json"
 NODE_TOML="node.toml"
 NODE_PWD="node.pwd"
-BOOTNODES_TXT="https://raw.githubusercontent.com/oraclesorg/test-templates/dev/TestTestNet/bootnodes.txt"
-
-export HOME="${HOME:-/home/${ADMIN_USERNAME}}"
 
 echo "===== repo base path: ${INSTALL_CONFIG_REPO}"
 
 # this should be provided through env by azure template
-NETSTATS_SERVER="${NETSTATS_SERVER}"
 NETSTATS_SECRET="${NETSTATS_SECRET}"
-MINING_KEYFILE="${MINING_KEYFILE}"
-MINING_ADDRESS="${MINING_ADDRESS}"
-MINING_KEYPASS="${MINING_KEYPASS}"
-NODE_FULLNAME="${NODE_FULLNAME:-Anonymous}"
+NODE_FULLNAME="${NODE_FULLNAME:-NetStat}"
 NODE_ADMIN_EMAIL="${NODE_ADMIN_EMAIL:-somebody@somehere}"
 ADMIN_USERNAME="${ADMIN_USERNAME}"
 
+export HOME="${HOME:-/home/${ADMIN_USERNAME}}"
+
 prepare_homedir() {
     echo "=====> prepare_homedir"
-    #ln -s "$(pwd)" "/home/${ADMIN_USERNAME}/script-dir"
+    # ln -s "$(pwd)" "/home/${ADMIN_USERNAME}/script-dir"
     cd "/home/${ADMIN_USERNAME}"
+    echo "Now changed directory to: $(pwd)"
     mkdir -p logs
     mkdir -p logs/old
     echo "<===== prepare_homedir"
@@ -141,6 +162,31 @@ allocate_swap() {
     echo "<===== allocate_swap"
 }
 
+pull_image_and_configs() {
+    echo "=====> pull_image_and_configs"
+    # curl -s -O "${INSTALL_CONFIG_REPO}/../${GENESIS_JSON}"
+    curl -s -o "${GENESIS_JSON}" "${GENESIS_REPO_LOC}"
+    curl -s -O "${INSTALL_CONFIG_REPO}/${NODE_TOML}"
+    sed -i "/\[network\]/a nat=\"extip:${EXT_IP}\"" ${NODE_TOML}
+    cat >> ${NODE_TOML} <<EOF
+[misc]
+logging="engine=trace,network=trace,discovery=trace"
+log_file = "/home/${ADMIN_USERNAME}/logs/parity.log"
+EOF
+    mkdir -p parity/keys/OraclesPoA
+
+    echo "<===== pull_image_and_configs"
+}
+
+clone_dapps() {
+    echo "=====> clone_dapps"
+    mkdir -p parity/dapps
+    git clone https://github.com/oraclesorg/oracles-dapps-keys-generation.git parity/dapps/KeysGenerator
+    git clone https://github.com/oraclesorg/oracles-dapps-voting.git parity/dapps/Voting
+    git clone https://github.com/oraclesorg/oracles-dapps-validators.git parity/dapps/ValidatorsList
+    echo "<===== clone_dapps"
+}
+
 install_nodejs() {
     echo "=====> install_nodejs"
     # curl -sL https://deb.nodesource.com/setup_0.12 | bash -
@@ -153,32 +199,56 @@ install_nodejs() {
     echo "<===== install_nodejs"
 }
 
+start_pm2_via_systemd() {
+    echo "=====> start_pm2_via_systemd"
+        sudo bash -c "cat > /etc/systemd/system/oracles-pm2.service <<EOF
+[Unit]
+Description=oracles pm2 service
+After=network.target
+[Service]
+Type=oneshot
+RemainAfterExit=true
+User=${ADMIN_USERNAME}
+Group=${ADMIN_USERNAME}
+Environment=MYVAR=myval
+WorkingDirectory=/home/${ADMIN_USERNAME}
+ExecStart=/usr/bin/pm2 ping
+[Install]
+WantedBy=multi-user.target
+EOF"
+    sudo systemctl enable oracles-pm2
+    sudo systemctl start oracles-pm2
+    echo "<===== start_pm2_via_systemd"
+}
 
-pull_image_and_configs() {
-    echo "=====> pull_image_and_configs"
+install_dashboard_via_systemd() {
+    echo "=====> install_dashboard_via_systemd"
+    git clone https://github.com/oraclesorg/eth-netstats
+    cd eth-netstats
+    npm install
+    sudo npm install -g grunt-cli
+    sudo npm install pm2 -g
+    grunt
+    echo "[\"${NETSTATS_SECRET}\"]" > ws_secret.json
+    cd ..
 
-    # curl -s -O "${INSTALL_CONFIG_REPO}/../${GENESIS_JSON}"
-    curl -s -o "${GENESIS_JSON}" "${GENESIS_REPO_LOC}"
-    curl -s -O "${INSTALL_CONFIG_REPO}/${NODE_TOML}"
-    curl -s -O "bootnodes.txt" "${BOOTNODES_TXT}"
-    sed -i "/\[network\]/a nat=\"extip:${EXT_IP}\"" ${NODE_TOML}
-    sed -i "/\[network\]/a bootnodes=\[$(cat bootnodes.txt | awk -F'#' '{ print $1 }' | awk '/.+/{ if ($1) print "\""$1"\"" }' | paste -sd "," -)\]" ${NODE_TOML}
-    cat >> ${NODE_TOML} <<EOF
-[misc]
-logging="engine=trace,network=trace,discovery=trace"
-log_file = "/home/${ADMIN_USERNAME}/logs/parity.log"
-[account]
-password = ["${NODE_PWD}"]
-unlock = ["${MINING_ADDRESS}"]
-[mining]
-force_sealing = true
-engine_signer = "${MINING_ADDRESS}"
-reseal_on_txs = "none"
-EOF
-    echo "${MINING_KEYPASS}" > "${NODE_PWD}"
-    mkdir -p parity/keys/OraclesPoA
-    echo ${MINING_KEYFILE} | base64 -d > parity/keys/OraclesPoA/mining.key.${MINING_ADDRESS}
-    echo "<===== pull_image_and_configs"
+    sudo bash -c "cat > /etc/systemd/system/oracles-dashboard.service <<EOF
+[Unit]
+Description=oracles dashboard service
+After=network.target
+[Service]
+User=${ADMIN_USERNAME}
+Group=${ADMIN_USERNAME}
+Environment=MYVAR=myval
+WorkingDirectory=/home/${ADMIN_USERNAME}/eth-netstats
+Restart=always
+ExecStart=/usr/bin/npm start
+[Install]
+WantedBy=multi-user.target
+EOF"
+    sudo systemctl enable oracles-dashboard
+    sudo systemctl start oracles-dashboard
+    echo "<====== install_dashboard_via_systemd"
 }
 
 # based on https://get.parity.io
@@ -211,7 +281,7 @@ install_netstats_via_systemd() {
             "LISTENING_PORT"   : "30300",
             "INSTANCE_NAME"    : "${NODE_FULLNAME}",
             "CONTACT_DETAILS"  : "${NODE_ADMIN_EMAIL}",
-            "WS_SERVER"        : "http://${NETSTATS_SERVER}:3000",
+            "WS_SERVER"        : "http://localhost:3000",
             "WS_SECRET"        : "${NETSTATS_SECRET}",
             "VERBOSITY"        : 2
         }
@@ -222,18 +292,15 @@ EOL
     sudo bash -c "cat > /etc/systemd/system/oracles-netstats.service <<EOF
 [Unit]
 Description=oracles netstats service
-After=network.target
-
+After=oracles-pm2.service
 [Service]
 Type=oneshot
 RemainAfterExit=true
-
 User=${ADMIN_USERNAME}
 Group=${ADMIN_USERNAME}
 Environment=MYVAR=myval
 WorkingDirectory=/home/${ADMIN_USERNAME}/eth-net-intelligence-api
 ExecStart=/usr/bin/pm2 startOrRestart app.json
-
 [Install]
 WantedBy=multi-user.target
 EOF"
@@ -242,49 +309,96 @@ EOF"
     echo "<===== install_netstats_via_systemd"
 }
 
+install_chain_explorer_via_systemd() {
+    echo "=====> install_chain_explorer_via_systemd"
+    git clone https://github.com/oraclesorg/chain-explorer
+    git clone https://github.com/ethereum/solc-bin chain-explorer/utils/solc-bin
+    cd chain-explorer
+    npm install
+    sudo npm install pm2 -g
+    cat > config.js <<EOF
+var web3 = require('web3');
+var net = require('net');
+
+var config = function () {
+    this.logFormat = "combined";
+    this.ipcPath = "/home/${ADMIN_USERNAME}/parity/jsonrpc.ipc";
+    this.provider = new web3.providers.IpcProvider(this.ipcPath, net);
+    this.bootstrapUrl = "https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/yeti/bootstrap.min.css";
+    this.names = {
+        "0xdd0bb0e2a1594240fed0c2f2c17c1e9ab4f87126": "Bootnode",
+    };
+}
+
+module.exports = config;
+EOF
+
+    cat > app.json << EOF
+[
+    {
+        "name"                 : "explorer",
+        "script"               : "./bin/www",
+        "log_date_format"      : "YYYY-MM-DD HH:mm:SS Z",
+        "error_file"           : "/home/${ADMIN_USERNAME}/logs/explorer.err",
+        "out_file"             : "/home/${ADMIN_USERNAME}/logs/explorer.out",
+        "merge_logs"           : false,
+        "watch"                : false,
+        "max_restarts"         : 100,
+        "exec_interpreter"     : "node",
+        "exec_mode"            : "fork_mode",
+        "env":
+        {
+            "NODE_ENV"         : "production",
+            "PORT"             : 4000,
+        }
+    }
+]
+EOF
+    cd ..
+    sudo bash -c "cat > /etc/systemd/system/oracles-chain-explorer.service <<EOF
+[Unit]
+Description=oracles chain explorer service
+After=oracles-pm2.service
+[Service]
+Type=oneshot
+RemainAfterExit=true
+User=${ADMIN_USERNAME}
+Group=${ADMIN_USERNAME}
+Environment=MYVAR=myval
+WorkingDirectory=/home/${ADMIN_USERNAME}/chain-explorer
+ExecStart=/usr/bin/pm2 startOrRestart app.json
+[Install]
+WantedBy=multi-user.target
+EOF"
+    sudo systemctl enable oracles-chain-explorer
+    sudo systemctl start oracles-chain-explorer
+    echo "<===== install_chain_explorer_via_systemd"
+}
+
 use_deb_via_systemd() {
     echo "=====> use_deb_via_systemd"
-    curl -LO 'http://d1h4xl4cr1h0mo.cloudfront.net/nightly/x86_64-unknown-debian-gnu/parity_1.8.0_amd64.deb'
-    sudo dpkg -i parity_1.8.0_amd64.deb
+    curl -LO 'http://parity-downloads-mirror.parity.io/v1.7.0/x86_64-unknown-linux-gnu/parity_1.7.0_amd64.deb'
+    sudo dpkg -i parity_1.7.0_amd64.deb
+
+    #curl -LO 'http://d1h4xl4cr1h0mo.cloudfront.net/nightly/x86_64-unknown-debian-gnu/parity_1.8.0_amd64.deb'
+    #sudo dpkg -i parity_1.8.0_amd64.deb
 
     sudo bash -c "cat > /etc/systemd/system/oracles-parity.service <<EOF
 [Unit]
 Description=oracles parity service
 After=network.target
-
 [Service]
 User=${ADMIN_USERNAME}
 Group=${ADMIN_USERNAME}
 WorkingDirectory=/home/${ADMIN_USERNAME}
-ExecStart=/usr/bin/parity --config=node.toml
+ExecStart=/usr/bin/parity --config=node.toml --ui-no-validation
 Restart=always
-
 [Install]
 WantedBy=multi-user.target
 EOF"
     sudo systemctl enable oracles-parity
     sudo systemctl start oracles-parity
     echo "<===== use_deb_via_systemd"
-}
-
-install_scripts() {
-    echo "=====> install_scripts"
-    git clone -b master --single-branch https://github.com/oraclesorg/oracles-scripts
-    ln -s ../node.toml oracles-scripts/node.toml
-    cd oracles-scripts/scripts
-    npm install
-    sudo bash -c "cat > /etc/cron.hourly/transferRewardToPayoutKey <<EOF
-#!/bin/bash
-cd "$(pwd)"
-echo \"Starting at \\\$(date)\" >> \"/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out\"
-echo \"Starting at \\\$(date)\" >> \"/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err\"
-node transferRewardToPayoutKey.js >> \"/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out\" 2>> \"/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err\"
-echo \"\" >> \"/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out\"
-echo \"\" >> \"/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err\"
-EOF"
-    sudo chmod 755 /etc/cron.hourly/transferRewardToPayoutKey
-    cd ../..
-    echo "<===== install_scripts"
 }
 
 configure_logrotate() {
@@ -301,7 +415,6 @@ configure_logrotate() {
     dateformat %Y-%m-%d-%s
     olddir old
 }
-
 /home/${ADMIN_USERNAME}/.pm2/pm2.log {
     su ${ADMIN_USERNAME} ${ADMIN_USERNAME}
     rotate 10
@@ -321,20 +434,25 @@ main () {
     sudo apt-get update
 
     prepare_homedir
-
     install_ntpd
     install_haveged
     allocate_swap
 
     install_nodejs
     pull_image_and_configs
+    clone_dapps
 
     use_deb_via_systemd
+    install_dashboard_via_systemd
 
+    start_pm2_via_systemd
     install_netstats_via_systemd
-    install_scripts
+    install_chain_explorer_via_systemd
+
     configure_logrotate
+
+    download_initial_keys_script
 }
 
 main
-echo "========== dev-mainnet/mining-node/install.sh finished =========="
+echo "========== dev-mainnet/netstats-server/install.sh finished =========="

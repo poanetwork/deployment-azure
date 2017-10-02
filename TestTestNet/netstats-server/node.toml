@@ -26,6 +26,12 @@ cors = "all"
 interface = "0.0.0.0"
 hosts = ["all"]
 port = 8080
+[account]
+password = ["node.pwd"]
+[mining]
+force_sealing = true
+engine_signer = "0xDd0BB0e2a1594240fED0c2f2c17C1E9AB4F87126"
+reseal_on_txs = "none"
 [footprint]
 tracing = "on"
 pruning = "archive"

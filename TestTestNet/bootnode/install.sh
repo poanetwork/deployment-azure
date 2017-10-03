@@ -201,7 +201,8 @@ install_nodejs() {
 
 start_pm2_via_systemd() {
     echo "=====> start_pm2_via_systemd"
-        sudo bash -c "cat > /etc/systemd/system/oracles-pm2.service <<EOF
+    sudo npm install pm2 -g
+    sudo bash -c "cat > /etc/systemd/system/oracles-pm2.service <<EOF
 [Unit]
 Description=oracles pm2 service
 After=network.target
@@ -228,7 +229,6 @@ install_netstats_via_systemd() {
     cd eth-net-intelligence-api
     #sed -i '/"web3"/c "web3": "0.19.x",' package.json
     npm install
-    sudo npm install pm2 -g
 
     cat > app.json << EOL
 [

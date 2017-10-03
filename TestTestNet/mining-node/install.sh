@@ -181,6 +181,29 @@ EOF
     echo "<===== pull_image_and_configs"
 }
 
+start_pm2_via_systemd() {
+    sudo npm install pm2 -g
+    echo "=====> start_pm2_via_systemd"
+    sudo bash -c "cat > /etc/systemd/system/oracles-pm2.service <<EOF
+[Unit]
+Description=oracles pm2 service
+After=network.target
+[Service]
+Type=oneshot
+RemainAfterExit=true
+User=${ADMIN_USERNAME}
+Group=${ADMIN_USERNAME}
+Environment=MYVAR=myval
+WorkingDirectory=/home/${ADMIN_USERNAME}
+ExecStart=/usr/bin/pm2 ping
+[Install]
+WantedBy=multi-user.target
+EOF"
+    sudo systemctl enable oracles-pm2
+    sudo systemctl start oracles-pm2
+    echo "<===== start_pm2_via_systemd"
+}
+
 # based on https://get.parity.io
 install_netstats_via_systemd() {
     echo "=====> install_netstats_via_systemd"
@@ -331,6 +354,7 @@ main () {
 
     use_deb_via_systemd
 
+    start_pm2_via_systemd
     install_netstats_via_systemd
     install_scripts
     configure_logrotate

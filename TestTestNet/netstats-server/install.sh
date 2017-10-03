@@ -200,8 +200,9 @@ install_nodejs() {
 }
 
 start_pm2_via_systemd() {
+    sudo npm install pm2 -g
     echo "=====> start_pm2_via_systemd"
-        sudo bash -c "cat > /etc/systemd/system/oracles-pm2.service <<EOF
+    sudo bash -c "cat > /etc/systemd/system/oracles-pm2.service <<EOF
 [Unit]
 Description=oracles pm2 service
 After=network.target
@@ -227,7 +228,6 @@ install_dashboard_via_systemd() {
     cd eth-netstats
     npm install
     sudo npm install -g grunt-cli
-    sudo npm install pm2 -g
     grunt
     echo "[\"${NETSTATS_SECRET}\"]" > ws_secret.json
     cd ..
@@ -443,9 +443,10 @@ main () {
     clone_dapps
 
     use_deb_via_systemd
-    install_dashboard_via_systemd
 
     start_pm2_via_systemd
+
+    install_dashboard_via_systemd
     install_netstats_via_systemd
     install_chain_explorer_via_systemd
 

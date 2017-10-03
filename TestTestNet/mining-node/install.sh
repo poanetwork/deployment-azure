@@ -267,8 +267,11 @@ EOF"
 
 use_deb_via_systemd() {
     echo "=====> use_deb_via_systemd"
-    curl -LO 'http://d1h4xl4cr1h0mo.cloudfront.net/nightly/x86_64-unknown-debian-gnu/parity_1.8.0_amd64.deb'
-    sudo dpkg -i parity_1.8.0_amd64.deb
+    curl -LO 'http://parity-downloads-mirror.parity.io/v1.7.0/x86_64-unknown-linux-gnu/parity_1.7.0_amd64.deb'
+    sudo dpkg -i parity_1.7.0_amd64.deb
+
+    # curl -LO 'http://d1h4xl4cr1h0mo.cloudfront.net/nightly/x86_64-unknown-debian-gnu/parity_1.8.0_amd64.deb'
+    # sudo dpkg -i parity_1.8.0_amd64.deb
 
     sudo bash -c "cat > /etc/systemd/system/oracles-parity.service <<EOF
 [Unit]

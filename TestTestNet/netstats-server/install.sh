@@ -99,7 +99,7 @@ set
 echo "===== declare -p:"
 declare -p
 
-INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/dev/dev-mainnet/bootnode"
+INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/dev-mainnet/TestTestNet/bootnode"
 GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/master/spec.json"
 GENESIS_JSON="spec.json"
 NODE_TOML="node.toml"

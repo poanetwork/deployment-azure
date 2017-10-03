@@ -236,7 +236,7 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
                 "fileUris": [
-                    "https://raw.githubusercontent.com/oraclesorg/test-templates/dev/dev-mainnet/mining-node/install.sh"
+                    "https://raw.githubusercontent.com/oraclesorg/test-templates/dev-mainnet/TestTestNet/mining-node/install.sh"
                 ]
             },
             "protectedSettings": {

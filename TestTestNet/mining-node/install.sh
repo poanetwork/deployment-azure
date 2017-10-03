@@ -74,12 +74,12 @@ echo "===== environmental variables:"
 printenv
 
 # script parameters
-INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/dev/TestTestNet/mining-node"
+INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/dev-mainnet/TestTestNet/mining-node"
 GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/master/spec.json"
 GENESIS_JSON="spec.json"
 NODE_TOML="node.toml"
 NODE_PWD="node.pwd"
-BOOTNODES_TXT="https://raw.githubusercontent.com/oraclesorg/test-templates/dev/TestTestNet/bootnodes.txt"
+BOOTNODES_TXT="https://raw.githubusercontent.com/oraclesorg/test-templates/dev-mainnet/TestTestNet/bootnodes.txt"
 
 export HOME="${HOME:-/home/${ADMIN_USERNAME}}"
 

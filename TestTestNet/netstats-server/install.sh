@@ -80,7 +80,7 @@ start_logentries
 
 # */
 
-echo "========== dev-mainnet/netstat-server/install.sh starting =========="
+echo "========== dev-mainnet/netstats-server/install.sh starting =========="
 echo "===== current time: $(date)"
 echo "===== username: $(whoami)"
 echo "===== working directory: $(pwd)"

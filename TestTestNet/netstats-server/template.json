@@ -208,7 +208,7 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
                 "fileUris": [
-                    "https://raw.githubusercontent.com/oraclesorg/test-templates/dev-mainnet/TestTestNet/bootnode/install.sh"
+                    "https://raw.githubusercontent.com/oraclesorg/test-templates/dev-mainnet/TestTestNet/netstats-server/install.sh"
                 ]
             },
             "protectedSettings": {

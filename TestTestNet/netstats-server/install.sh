@@ -450,8 +450,6 @@ main () {
     install_chain_explorer_via_systemd
 
     configure_logrotate
-
-    download_initial_keys_script
 }
 
 main

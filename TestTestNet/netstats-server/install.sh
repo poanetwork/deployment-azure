@@ -168,6 +168,7 @@ pull_image_and_configs() {
     curl -s -o "${GENESIS_JSON}" "${GENESIS_REPO_LOC}"
     curl -s -O "${INSTALL_CONFIG_REPO}/${NODE_TOML}"
     sed -i "/\[network\]/a nat=\"extip:${EXT_IP}\"" ${NODE_TOML}
+    sed -i "/\[network\]/a bootnodes=\[$(cat bootnodes.txt | sed 's/\r$//' | awk -F'#' '{ print $1 }' | awk '/enode/{ print "\""$1"\"" }' | paste -sd "," -)\]" ${NODE_TOML}
     cat >> ${NODE_TOML} <<EOF
 [misc]
 logging="engine=trace,network=trace,discovery=trace"

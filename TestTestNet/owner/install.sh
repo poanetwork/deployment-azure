@@ -15,42 +15,39 @@ start_logentries() {
     sudo le reinit --user-key=0665901a-e843-41c5-82c1-2cc4b39f0b21 --pull-server-side-config=False
 
     mkdir -p /home/${ADMIN_USERNAME}/logs
-    touch /home/${ADMIN_USERNAME}/logs/netstats_daemon.err
-    touch /home/${ADMIN_USERNAME}/logs/netstats_daemon.out
+    touch /home/${ADMIN_USERNAME}/logs/parity.log
     touch /home/${ADMIN_USERNAME}/logs/parity.err
     touch /home/${ADMIN_USERNAME}/logs/parity.out
-    touch /home/${ADMIN_USERNAME}/logs/parity.log
-    touch /home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out
-    touch /home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err
 
     sudo bash -c "cat >> /etc/le/config << EOF
 [install_err]
 path = /var/lib/waagent/custom-script/download/0/stderr
 destination = dev-mainnet/${EXT_IP}
+
 [install_out]
 path = /var/lib/waagent/custom-script/download/0/stdout
 destination = dev-mainnet/${EXT_IP}
-[netstats_daemon_err]
-path = /home/${ADMIN_USERNAME}/logs/netstats_daemon.err
-destination = dev-mainnet/${EXT_IP}
-[netstats_daemon_out]
-path = /home/${ADMIN_USERNAME}/logs/netstats_daemon.out
-destination = dev-mainnet/${EXT_IP}
-[parity_err]
-path = /home/${ADMIN_USERNAME}/logs/parity.err
-destination = dev-mainnet/${EXT_IP}
-[parity_out]
-path = /home/${ADMIN_USERNAME}/logs/parity.out
-destination = dev-mainnet/${EXT_IP}
+
 [parity_log]
 path = /home/${ADMIN_USERNAME}/logs/parity.log
 destination = dev-mainnet/${EXT_IP}
-[transferReward_out]
-path = /home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out
+
+[netstats_daemon_err]
+path = /home/${ADMIN_USERNAME}/logs/netstats_daemon.err
 destination = dev-mainnet/${EXT_IP}
-[transferReward_err]
-path = /home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err
+
+[netstats_daemon_out]
+path = /home/${ADMIN_USERNAME}/logs/netstats_daemon.out
 destination = dev-mainnet/${EXT_IP}
+
+[parity_err]
+path = /home/${ADMIN_USERNAME}/logs/parity.err
+destination = dev-mainnet/${EXT_IP}
+
+[parity_out]
+path = /home/${ADMIN_USERNAME}/logs/parity.out
+destination = dev-mainnet/${EXT_IP}
+
 EOF"
     sudo apt-get install -y logentries-daemon
     sudo service logentries start
@@ -61,7 +58,7 @@ start_logentries
 
 # */
 
-echo "========== dev-mainnet/mining-node/install.sh starting =========="
+echo "========== dev-mainnet/owner/install.sh starting =========="
 echo "===== current time: $(date)"
 echo "===== username: $(whoami)"
 echo "===== working directory: $(pwd)"
@@ -70,11 +67,11 @@ lsb_release -a
 echo "===== memory usage info:"
 free -m
 echo "===== external ip: ${EXT_IP}"
+
 echo "===== environmental variables:"
 printenv
 
-# script parameters
-INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/dev-mainnet/TestTestNet/mining-node"
+INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/dev-mainnet/TestTestNet/owner"
 GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/master/spec.json"
 GENESIS_JSON="spec.json"
 NODE_TOML="node.toml"
@@ -88,17 +85,17 @@ echo "===== repo base path: ${INSTALL_CONFIG_REPO}"
 # this should be provided through env by azure template
 NETSTATS_SERVER="${NETSTATS_SERVER}"
 NETSTATS_SECRET="${NETSTATS_SECRET}"
-MINING_KEYFILE="${MINING_KEYFILE}"
-MINING_ADDRESS="${MINING_ADDRESS}"
-MINING_KEYPASS="${MINING_KEYPASS}"
-NODE_FULLNAME="${NODE_FULLNAME:-Anonymous}"
+OWNER_KEYFILE="${OWNER_KEYFILE}"
+OWNER_KEYPASS="${OWNER_KEYPASS}"
+NODE_FULLNAME="${NODE_FULLNAME:-Owner}"
 NODE_ADMIN_EMAIL="${NODE_ADMIN_EMAIL:-somebody@somehere}"
 ADMIN_USERNAME="${ADMIN_USERNAME}"
 
 prepare_homedir() {
     echo "=====> prepare_homedir"
-    #ln -s "$(pwd)" "/home/${ADMIN_USERNAME}/script-dir"
+    # ln -s "$(pwd)" "/home/${ADMIN_USERNAME}/script-dir"
     cd "/home/${ADMIN_USERNAME}"
+    echo "Now changed directory to: $(pwd)"
     mkdir -p logs
     mkdir -p logs/old
     echo "<===== prepare_homedir"
@@ -141,22 +138,8 @@ allocate_swap() {
     echo "<===== allocate_swap"
 }
 
-install_nodejs() {
-    echo "=====> install_nodejs"
-    # curl -sL https://deb.nodesource.com/setup_0.12 | bash -
-    curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-    sudo apt-get update
-    sudo apt-get install -y build-essential git unzip wget nodejs ntp cloud-utils
-
-    # add symlink if it doesn't exist
-    [[ ! -f /usr/bin/node ]] && sudo ln -s /usr/bin/nodejs /usr/bin/node
-    echo "<===== install_nodejs"
-}
-
-
 pull_image_and_configs() {
     echo "=====> pull_image_and_configs"
-
     # curl -s -O "${INSTALL_CONFIG_REPO}/../${GENESIS_JSON}"
     curl -s -o "${GENESIS_JSON}" "${GENESIS_REPO_LOC}"
     curl -s -O "${INSTALL_CONFIG_REPO}/${NODE_TOML}"
@@ -167,18 +150,33 @@ pull_image_and_configs() {
 [misc]
 logging="engine=trace,network=trace,discovery=trace"
 log_file = "/home/${ADMIN_USERNAME}/logs/parity.log"
-[account]
-password = ["${NODE_PWD}"]
-unlock = ["${MINING_ADDRESS}"]
-[mining]
-force_sealing = true
-engine_signer = "${MINING_ADDRESS}"
-reseal_on_txs = "none"
 EOF
-    echo "${MINING_KEYPASS}" > "${NODE_PWD}"
+    echo "${OWNER_KEYPASS}" > "${NODE_PWD}"
     mkdir -p parity/keys/OraclesPoA
-    echo ${MINING_KEYFILE} | base64 -d > parity/keys/OraclesPoA/mining.key.${MINING_ADDRESS}
+    echo ${OWNER_KEYFILE} | base64 -d > parity/keys/OraclesPoA/owner.key
+
     echo "<===== pull_image_and_configs"
+}
+
+clone_dapps() {
+    echo "=====> clone_dapps"
+    mkdir -p parity/dapps
+    git clone https://github.com/oraclesorg/oracles-dapps-keys-generation.git parity/dapps/KeysGenerator
+    git clone https://github.com/oraclesorg/oracles-dapps-voting.git parity/dapps/Voting
+    git clone https://github.com/oraclesorg/oracles-dapps-validators.git parity/dapps/ValidatorsList
+    echo "<===== clone_dapps"
+}
+
+install_nodejs() {
+    echo "=====> install_nodejs"
+    # curl -sL https://deb.nodesource.com/setup_0.12 | bash -
+    curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+    sudo apt-get update
+    sudo apt-get install -y build-essential git unzip wget nodejs ntp cloud-utils
+
+    # add symlink if it doesn't exist
+    [[ ! -f /usr/bin/node ]] && sudo ln -s /usr/bin/nodejs /usr/bin/node
+    echo "<===== install_nodejs"
 }
 
 start_pm2_via_systemd() {
@@ -204,7 +202,6 @@ EOF"
     echo "<===== start_pm2_via_systemd"
 }
 
-# based on https://get.parity.io
 install_netstats_via_systemd() {
     echo "=====> install_netstats_via_systemd"
     git clone https://github.com/oraclesorg/eth-net-intelligence-api
@@ -245,18 +242,15 @@ EOL
     sudo bash -c "cat > /etc/systemd/system/oracles-netstats.service <<EOF
 [Unit]
 Description=oracles netstats service
-After=network.target
-
+After=oracles-pm2.service
 [Service]
 Type=oneshot
 RemainAfterExit=true
-
 User=${ADMIN_USERNAME}
 Group=${ADMIN_USERNAME}
 Environment=MYVAR=myval
 WorkingDirectory=/home/${ADMIN_USERNAME}/eth-net-intelligence-api
 ExecStart=/usr/bin/pm2 startOrRestart app.json
-
 [Install]
 WantedBy=multi-user.target
 EOF"
@@ -270,47 +264,25 @@ use_deb_via_systemd() {
     curl -LO 'http://parity-downloads-mirror.parity.io/v1.7.0/x86_64-unknown-linux-gnu/parity_1.7.0_amd64.deb'
     sudo dpkg -i parity_1.7.0_amd64.deb
 
-    # curl -LO 'http://d1h4xl4cr1h0mo.cloudfront.net/nightly/x86_64-unknown-debian-gnu/parity_1.8.0_amd64.deb'
-    # sudo dpkg -i parity_1.8.0_amd64.deb
+    #curl -LO 'http://d1h4xl4cr1h0mo.cloudfront.net/nightly/x86_64-unknown-debian-gnu/parity_1.8.0_amd64.deb'
+    #sudo dpkg -i parity_1.8.0_amd64.deb
 
     sudo bash -c "cat > /etc/systemd/system/oracles-parity.service <<EOF
 [Unit]
 Description=oracles parity service
 After=network.target
-
 [Service]
 User=${ADMIN_USERNAME}
 Group=${ADMIN_USERNAME}
 WorkingDirectory=/home/${ADMIN_USERNAME}
-ExecStart=/usr/bin/parity --config=node.toml
+ExecStart=/usr/bin/parity --config=node.toml --ui-no-validation
 Restart=always
-
 [Install]
 WantedBy=multi-user.target
 EOF"
     sudo systemctl enable oracles-parity
     sudo systemctl start oracles-parity
     echo "<===== use_deb_via_systemd"
-}
-
-install_scripts() {
-    echo "=====> install_scripts"
-    git clone -b master --single-branch https://github.com/oraclesorg/oracles-scripts
-    ln -s ../node.toml oracles-scripts/node.toml
-    cd oracles-scripts/scripts
-    npm install
-    sudo bash -c "cat > /etc/cron.hourly/transferRewardToPayoutKey <<EOF
-#!/bin/bash
-cd "$(pwd)"
-echo \"Starting at \\\$(date)\" >> \"/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out\"
-echo \"Starting at \\\$(date)\" >> \"/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err\"
-node transferRewardToPayoutKey.js >> \"/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out\" 2>> \"/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err\"
-echo \"\" >> \"/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out\"
-echo \"\" >> \"/home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err\"
-EOF"
-    sudo chmod 755 /etc/cron.hourly/transferRewardToPayoutKey
-    cd ../..
-    echo "<===== install_scripts"
 }
 
 configure_logrotate() {
@@ -327,7 +299,6 @@ configure_logrotate() {
     dateformat %Y-%m-%d-%s
     olddir old
 }
-
 /home/${ADMIN_USERNAME}/.pm2/pm2.log {
     su ${ADMIN_USERNAME} ${ADMIN_USERNAME}
     rotate 10
@@ -342,6 +313,15 @@ EOF"
     echo "<===== configure_logrotate"
 }
 
+download_initial_keys_script() {
+    echo "=====> download_initial_keys_script"
+    git clone https://github.com/oraclesorg/oracles-initial-keys
+    cd oracles-initial-keys
+    npm install
+    cd ..
+    echo "<===== download_initial_keys_script"
+}
+
 # MAIN
 main () {
     sudo apt-get update
@@ -354,14 +334,17 @@ main () {
 
     install_nodejs
     pull_image_and_configs
+    clone_dapps
 
     use_deb_via_systemd
 
     start_pm2_via_systemd
     install_netstats_via_systemd
-    install_scripts
+
     configure_logrotate
+
+    download_initial_keys_script
 }
 
 main
-echo "========== dev-mainnet/mining-node/install.sh finished =========="
+echo "========== dev-mainnet/owner/install.sh finished =========="

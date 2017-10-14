@@ -187,7 +187,6 @@ pull_image_and_configs() {
     sed -i "/\[network\]/a nat=\"extip:${EXT_IP}\"" ${NODE_TOML}
     cat >> ${NODE_TOML} <<EOF
 [misc]
-logging="engine=trace,network=trace,discovery=trace"
 log_file = "/home/${ADMIN_USERNAME}/logs/parity.log"
 [account]
 password = ["${NODE_PWD}"]

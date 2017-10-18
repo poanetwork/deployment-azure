@@ -37,7 +37,7 @@
       "metadata": {
         "description": "NetStats net code"
       }
-    }
+    },
     "MiningKeyAddress": {
       "type": "string",
       "metadata": {
@@ -55,7 +55,7 @@
       "metadata": {
         "description": "Content of the file with mining key (json string)"
       }
-    },
+    }
   },
   "variables": {
     "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'salinuxvm')]",

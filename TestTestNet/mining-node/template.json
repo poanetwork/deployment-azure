@@ -2,13 +2,13 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "nodeFullName": {
+    "NodeFULLName": {
       "type": "string",
       "metadata": {
         "description": "Node full name (publicly visible)"
       }
     },
-    "nodeAdminEmail": {
+    "node_admin_Email": {
       "type": "string",
       "metadata": {
         "description": "Node admin email (publicly visible)"
@@ -77,8 +77,8 @@
     "dnsLabelPrefix": "[toLower(concat('oracles-', uniqueString(resourceGroup().id, parameters('miningAddress'))))]",
     "adminUsername": "[trim(toLower(parameters('adminUsername')))]",
     "sshPublicKey": "[trim(parameters('sshPublicKey'))]",
-    "nodeFullName": "[trim(parameters('nodeFullName'))]",
-    "nodeAdminEmail": "[trim(parameters('nodeAdminEmail'))]",
+    "nodeFullName": "[trim(parameters('NodeFULLName'))]",
+    "nodeAdminEmail": "[trim(parameters('node_admin_Email'))]",
     "miningAddress": "[trim(parameters('miningAddress'))]",
     "miningKeyfile": "[base64(trim(string(parameters('miningKeyfile'))))]",
     "miningKeypass": "[trim(parameters('miningKeypass'))]",

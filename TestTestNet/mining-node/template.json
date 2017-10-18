@@ -2,60 +2,60 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "NodeFULLName": {
+    "FullName": {
       "type": "string",
       "metadata": {
         "description": "Node full name (publicly visible)"
       }
     },
-    "node_admin_Email": {
+    "AdminEmail": {
       "type": "string",
       "metadata": {
         "description": "Node admin email (publicly visible)"
       }
     },
-    "miningAddress": {
-      "type": "string",
-      "metadata": {
-        "description": "Miner blockchain account address (0x...)"
-      }
-    },
-    "miningKeyfile": {
-      "type": "secureString",
-      "metadata": {
-        "description": "Content of the file with mining key (json string)"
-      }
-    },
-    "miningKeypass": {
-      "type": "secureString",
-      "metadata": {
-        "description": "Password for the mining key"
-      }
-    },
-    "adminUsername": {
+    "AdminUsername": {
       "type": "string",
       "metadata": {
         "description": "Username for the Virtual Machine"
       }
     },
-    "sshPublicKey": {
+    "SSHPublicKey": {
       "type": "string",
       "metadata": {
         "description": "SSH public key for the Virtual Machine"
       }
     },
-    "netstatsServer": {
+    "NetstatsServer": {
       "type": "string",
       "metadata": {
         "description": "NetStats server IP"
       }
     },
-    "netstatsSecret": {
+    "NetstatsSecret": {
       "type": "secureString",
       "metadata": {
         "description": "NetStats net code"
       }
     }
+    "MiningKeyAddress": {
+      "type": "string",
+      "metadata": {
+        "description": "Miner blockchain account address (0x...)"
+      }
+    },
+    "MiningKeyPassword": {
+      "type": "secureString",
+      "metadata": {
+        "description": "Password for the mining key"
+      }
+    },
+    "MiningJSONKeyFile": {
+      "type": "secureString",
+      "metadata": {
+        "description": "Content of the file with mining key (json string)"
+      }
+    },
   },
   "variables": {
     "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'salinuxvm')]",
@@ -75,15 +75,15 @@
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
     "ubuntuOSVersion": "16.04.0-LTS",
     "dnsLabelPrefix": "[toLower(concat('oracles-', uniqueString(resourceGroup().id, parameters('miningAddress'))))]",
-    "adminUsername": "[trim(toLower(parameters('adminUsername')))]",
-    "sshPublicKey": "[trim(parameters('sshPublicKey'))]",
-    "nodeFullName": "[trim(parameters('NodeFULLName'))]",
-    "nodeAdminEmail": "[trim(parameters('node_admin_Email'))]",
-    "miningAddress": "[trim(parameters('miningAddress'))]",
-    "miningKeyfile": "[base64(trim(string(parameters('miningKeyfile'))))]",
-    "miningKeypass": "[trim(parameters('miningKeypass'))]",
-    "netstatsServer": "[trim(parameters('netstatsServer'))]",
-    "netstatsSecret": "[trim(parameters('netstatsSecret'))]"
+    "adminUsername": "[trim(toLower(parameters('AdminUsername')))]",
+    "sshPublicKey": "[trim(parameters('SSHPublicKey'))]",
+    "nodeFullName": "[trim(parameters('FullName'))]",
+    "nodeAdminEmail": "[trim(parameters('AdminEmail'))]",
+    "miningAddress": "[trim(parameters('MiningKeyAddress'))]",
+    "miningKeyfile": "[base64(trim(string(parameters('MiningJSONKeyFile'))))]",
+    "miningKeypass": "[trim(parameters('MiningKeyPassword'))]",
+    "netstatsServer": "[trim(parameters('NetstatsServer'))]",
+    "netstatsSecret": "[trim(parameters('NetstatsSecret'))]"
   },
   "resources": [
     {

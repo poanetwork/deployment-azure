@@ -57,7 +57,7 @@ EOF"
     echo "<===== start_logentries"
 }
 
-start_logentries
+#start_logentries
 
 # */
 

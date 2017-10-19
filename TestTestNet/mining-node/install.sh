@@ -165,7 +165,6 @@ pull_image_and_configs() {
     sed -i "/\[network\]/a bootnodes=\[$(cat bootnodes.txt | sed 's/\r$//' | awk -F'#' '{ print $1 }' | awk '/enode/{ print "\""$1"\"" }' | paste -sd "," -)\]" ${NODE_TOML}
     cat >> ${NODE_TOML} <<EOF
 [misc]
-logging="engine=trace,network=trace,discovery=trace"
 log_file = "/home/${ADMIN_USERNAME}/logs/parity.log"
 [account]
 password = ["${NODE_PWD}"]

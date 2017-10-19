@@ -229,7 +229,7 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
                 "fileUris": [
-                    "https://raw.githubusercontent.com/oraclesorg/test-templates/dev/TestTestNet/bootnode/install.sh"
+                    "https://raw.githubusercontent.com/oraclesorg/test-templates/dev-mainnet/TestTestNet/owner/install.sh"
                 ]
             },
             "protectedSettings": {

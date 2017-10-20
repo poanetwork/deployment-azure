@@ -327,7 +327,7 @@ var config = function () {
     this.provider = new web3.providers.IpcProvider(this.ipcPath, net);
     this.bootstrapUrl = "https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/yeti/bootstrap.min.css";
     this.names = {
-        "0xdd0bb0e2a1594240fed0c2f2c17c1e9ab4f87126": "Bootnode",
+        "0xdd0bb0e2a1594240fed0c2f2c17c1e9ab4f87126": "Owner",
     };
 }
 

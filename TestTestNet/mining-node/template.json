@@ -74,7 +74,6 @@
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
     "ubuntuOSVersion": "16.04.0-LTS",
-    "dnsLabelPrefix": "[toLower(concat('oracles-', uniqueString(resourceGroup().id, parameters('miningAddress'))))]",
     "adminUsername": "[trim(toLower(parameters('AdminUsername')))]",
     "sshPublicKey": "[trim(parameters('SSHPublicKey'))]",
     "nodeFullName": "[trim(parameters('FullName'))]",
@@ -83,7 +82,8 @@
     "miningKeyfile": "[base64(trim(string(parameters('MiningJSONKeyFile'))))]",
     "miningKeypass": "[trim(parameters('MiningKeyPassword'))]",
     "netstatsServer": "[trim(parameters('NetstatsServer'))]",
-    "netstatsSecret": "[trim(parameters('NetstatsSecret'))]"
+    "netstatsSecret": "[trim(parameters('NetstatsSecret'))]",
+    "dnsLabelPrefix": "[toLower(concat('oracles-', uniqueString(resourceGroup().id, variables('miningAddress'))))]"
   },
   "resources": [
     {

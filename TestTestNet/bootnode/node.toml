@@ -10,7 +10,7 @@ cors = "all"
 interface = "all"
 hosts = ["all"]
 port = 8545
-apis = ["web3", "eth", "net", "personal", "parity", "parity_set", "traces", "rpc", "parity_accounts"]
+apis = ["web3", "eth", "net", "parity", "traces", "rpc", "secretstore"]
 [ui]
 interface = "0.0.0.0"
 port = 8180

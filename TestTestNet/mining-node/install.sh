@@ -75,11 +75,12 @@ printenv
 
 # script parameters
 INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/dev-mainnet/TestTestNet/mining-node"
-GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/master/spec.json"
+GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/sokol/spec.json"
 GENESIS_JSON="spec.json"
 NODE_TOML="node.toml"
 NODE_PWD="node.pwd"
 BOOTNODES_TXT="https://raw.githubusercontent.com/oraclesorg/test-templates/dev-mainnet/TestTestNet/bootnodes.txt"
+PARITY_DEB_LOC="https://parity-downloads-mirror.parity.io/v1.8.1/x86_64-unknown-linux-gnu/parity_1.8.1_amd64.deb"
 
 export HOME="${HOME:-/home/${ADMIN_USERNAME}}"
 
@@ -266,11 +267,8 @@ EOF"
 
 use_deb_via_systemd() {
     echo "=====> use_deb_via_systemd"
-    curl -LO 'http://parity-downloads-mirror.parity.io/v1.7.0/x86_64-unknown-linux-gnu/parity_1.7.0_amd64.deb'
-    sudo dpkg -i parity_1.7.0_amd64.deb
-
-    # curl -LO 'http://d1h4xl4cr1h0mo.cloudfront.net/nightly/x86_64-unknown-debian-gnu/parity_1.8.0_amd64.deb'
-    # sudo dpkg -i parity_1.8.0_amd64.deb
+    curl -LO "${PARITY_DEB_LOC}"
+    sudo dpkg -i "$(basename ${PARITY_DEB_LOC})"
 
     sudo bash -c "cat > /etc/systemd/system/oracles-parity.service <<EOF
 [Unit]
@@ -294,7 +292,7 @@ EOF"
 
 install_scripts() {
     echo "=====> install_scripts"
-    git clone -b master --single-branch https://github.com/oraclesorg/oracles-scripts
+    git clone -b sokol --single-branch https://github.com/oraclesorg/oracles-scripts
     ln -s ../node.toml oracles-scripts/node.toml
     cd oracles-scripts/scripts
     npm install

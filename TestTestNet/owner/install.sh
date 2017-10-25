@@ -146,7 +146,8 @@ pull_image_and_configs() {
     curl -s -O "${INSTALL_CONFIG_REPO}/${NODE_TOML}"
     curl -s -o "bootnodes.txt" "${BOOTNODES_TXT}"
     sed -i "/\[network\]/a nat=\"extip:${EXT_IP}\"" ${NODE_TOML}
-    sed -i "/\[network\]/a bootnodes=\[$(cat bootnodes.txt | sed 's/\r$//' | awk -F'#' '{ print $1 }' | awk '/enode/{ print "\""$1"\"" }' | paste -sd "," -)\]" ${NODE_TOML}
+    #sed -i "/\[network\]/a bootnodes=\[$(cat bootnodes.txt | sed 's/\r$//' | awk -F'#' '{ print $1 }' | awk '/enode/{ print "\""$1"\"" }' | paste -sd "," -)\]" ${NODE_TOML}
+    sed -i "/\[network\]/a reserved_peers=\"/home/${ADMIN_USERNAME}/bootnodes.txt\"" ${NODE_TOML}
     cat >> ${NODE_TOML} <<EOF
 [misc]
 log_file = "/home/${ADMIN_USERNAME}/logs/parity.log"

@@ -3,6 +3,7 @@
 chain = "spec.json"
 base_path = "parity"
 [network]
+max_pending_peers = 16
 port = 30300
 discovery=true
 [rpc]

@@ -5,6 +5,7 @@ base_path = "parity"
 [network]
 port = 30300
 discovery=true
+max_pending_peers = 16
 [rpc]
 cors = "all"
 interface = "all"

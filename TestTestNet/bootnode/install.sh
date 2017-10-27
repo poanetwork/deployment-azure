@@ -127,6 +127,11 @@ prepare_homedir() {
     echo "<===== prepare_homedir"
 }
 
+increase_ulimit_n() {
+     echo "${ADMIN_USERNAME} soft nofile 100000" | sudo tee /etc/security/limits.conf > /dev/null
+     echo "${ADMIN_USERNAME} hard nofile 100000" | sudo tee /etc/security/limits.conf > /dev/null 
+}
+
 install_ntpd() {
     echo "=====> install_ntpd"
     sudo timedatectl set-ntp no
@@ -347,6 +352,7 @@ main () {
     sudo apt-get update
 
     prepare_homedir
+    increase_ulimit_n
     install_ntpd
     install_haveged
     allocate_swap

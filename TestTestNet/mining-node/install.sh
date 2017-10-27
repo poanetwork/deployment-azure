@@ -106,8 +106,8 @@ prepare_homedir() {
 }
 
 increase_ulimit_n() {
-     echo "${ADMIN_USERNAME} soft nofile 100000" | sudo tee /etc/security/limits.conf > /dev/null
-     echo "${ADMIN_USERNAME} hard nofile 100000" | sudo tee /etc/security/limits.conf > /dev/null 
+     echo "${ADMIN_USERNAME} soft nofile 100000" | sudo tee /etc/security/limits.conf >> /dev/null
+     echo "${ADMIN_USERNAME} hard nofile 100000" | sudo tee /etc/security/limits.conf >> /dev/null 
 }
 
 install_ntpd() {

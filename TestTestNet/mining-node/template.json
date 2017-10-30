@@ -22,6 +22,7 @@
     },
     "SSHPublicKey": {
       "type": "string",
+      "defaultValue": "",
       "metadata": {
         "description": "SSH public key for the Virtual Machine"
       }

@@ -319,7 +319,7 @@ EOF"
 configure_logrotate() {
     echo "=====> configure_logrotate"
 
-    sudo bash -c "cat > /etc/logrotate.d/oracles.conf << EOF
+    sudo bash -c "cat > /home/${ADMIN_USERNAME}/logrotate.conf << EOF
 /home/${ADMIN_USERNAME}/logs/*.log {
     rotate 10
     size 200M
@@ -342,6 +342,9 @@ configure_logrotate() {
     dateformat %Y-%m-%d-%s
 }
 EOF"
+
+    (crontab -l 2>/dev/null; echo "* */12 * * * /usr/sbin/logrotate /home/${ADMIN_USERNAME}/logrotate.conf") | crontab -
+
     echo "<===== configure_logrotate"
 }
 

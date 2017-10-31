@@ -175,7 +175,15 @@
           "adminUsername": "[variables('adminUsername')]",
           "adminPassword": "",
           "linuxConfiguration": {
-            "disablePasswordAuthentication": true
+            "disablePasswordAuthentication": true,
+            "ssh": {
+              "publicKeys": [
+                {
+                  "path": "[concat('/home/', variables('adminUsername'), '/.ssh/authorized_keys')]",
+                  "keyData": " "
+                }
+              ]
+            }
           }
         },
         "storageProfile": {

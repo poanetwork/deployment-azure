@@ -343,7 +343,7 @@ configure_logrotate() {
 }
 EOF"
 
-    sudo bash -c 'crontab -l 1> orig.crontab 2> /dev/null'
+    #sudo bash -c 'crontab -l 1> orig.crontab 2> /dev/null'
     sudo bash -c "cat >> orig.crontab << EOF
 * */1 * * * /usr/sbin/logrotate /home/${ADMIN_USERNAME}/logrotate.conf
 EOF"

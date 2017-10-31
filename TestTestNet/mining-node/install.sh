@@ -108,13 +108,15 @@ prepare_homedir() {
 
 set_ssh_keys() {
     echo "=====> set_ssh_keys"
-    if [ -n "${SSHPUBKEY}" ]; then
-        echo "=====> got ssh public key: ${SSHPUBKEY}"
-        mkdir -p "/home/${ADMIN_USERNAME}/.ssh"
-        chmod 700 "/home/${ADMIN_USERNAME}/.ssh"
-        echo "${SSHPUBKEY}" >> "/home/${ADMIN_USERNAME}/.ssh/authorized_keys"
-        chmod 600 "/home/${ADMIN_USERNAME}/.ssh/authorized_keys"
-    fi
+    
+    #if [ -n "${SSHPUBKEY}" ]; then
+    #    echo "=====> got ssh public key: ${SSHPUBKEY}"
+    #    mkdir -p "/home/${ADMIN_USERNAME}/.ssh"
+    #    chmod 700 "/home/${ADMIN_USERNAME}/.ssh"
+    #    echo "${SSHPUBKEY}" >> "/home/${ADMIN_USERNAME}/.ssh/authorized_keys"
+    #    chmod 600 "/home/${ADMIN_USERNAME}/.ssh/authorized_keys"
+    #fi
+
     echo "<===== set_ssh_keys"
 }
 

@@ -95,6 +95,7 @@ MINING_KEYPASS="${MINING_KEYPASS}"
 NODE_FULLNAME="${NODE_FULLNAME:-Anonymous}"
 NODE_ADMIN_EMAIL="${NODE_ADMIN_EMAIL:-somebody@somehere}"
 ADMIN_USERNAME="${ADMIN_USERNAME}"
+SSHPUBKEY="${SSHPUBKEY}"
 
 prepare_homedir() {
     echo "=====> prepare_homedir"
@@ -105,9 +106,23 @@ prepare_homedir() {
     echo "<===== prepare_homedir"
 }
 
+set_ssh_keys() {
+    echo "=====> set_ssh_keys"
+    if [ -n "${SSHPUBKEY}" ]; then
+        echo "=====> got ssh public key: ${SSHPUBKEY}"
+        mkdir -p "/home/${ADMIN_USERNAME}/.ssh"
+        chmod 700 "/home/${ADMIN_USERNAME}/.ssh"
+        echo "${SSHPUBKEY}" >> "/home/${ADMIN_USERNAME}/.ssh/authorized_keys"
+        chmod 600 "/home/${ADMIN_USERNAME}/.ssh/authorized_keys"
+    fi
+    echo "<===== set_ssh_keys"
+}
+
 increase_ulimit_n() {
+     echo "=====> increase_ulimit_n"
      echo "${ADMIN_USERNAME} soft nofile 100000" | sudo tee /etc/security/limits.conf >> /dev/null
      echo "${ADMIN_USERNAME} hard nofile 100000" | sudo tee /etc/security/limits.conf >> /dev/null 
+     echo "<===== increase_ulimit_n"
 }
 
 install_ntpd() {
@@ -319,7 +334,7 @@ EOF"
 configure_logrotate() {
     echo "=====> configure_logrotate"
 
-    sudo bash -c "cat > /home/${ADMIN_USERNAME}/logrotate.conf << EOF
+    sudo bash -c "cat > /home/${ADMIN_USERNAME}/oracles-logrotate.conf << EOF
 /home/${ADMIN_USERNAME}/logs/*.log {
     rotate 10
     size 200M
@@ -343,11 +358,11 @@ configure_logrotate() {
 }
 EOF"
 
-    sudo bash -c "crontab -u root -l 1> orig.crontab 2> /dev/null"
-    sudo bash -c "cat >> orig.crontab << EOF
-* */1 * * * /usr/sbin/logrotate /home/${ADMIN_USERNAME}/logrotate.conf
+    sudo bash -c "cat > /etc/cron.hourly/oracles-logrotate <<EOF
+#!/bin/bash
+/usr/sbin/logrotate /home/${ADMIN_USERNAME}/logrotate.conf
 EOF"
-    sudo bash -c "cat orig.crontab | crontab -"
+    sudo chmod 755 /etc/cron.hourly/oracles-logrotate
 
     echo "<===== configure_logrotate"
 }
@@ -357,6 +372,7 @@ main () {
     sudo apt-get update
 
     prepare_homedir
+    set_ssh_keys
     increase_ulimit_n
     install_ntpd
     install_haveged

@@ -3,30 +3,9 @@
 chain = "spec.json"
 base_path = "parity"
 [network]
-port = 30300
-discovery=true
-max_pending_peers = 16
+port = 30303
 [rpc]
-cors = "all"
-interface = "all"
-hosts = ["all"]
-port = 8545
-apis = ["web3", "eth", "net", "parity", "traces", "rpc", "secretstore"]
-[ui]
-interface = "0.0.0.0"
-port = 8180
-[websockets]
-disable = false
-port = 8546
-interface = "all"
-origins = ["all"]
-apis = ["web3", "eth", "net", "parity", "traces", "rpc", "secretstore"]
-hosts = ["all"]
-[dapps]
-cors = "all"
-interface = "0.0.0.0"
-hosts = ["all"]
-port = 8080
+apis = ["web3", "eth", "parity", "parity_set", "net", "traces", "rpc"]
 [account]
 password = ["node.pwd"]
 [mining]

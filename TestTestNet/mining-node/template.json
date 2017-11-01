@@ -180,7 +180,7 @@
               "publicKeys": [
                 {
                   "path": "[concat('/home/', variables('adminUsername'), '/.ssh/authorized_keys')]",
-                  "keyData": " "
+                  "keyData": "[variables('sshPublicKey')]"
                 }
               ]
             }

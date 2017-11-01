@@ -291,7 +291,7 @@ EOF"
 configure_logrotate() {
     echo "=====> configure_logrotate"
 
-    sudo bash -c "cat > /etc/logrotate.d/oracles.conf << EOF
+    sudo bash -c "cat > /home/${ADMIN_USERNAME}/oracles-logrotate.conf << EOF
 /home/${ADMIN_USERNAME}/logs/*.log {
     rotate 10
     size 200M
@@ -302,6 +302,7 @@ configure_logrotate() {
     dateformat %Y-%m-%d-%s
     olddir old
 }
+
 /home/${ADMIN_USERNAME}/.pm2/pm2.log {
     su ${ADMIN_USERNAME} ${ADMIN_USERNAME}
     rotate 10
@@ -313,6 +314,13 @@ configure_logrotate() {
     dateformat %Y-%m-%d-%s
 }
 EOF"
+
+    sudo bash -c "cat > /etc/cron.hourly/oracles-logrotate <<EOF
+#!/bin/bash
+/usr/sbin/logrotate /home/${ADMIN_USERNAME}/logrotate.conf
+EOF"
+    sudo chmod 755 /etc/cron.hourly/oracles-logrotate
+
     echo "<===== configure_logrotate"
 }
 

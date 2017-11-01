@@ -95,7 +95,7 @@ MINING_KEYPASS="${MINING_KEYPASS}"
 NODE_FULLNAME="${NODE_FULLNAME:-Anonymous}"
 NODE_ADMIN_EMAIL="${NODE_ADMIN_EMAIL:-somebody@somehere}"
 ADMIN_USERNAME="${ADMIN_USERNAME}"
-SSHPUBKEY="${SSHPUBKEY}"
+#SSHPUBKEY="${SSHPUBKEY}"
 
 prepare_homedir() {
     echo "=====> prepare_homedir"

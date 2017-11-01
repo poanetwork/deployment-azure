@@ -241,7 +241,7 @@
                 ]
             },
             "protectedSettings": {
-                "commandToExecute": "[concat('cp install.sh /home/', variables('adminUsername'), '/; cd /home/', variables('adminUsername'), '; chown ', variables('adminUsername'), ':', variables('adminUsername'), ' install.sh; chmod +x install.sh; SSHPUBKEY=\"', variables('sshPublicKey') ,'\" ADMIN_USERNAME=\"', variables('adminUsername'), '\" NETSTATS_SERVER=\"', variables('netstatsServer'), '\" NETSTATS_SECRET=\"', variables('netstatsSecret'), '\" MINING_KEYFILE=\"', variables('miningKeyfile'), '\" MINING_ADDRESS=\"', variables('miningAddress'), '\" MINING_KEYPASS=\"', variables('miningKeypass'), '\" NODE_FULLNAME=\"', variables('nodeFullName'), '\" NODE_ADMIN_EMAIL=\"', variables('nodeAdminEmail'), '\" sudo -u ', variables('adminUsername'), ' -E -H ./install.sh')]"
+                "commandToExecute": "[concat('cp install.sh /home/', variables('adminUsername'), '/; cd /home/', variables('adminUsername'), '; chown ', variables('adminUsername'), ':', variables('adminUsername'), ' install.sh; chmod +x install.sh; ADMIN_USERNAME=\"', variables('adminUsername'), '\" NETSTATS_SERVER=\"', variables('netstatsServer'), '\" NETSTATS_SECRET=\"', variables('netstatsSecret'), '\" MINING_KEYFILE=\"', variables('miningKeyfile'), '\" MINING_ADDRESS=\"', variables('miningAddress'), '\" MINING_KEYPASS=\"', variables('miningKeypass'), '\" NODE_FULLNAME=\"', variables('nodeFullName'), '\" NODE_ADMIN_EMAIL=\"', variables('nodeAdminEmail'), '\" sudo -u ', variables('adminUsername'), ' -E -H ./install.sh')]"
             }
           }
         }

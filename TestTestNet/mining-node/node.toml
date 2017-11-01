@@ -3,12 +3,6 @@
 chain = "spec.json"
 base_path = "parity"
 [network]
-max_pending_peers = 16
-port = 30300
-discovery=true
+port = 30303
 [rpc]
-cors = "all"
-interface = "all"
-hosts = ["all"]
-port = 8545
-apis = ["web3", "eth", "net", "parity", "traces", "rpc", "secretstore"]
+apis = ["web3", "eth", "parity", "parity_set", "net", "traces", "rpc"]

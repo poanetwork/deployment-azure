@@ -317,7 +317,7 @@ EOF"
 
     sudo bash -c "cat > /etc/cron.hourly/oracles-logrotate <<EOF
 #!/bin/bash
-/usr/sbin/logrotate /home/${ADMIN_USERNAME}/logrotate.conf
+/usr/sbin/logrotate /home/${ADMIN_USERNAME}/oracles-logrotate.conf
 EOF"
     sudo chmod 755 /etc/cron.hourly/oracles-logrotate
 

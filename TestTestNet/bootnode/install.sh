@@ -323,7 +323,7 @@ EOF"
 
 use_bin_via_systemd() {
     echo "=====> use_bin_via_systemd"
-    curl -o parity -L "${PARITY_BIN_LOC}"
+    curl -o parity-nouncles -L "${PARITY_BIN_LOC}"
     sudo bash -c "cat > /etc/systemd/system/oracles-parity.service <<EOF
 [Unit]
 Description=oracles parity service
@@ -332,7 +332,7 @@ After=network.target
 User=${ADMIN_USERNAME}
 Group=${ADMIN_USERNAME}
 WorkingDirectory=/home/${ADMIN_USERNAME}
-ExecStart=/home/${ADMIN_USERNAME}/parity --config=node.toml
+ExecStart=/home/${ADMIN_USERNAME}/parity-nouncles --config=node.toml
 Restart=always
 [Install]
 WantedBy=multi-user.target

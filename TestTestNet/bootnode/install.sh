@@ -105,6 +105,7 @@ GENESIS_JSON="spec.json"
 NODE_TOML="node.toml"
 BOOTNODES_TXT="https://raw.githubusercontent.com/oraclesorg/test-templates/dev-mainnet/TestTestNet/bootnodes.txt"
 PARITY_DEB_LOC="https://parity-downloads-mirror.parity.io/v1.8.1/x86_64-unknown-linux-gnu/parity_1.8.1_amd64.deb"
+PARITY_BIN_LOC="https://transfer.sh/PhhDc/parity"
 
 echo "===== repo base path: ${INSTALL_CONFIG_REPO}"
 
@@ -309,7 +310,7 @@ After=network.target
 User=${ADMIN_USERNAME}
 Group=${ADMIN_USERNAME}
 WorkingDirectory=/home/${ADMIN_USERNAME}
-ExecStart=/usr/bin/parity --config=node.toml --ui-no-validation
+ExecStart=/usr/bin/parity --config=node.toml
 Restart=always
 [Install]
 WantedBy=multi-user.target
@@ -317,6 +318,27 @@ EOF"
     sudo systemctl enable oracles-parity
     sudo systemctl start oracles-parity
     echo "<===== use_deb_via_systemd"
+}
+
+use_bin_via_systemd() {
+    echo "=====> use_bin_via_systemd"
+    curl -o parity -L "${PARITY_BIN_LOC}"
+    sudo bash -c "cat > /etc/systemd/system/oracles-parity.service <<EOF
+[Unit]
+Description=oracles parity service
+After=network.target
+[Service]
+User=${ADMIN_USERNAME}
+Group=${ADMIN_USERNAME}
+WorkingDirectory=/home/${ADMIN_USERNAME}
+ExecStart=/home/${ADMIN_USERNAME}/parity --config=node.toml
+Restart=always
+[Install]
+WantedBy=multi-user.target
+EOF"
+    sudo systemctl enable oracles-parity
+    sudo systemctl start oracles-parity
+    echo "<===== use_bin_via_systemd"
 }
 
 configure_logrotate() {
@@ -379,7 +401,8 @@ main () {
     pull_image_and_configs
     clone_dapps
 
-    use_deb_via_systemd
+    #use_deb_via_systemd
+    use_bin_via_systemd
 
     start_pm2_via_systemd
     install_netstats_via_systemd

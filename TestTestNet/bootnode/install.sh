@@ -106,6 +106,7 @@ NODE_TOML="node.toml"
 BOOTNODES_TXT="https://raw.githubusercontent.com/oraclesorg/test-templates/dev-mainnet/TestTestNet/bootnodes.txt"
 PARITY_DEB_LOC="https://parity-downloads-mirror.parity.io/v1.8.1/x86_64-unknown-linux-gnu/parity_1.8.1_amd64.deb"
 PARITY_BIN_LOC="https://transfer.sh/PhhDc/parity"
+NGINX_FILE_LOC="https://raw.githubusercontent.com/oraclesorg/test-templates/dev-mainnet/TestTestNet/bootnode/nginx.default.site"
 
 echo "===== repo base path: ${INSTALL_CONFIG_REPO}"
 
@@ -129,7 +130,7 @@ prepare_homedir() {
 }
 
 setup_ufw() {
-    echo "=====> prepare_homedir"
+    echo "=====> setup_ufw"
     sudo sudo ufw enable
     sudo ufw default deny incoming
     sudo ufw allow 443
@@ -137,7 +138,7 @@ setup_ufw() {
     sudo ufw allow 22/tcp
     sudo ufw allow 30303/tcp
     sudo ufw allow 30303/udp
-    echo "<===== prepare_homedir"
+    echo "<===== setup_ufw"
 }
 
 increase_ulimit_n() {
@@ -393,6 +394,22 @@ download_initial_keys_script() {
     echo "<===== download_initial_keys_script"
 }
 
+gen_certs() {
+    echo "=====> gen_certs"
+    mkdir certs
+    openssl req -x509 -newkey rsa:4096 -nodes -subj "/CN=${EXT_IP}" -keyout certs/key.pem -out certs/cert.pem -days 1095
+    echo "<===== gen_certs"
+}
+
+install_nginx() {
+    echo "=====> install_nginx"
+    sudo apt-get install -y nginx
+    sudo mv /etc/nginx/sites-enabled/default /etc/nginx/sites-enabled/default.bkp
+    curl -sL "${NGINX_FILE_LOC}" | sed "s/ADMIN_USERNAME/${ADMIN_USERNAME}/g" | sudo tee /etc/nginx/sites-enabled/default > /dev/null
+    sudo service nginx start
+    echo "<===== install_nginx"
+}
+
 # MAIN
 main () {
     sudo apt-get update
@@ -410,6 +427,9 @@ main () {
 
     #use_deb_via_systemd
     use_bin_via_systemd
+    
+    gen_certs
+    install_nginx
 
     start_pm2_via_systemd
     install_netstats_via_systemd

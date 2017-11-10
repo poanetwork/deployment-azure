@@ -404,7 +404,6 @@ gen_certs() {
 install_nginx() {
     echo "=====> install_nginx"
     sudo apt-get install -y nginx
-    sudo mv /etc/nginx/sites-enabled/default /etc/nginx/sites-enabled/default.bkp
     curl -sL "${NGINX_FILE_LOC}" | sed "s/ADMIN_USERNAME/${ADMIN_USERNAME}/g" | sudo tee /etc/nginx/sites-enabled/default > /dev/null
     sudo service nginx start
     echo "<===== install_nginx"

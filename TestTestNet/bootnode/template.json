@@ -270,7 +270,7 @@
               {
                   "name": "allow-rpc",
                   "properties": {
-                      "priority": 1000,
+                      "priority": 1100,
                       "direction": "Inbound",
                       "sourceAddressPrefix": "*",
                       "sourcePortRange": "*",
@@ -283,7 +283,7 @@
               {
                   "name": "allow-discovery",
                   "properties": {
-                      "priority": 1000,
+                      "priority": 1200,
                       "direction": "Inbound",
                       "sourceAddressPrefix": "*",
                       "sourcePortRange": "*",
@@ -296,7 +296,7 @@
               {
                   "name": "allow-https",
                   "properties": {
-                      "priority": 1000,
+                      "priority": 1300,
                       "direction": "Inbound",
                       "sourceAddressPrefix": "*",
                       "sourcePortRange": "*",

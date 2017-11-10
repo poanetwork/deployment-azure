@@ -132,6 +132,7 @@ setup_ufw() {
     echo "=====> prepare_homedir"
     sudo sudo ufw enable
     sudo ufw default deny incoming
+    sudo ufw allow 8545
     sudo ufw allow 22/tcp
     sudo ufw allow 30303/tcp
     sudo ufw allow 30303/udp

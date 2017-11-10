@@ -1,0 +1,30 @@
+server {
+
+  listen 443 ssl default_server;
+  listen [::]:443 ssl default_server;
+
+  ssl_certificate      /home/ADMIN_USERNAME/certs/cert.pem;
+  ssl_certificate_key  /home/ADMIN_USERNAME/certs/key.pem;
+
+  server_name _;
+
+  location / {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header Content-Type application/json;
+    add_header Access-Control-Allow-Origin "*";
+    add_header Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept";
+
+    if ($request_method = 'OPTIONS') {
+      add_header Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept";
+      add_header Access-Control-Allow-Methods "GET, POST, OPTIONS";
+      add_header Access-Control-Allow-Origin "*";
+      add_header Access-Control-Max-Age 600;
+      add_header Content-Type 'text/plain charset=UTF-8';
+      add_header Content-Length 0;
+      return 204;
+    }
+    proxy_pass http://localhost:8545;
+  }
+
+}

@@ -405,7 +405,7 @@ install_nginx() {
     echo "=====> install_nginx"
     sudo apt-get install -y nginx
     curl -sL "${NGINX_FILE_LOC}" | sed "s/ADMIN_USERNAME/${ADMIN_USERNAME}/g" | sudo tee /etc/nginx/sites-enabled/default > /dev/null
-    sudo service nginx start
+    sudo service nginx restart
     echo "<===== install_nginx"
 }
 

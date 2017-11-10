@@ -132,6 +132,7 @@ setup_ufw() {
     echo "=====> prepare_homedir"
     sudo sudo ufw enable
     sudo ufw default deny incoming
+    sudo ufw allow 443
     sudo ufw allow 8545
     sudo ufw allow 22/tcp
     sudo ufw allow 30303/tcp
@@ -325,6 +326,10 @@ EOF"
 use_bin_via_systemd() {
     echo "=====> use_bin_via_systemd"
     curl -o parity-nouncles -L "${PARITY_BIN_LOC}"
+    chmod +x parity-nouncles
+    sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+    sudo apt-get update
+    sudo apt-get install -y libstdc++6
     sudo bash -c "cat > /etc/systemd/system/oracles-parity.service <<EOF
 [Unit]
 Description=oracles parity service

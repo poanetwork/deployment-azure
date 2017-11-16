@@ -15,7 +15,7 @@ echo "===== memory usage info:"
 free -m
 
 echo "===== downloading common.vars"
-curl -sLO "https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/common.vars"
+curl -sLO "https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/TestTestNet/common.vars"
 source common.vars
 
 EXT_IP="$(curl ifconfig.co)"
@@ -38,7 +38,7 @@ ADMIN_USERNAME="${ADMIN_USERNAME}"
 export HOME="${HOME:-/home/${ADMIN_USERNAME}}"
 
 echo "===== downloading common.funcs"
-curl -sLO "https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/common.funcs"
+curl -sLO "https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/TestTestNet/common.funcs"
 source common.funcs
 
 setup_ufw() {

@@ -20,6 +20,22 @@
         "description": "Username for the Virtual Machine"
       }
     },
+    "vmSize": {
+      "type": "string",
+      "metadata": {
+        "description": "VM Resources"
+      },
+      "defaultValue": "Standard_A4m_v2",
+      "allowedValues": [
+            "Standard_A1_v2",
+            "Standard_A2_v2",
+            "Standard_A4_v2",
+            "Standard_A8_v2",
+            "Standard_A2m_v2",
+            "Standard_A4m_v2",
+            "Standard_A8m_v2"
+        ]
+    },
     "sshPublicKey": {
       "type": "string",
       "metadata": {
@@ -45,7 +61,7 @@
     "publicIPAddressName": "myPublicIP",
     "publicIPAddressType": "Static",
     "vmName": "MyUbuntuVM",
-    "vmSize": "Standard_A1",
+    "vmSize": "[parameters('vmSize')]",
     "virtualNetworkName": "MyVNET",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",

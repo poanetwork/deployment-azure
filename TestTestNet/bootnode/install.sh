@@ -435,7 +435,7 @@ main () {
 
     configure_logrotate
 
-    download_initial_keys_script
+    #download_initial_keys_script
 }
 
 main

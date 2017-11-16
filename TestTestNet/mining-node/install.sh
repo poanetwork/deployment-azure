@@ -109,15 +109,27 @@ prepare_homedir() {
 set_ssh_keys() {
     echo "=====> set_ssh_keys"
     
-    #if [ -n "${SSHPUBKEY}" ]; then
-    #    echo "=====> got ssh public key: ${SSHPUBKEY}"
-    #    mkdir -p "/home/${ADMIN_USERNAME}/.ssh"
-    #    chmod 700 "/home/${ADMIN_USERNAME}/.ssh"
-    #    echo "${SSHPUBKEY}" >> "/home/${ADMIN_USERNAME}/.ssh/authorized_keys"
-    #    chmod 600 "/home/${ADMIN_USERNAME}/.ssh/authorized_keys"
-    #fi
+    if [ -n "${SSHPUBKEY}" ]; then
+        echo "=====> got ssh public key: ${SSHPUBKEY}"
+        mkdir -p "/home/${ADMIN_USERNAME}/.ssh"
+        chmod 700 "/home/${ADMIN_USERNAME}/.ssh"
+        echo "${SSHPUBKEY}" >> "/home/${ADMIN_USERNAME}/.ssh/authorized_keys"
+        chmod 600 "/home/${ADMIN_USERNAME}/.ssh/authorized_keys"
+    fi
 
     echo "<===== set_ssh_keys"
+}
+
+setup_ufw() {
+    echo "=====> setup_ufw"
+    sudo sudo ufw enable
+    sudo ufw default deny incoming
+    sudo ufw allow 443
+    sudo ufw allow 8545
+    sudo ufw allow 22/tcp
+    sudo ufw allow 30303/tcp
+    sudo ufw allow 30303/udp
+    echo "<===== setup_ufw"
 }
 
 increase_ulimit_n() {
@@ -374,7 +386,8 @@ main () {
     sudo apt-get update
 
     prepare_homedir
-    set_ssh_keys
+    #set_ssh_keys
+    setup_ufw
     increase_ulimit_n
     install_ntpd
     install_haveged

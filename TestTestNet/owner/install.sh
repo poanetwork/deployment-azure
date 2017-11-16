@@ -102,6 +102,18 @@ prepare_homedir() {
     echo "<===== prepare_homedir"
 }
 
+setup_ufw() {
+    echo "=====> setup_ufw"
+    sudo sudo ufw enable
+    sudo ufw default deny incoming
+    sudo ufw allow 443
+    sudo ufw allow 8545
+    sudo ufw allow 22/tcp
+    sudo ufw allow 30303/tcp
+    sudo ufw allow 30303/udp
+    echo "<===== setup_ufw"
+}
+
 increase_ulimit_n() {
      echo "${ADMIN_USERNAME} soft nofile 100000" | sudo tee /etc/security/limits.conf >> /dev/null
      echo "${ADMIN_USERNAME} hard nofile 100000" | sudo tee /etc/security/limits.conf >> /dev/null 
@@ -338,6 +350,7 @@ main () {
     sudo apt-get update
 
     prepare_homedir
+    setup_ufw
     increase_ulimit_n
     install_ntpd
     install_haveged

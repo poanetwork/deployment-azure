@@ -1,7 +1,7 @@
 # dev-mainnet branch
 [parity]
 chain = "spec.json"
-base_path = "parity"
+base_path = "parity_data"
 [network]
 port = 30303
 [footprint]

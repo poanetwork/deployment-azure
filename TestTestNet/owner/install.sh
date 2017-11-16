@@ -3,9 +3,9 @@ set -e
 set -u
 set -x
 
-EXT_IP="$(curl ifconfig.co)"
+TEMPLATES_BRANCH="dev-mainnet"
 
-echo "========== dev-mainnet/owner/install.sh starting =========="
+echo "========== ${TEMPLATES_BRANCH}/owner/install.sh starting =========="
 echo "===== current time: $(date)"
 echo "===== username: $(whoami)"
 echo "===== working directory: $(pwd)"
@@ -13,17 +13,20 @@ echo "===== operating system info:"
 lsb_release -a
 echo "===== memory usage info:"
 free -m
-echo "===== external ip: ${EXT_IP}"
+
+echo "===== downloading common.vars"
+curl -sLO "https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/common.vars"
+source common.vars
+
 echo "===== environmental variables:"
 printenv
 
-INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/dev-mainnet/TestTestNet/owner"
-GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/sokol/spec.json"
+INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/TestTestNet/owner"
+GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/${SCRIPTS_BRANCH}/spec.json"
 GENESIS_JSON="spec.json"
 NODE_TOML="node.toml"
 NODE_PWD="node.pwd"
-BOOTNODES_TXT="https://raw.githubusercontent.com/oraclesorg/test-templates/dev-mainnet/TestTestNet/bootnodes.txt"
-PARITY_DEB_LOC="https://parity-downloads-mirror.parity.io/v1.8.1/x86_64-unknown-linux-gnu/parity_1.8.1_amd64.deb"
+BOOTNODES_TXT="https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/TestTestNet/bootnodes.txt"
 
 export HOME="${HOME:-/home/${ADMIN_USERNAME}}"
 
@@ -52,7 +55,6 @@ setup_ufw() {
     echo "=====> setup_ufw"
     sudo sudo ufw enable
     sudo ufw default deny incoming
-    sudo ufw allow 443
     sudo ufw allow 8545
     sudo ufw allow 22/tcp
     sudo ufw allow 30303/tcp
@@ -114,27 +116,24 @@ pull_image_and_configs() {
     cat >> ${NODE_TOML} <<EOF
 [misc]
 log_file = "/home/${ADMIN_USERNAME}/logs/parity.log"
+[account]
+password = ["${NODE_PWD}"]
+unlock = ["${MINING_ADDRESS}"]
+[mining]
+force_sealing = true
+engine_signer = "${OWNER_ADDRESS}"
+reseal_on_txs = "none"
 EOF
     echo "${OWNER_KEYPASS}" > "${NODE_PWD}"
-    mkdir -p parity/keys/OraclesPoA
-    echo ${OWNER_KEYFILE} | base64 -d > parity/keys/OraclesPoA/owner.key
+    mkdir -p parity_data/keys/OraclesPoA
+    echo ${OWNER_KEYFILE} | base64 -d > parity_data/keys/OraclesPoA/owner.key
 
     echo "<===== pull_image_and_configs"
 }
 
-clone_dapps() {
-    echo "=====> clone_dapps"
-    mkdir -p parity/dapps
-    git clone https://github.com/oraclesorg/oracles-dapps-keys-generation.git parity/dapps/KeysGenerator
-    git clone https://github.com/oraclesorg/oracles-dapps-voting.git parity/dapps/Voting
-    git clone https://github.com/oraclesorg/oracles-dapps-validators.git parity/dapps/ValidatorsList
-    echo "<===== clone_dapps"
-}
-
 install_nodejs() {
     echo "=====> install_nodejs"
-    # curl -sL https://deb.nodesource.com/setup_0.12 | bash -
-    curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+    curl -sL ${NODE_SOURCE_DEB} | sudo -E bash -
     sudo apt-get update
     sudo apt-get install -y build-essential git unzip wget nodejs ntp cloud-utils
 
@@ -246,6 +245,31 @@ EOF"
     echo "<===== use_deb_via_systemd"
 }
 
+use_bin_via_systemd() {
+    echo "=====> use_bin_via_systemd"
+    curl -o parity -L "${PARITY_BIN_LOC}"
+    chmod +x parity
+    sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+    sudo apt-get update
+    sudo apt-get install -y libstdc++6
+    sudo bash -c "cat > /etc/systemd/system/oracles-parity.service <<EOF
+[Unit]
+Description=oracles parity service
+After=network.target
+[Service]
+User=${ADMIN_USERNAME}
+Group=${ADMIN_USERNAME}
+WorkingDirectory=/home/${ADMIN_USERNAME}
+ExecStart=/home/${ADMIN_USERNAME}/parity --config=node.toml
+Restart=always
+[Install]
+WantedBy=multi-user.target
+EOF"
+    sudo systemctl enable oracles-parity
+    sudo systemctl start oracles-parity
+    echo "<===== use_bin_via_systemd"
+}
+
 configure_logrotate() {
     echo "=====> configure_logrotate"
 
@@ -284,7 +308,7 @@ EOF"
 
 download_initial_keys_script() {
     echo "=====> download_initial_keys_script"
-    git clone https://github.com/oraclesorg/oracles-initial-keys
+    git clone -b ${IKEYS_BRANCH} --single-branch https://github.com/oraclesorg/oracles-initial-keys
     cd oracles-initial-keys
     npm install
     cd ..
@@ -304,9 +328,15 @@ main () {
 
     install_nodejs
     pull_image_and_configs
-    clone_dapps
 
-    use_deb_via_systemd
+    if [ "${PARITY_INSTALLATION_MODE}" = "BIN" ]; then
+        use_bin_via_systemd
+    elif [ "${PARITY_INSTALLATION_MODE}" = "DEB" ]; then
+        use_deb_via_systemd
+    else
+        echo "===== invalid PARITY_INSTALLATION_MODE == ${PARITY_INSTALLATION_MODE}. Should be either BIN or DEB"
+        exit 1
+    fi
 
     start_pm2_via_systemd
     install_netstats_via_systemd
@@ -317,4 +347,4 @@ main () {
 }
 
 main
-echo "========== dev-mainnet/owner/install.sh finished =========="
+echo "========== ${TEMPLATES_BRANCH}/owner/install.sh finished =========="

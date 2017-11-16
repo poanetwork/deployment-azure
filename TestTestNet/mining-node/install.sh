@@ -3,9 +3,9 @@ set -e
 set -u
 set -x
 
-EXT_IP="$(curl ifconfig.co)"
+TEMPLATES_BRANCH="dev-mainnet"
 
-echo "========== dev-mainnet/mining-node/install.sh starting =========="
+echo "========== ${TEMPLATES_BRANCH}/mining-node/install.sh starting =========="
 echo "===== current time: $(date)"
 echo "===== username: $(whoami)"
 echo "===== working directory: $(pwd)"
@@ -13,18 +13,24 @@ echo "===== operating system info:"
 lsb_release -a
 echo "===== memory usage info:"
 free -m
+
+echo "===== downloading common.vars"
+curl -sLO "https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/common.vars"
+source common.vars
+
+EXT_IP="$(curl ifconfig.co)"
 echo "===== external ip: ${EXT_IP}"
+
 echo "===== environmental variables:"
 printenv
 
 # script parameters
-INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/dev-mainnet/TestTestNet/mining-node"
-GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/sokol/spec.json"
+INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/TestTestNet/mining-node"
+GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/${SCRIPTS_BRANCH}/spec.json"
 GENESIS_JSON="spec.json"
 NODE_TOML="node.toml"
 NODE_PWD="node.pwd"
-BOOTNODES_TXT="https://raw.githubusercontent.com/oraclesorg/test-templates/dev-mainnet/TestTestNet/bootnodes.txt"
-PARITY_DEB_LOC="https://parity-downloads-mirror.parity.io/v1.8.1/x86_64-unknown-linux-gnu/parity_1.8.1_amd64.deb"
+BOOTNODES_TXT="https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/TestTestNet/bootnodes.txt"
 
 export HOME="${HOME:-/home/${ADMIN_USERNAME}}"
 
@@ -68,7 +74,6 @@ setup_ufw() {
     echo "=====> setup_ufw"
     sudo sudo ufw enable
     sudo ufw default deny incoming
-    sudo ufw allow 443
     sudo ufw allow 8545
     sudo ufw allow 22/tcp
     sudo ufw allow 30303/tcp
@@ -122,8 +127,7 @@ allocate_swap() {
 
 install_nodejs() {
     echo "=====> install_nodejs"
-    # curl -sL https://deb.nodesource.com/setup_0.12 | bash -
-    curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+    curl -sL ${NODE_SOURCE_DEB} | sudo -E bash -
     sudo apt-get update
     sudo apt-get install -y build-essential git unzip wget nodejs ntp cloud-utils
 
@@ -131,7 +135,6 @@ install_nodejs() {
     [[ ! -f /usr/bin/node ]] && sudo ln -s /usr/bin/nodejs /usr/bin/node
     echo "<===== install_nodejs"
 }
-
 
 pull_image_and_configs() {
     echo "=====> pull_image_and_configs"
@@ -155,8 +158,8 @@ engine_signer = "${MINING_ADDRESS}"
 reseal_on_txs = "none"
 EOF
     echo "${MINING_KEYPASS}" > "${NODE_PWD}"
-    mkdir -p parity/keys/OraclesPoA
-    echo ${MINING_KEYFILE} | base64 -d > parity/keys/OraclesPoA/mining.key.${MINING_ADDRESS}
+    mkdir -p parity_data/keys/OraclesPoA
+    echo ${MINING_KEYFILE} | base64 -d > parity_data/keys/OraclesPoA/mining.key.${MINING_ADDRESS}
     echo "<===== pull_image_and_configs"
 }
 
@@ -269,9 +272,34 @@ EOF"
     echo "<===== use_deb_via_systemd"
 }
 
+use_bin_via_systemd() {
+    echo "=====> use_bin_via_systemd"
+    curl -o parity -L "${PARITY_BIN_LOC}"
+    chmod +x parity
+    sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+    sudo apt-get update
+    sudo apt-get install -y libstdc++6
+    sudo bash -c "cat > /etc/systemd/system/oracles-parity.service <<EOF
+[Unit]
+Description=oracles parity service
+After=network.target
+[Service]
+User=${ADMIN_USERNAME}
+Group=${ADMIN_USERNAME}
+WorkingDirectory=/home/${ADMIN_USERNAME}
+ExecStart=/home/${ADMIN_USERNAME}/parity --config=node.toml
+Restart=always
+[Install]
+WantedBy=multi-user.target
+EOF"
+    sudo systemctl enable oracles-parity
+    sudo systemctl start oracles-parity
+    echo "<===== use_bin_via_systemd"
+}
+
 install_scripts() {
     echo "=====> install_scripts"
-    git clone -b sokol --single-branch https://github.com/oraclesorg/oracles-scripts
+    git clone -b ${SCRIPTS_BRANCH} --single-branch https://github.com/oraclesorg/oracles-scripts
     ln -s ../node.toml oracles-scripts/node.toml
     cd oracles-scripts/scripts
     npm install
@@ -340,7 +368,14 @@ main () {
     install_nodejs
     pull_image_and_configs
 
-    use_deb_via_systemd
+    if [ "${PARITY_INSTALLATION_MODE}" = "BIN" ]; then
+        use_bin_via_systemd
+    elif [ "${PARITY_INSTALLATION_MODE}" = "DEB" ]; then
+        use_deb_via_systemd
+    else
+        echo "===== invalid PARITY_INSTALLATION_MODE == ${PARITY_INSTALLATION_MODE}. Should be either BIN or DEB"
+        exit 1
+    fi
 
     start_pm2_via_systemd
     install_netstats_via_systemd
@@ -349,4 +384,4 @@ main () {
 }
 
 main
-echo "========== dev-mainnet/mining-node/install.sh finished =========="
+echo "========== ${TEMPLATES_BRANCH}/mining-node/install.sh finished =========="

@@ -5,62 +5,6 @@ set -x
 
 EXT_IP="$(curl ifconfig.co)"
 
-# Install logentries daemon /*
-start_logentries() {
-    echo "=====> start_logentries"
-    sudo bash -c "echo 'deb http://rep.logentries.com/ trusty main' > /etc/apt/sources.list.d/logentries.list"
-    sudo bash -c "gpg --keyserver pgp.mit.edu --recv-keys C43C79AD && gpg -a --export C43C79AD | apt-key add -"
-    sudo apt-get update
-    sudo apt-get install -y logentries
-    sudo le reinit --user-key=0665901a-e843-41c5-82c1-2cc4b39f0b21 --pull-server-side-config=False
-
-    mkdir -p /home/${ADMIN_USERNAME}/logs
-    touch /home/${ADMIN_USERNAME}/logs/netstats_daemon.err
-    touch /home/${ADMIN_USERNAME}/logs/netstats_daemon.out
-    touch /home/${ADMIN_USERNAME}/logs/parity.err
-    touch /home/${ADMIN_USERNAME}/logs/parity.out
-    touch /home/${ADMIN_USERNAME}/logs/parity.log
-    touch /home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out
-    touch /home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err
-
-    sudo bash -c "cat >> /etc/le/config << EOF
-[install_err]
-path = /var/lib/waagent/custom-script/download/0/stderr
-destination = dev-mainnet/${EXT_IP}
-[install_out]
-path = /var/lib/waagent/custom-script/download/0/stdout
-destination = dev-mainnet/${EXT_IP}
-[netstats_daemon_err]
-path = /home/${ADMIN_USERNAME}/logs/netstats_daemon.err
-destination = dev-mainnet/${EXT_IP}
-[netstats_daemon_out]
-path = /home/${ADMIN_USERNAME}/logs/netstats_daemon.out
-destination = dev-mainnet/${EXT_IP}
-[parity_err]
-path = /home/${ADMIN_USERNAME}/logs/parity.err
-destination = dev-mainnet/${EXT_IP}
-[parity_out]
-path = /home/${ADMIN_USERNAME}/logs/parity.out
-destination = dev-mainnet/${EXT_IP}
-[parity_log]
-path = /home/${ADMIN_USERNAME}/logs/parity.log
-destination = dev-mainnet/${EXT_IP}
-[transferReward_out]
-path = /home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.out
-destination = dev-mainnet/${EXT_IP}
-[transferReward_err]
-path = /home/${ADMIN_USERNAME}/logs/transferRewardToPayoutKey.err
-destination = dev-mainnet/${EXT_IP}
-EOF"
-    sudo apt-get install -y logentries-daemon
-    sudo service logentries start
-    echo "<===== start_logentries"
-}
-
-#start_logentries
-
-# */
-
 echo "========== dev-mainnet/mining-node/install.sh starting =========="
 echo "===== current time: $(date)"
 echo "===== username: $(whoami)"
@@ -108,7 +52,7 @@ prepare_homedir() {
 
 set_ssh_keys() {
     echo "=====> set_ssh_keys"
-    
+
     if [ -n "${SSHPUBKEY}" ]; then
         echo "=====> got ssh public key: ${SSHPUBKEY}"
         mkdir -p "/home/${ADMIN_USERNAME}/.ssh"
@@ -135,7 +79,7 @@ setup_ufw() {
 increase_ulimit_n() {
      echo "=====> increase_ulimit_n"
      echo "${ADMIN_USERNAME} soft nofile 100000" | sudo tee /etc/security/limits.conf >> /dev/null
-     echo "${ADMIN_USERNAME} hard nofile 100000" | sudo tee /etc/security/limits.conf >> /dev/null 
+     echo "${ADMIN_USERNAME} hard nofile 100000" | sudo tee /etc/security/limits.conf >> /dev/null
      echo "<===== increase_ulimit_n"
 }
 

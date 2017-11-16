@@ -76,7 +76,8 @@
     "ownerKeyFile": "[base64(trim(string(parameters('ownerKeyFile'))))]",
     "ownerKeypass": "[trim(parameters('ownerKeypass'))]",
     "netstatsServer": "[trim(parameters('netstatsServer'))]",
-    "netstatsSecret": "[trim(parameters('netstatsSecret'))]"
+    "netstatsSecret": "[trim(parameters('netstatsSecret'))]",
+    "networkSecurityGroupName": "OraclesTest-NSG-1"
   },
   "resources": [
     {
@@ -130,6 +131,7 @@
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
+        "[resourceId('Microsoft.Network/networkSecurityGroups/', variables('networkSecurityGroupName'))]",
         "[resourceId('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
       ],
       "properties": {
@@ -146,7 +148,10 @@
               }
             }
           }
-        ]
+        ],
+        "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
+        }
       }
     },
     {
@@ -238,6 +243,82 @@
           }
         }
       ]
+    },
+    {
+      "name": "[variables('networkSecurityGroupName')]",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2016-09-01",
+      "location": "[resourceGroup().location]",
+      "comments": "Network Security Group (NSG) for your Primary NIC",
+      "properties": {
+          "securityRules": [
+              {
+                  "name": "allow-ssh",
+                  "properties": {
+                      "priority": 1000,
+                      "direction": "Inbound",
+                      "sourceAddressPrefix": "*",
+                      "sourcePortRange": "*",
+                      "protocol": "Tcp",
+                      "access": "Allow",
+                      "destinationAddressPrefix": "*",
+                      "destinationPortRange": "22"
+                  }
+              },
+              {
+                  "name": "allow-rpc",
+                  "properties": {
+                      "priority": 1100,
+                      "direction": "Inbound",
+                      "sourceAddressPrefix": "*",
+                      "sourcePortRange": "*",
+                      "protocol": "Tcp",
+                      "access": "Allow",
+                      "destinationAddressPrefix": "*",
+                      "destinationPortRange": "8545"
+                  }
+              },
+              {
+                  "name": "allow-discovery",
+                  "properties": {
+                      "priority": 1200,
+                      "direction": "Inbound",
+                      "sourceAddressPrefix": "*",
+                      "sourcePortRange": "*",
+                      "protocol": "*",
+                      "access": "Allow",
+                      "destinationAddressPrefix": "*",
+                      "destinationPortRange": "30303"
+                  }
+              },
+              {
+                  "name": "allow-https",
+                  "properties": {
+                      "priority": 1300,
+                      "direction": "Inbound",
+                      "sourceAddressPrefix": "*",
+                      "sourcePortRange": "*",
+                      "protocol": "*",
+                      "access": "Allow",
+                      "destinationAddressPrefix": "*",
+                      "destinationPortRange": "443"
+                  }
+              },
+              {
+                  "name": "disallow-other",
+                  "properties": {
+                      "priority": 2000,
+                      "direction": "Inbound",
+                      "sourceAddressPrefix": "*",
+                      "sourcePortRange": "*",
+                      "protocol": "*",
+                      "access": "Deny",
+                      "destinationAddressPrefix": "*",
+                      "destinationPortRange": "*"
+                  }
+              }
+          ]
+      }
     }
   ],
   "outputs": {

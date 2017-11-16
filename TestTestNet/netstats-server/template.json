@@ -143,10 +143,10 @@
               }
             }
           }
-        ]
-      },
-      "networkSecurityGroup": {
-        "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
+        ],
+        "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
+        }
       }
     },
     {

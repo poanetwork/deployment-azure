@@ -24,13 +24,9 @@ echo "===== external ip: ${EXT_IP}"
 echo "===== environmental variables:"
 printenv
 
-INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/TestTestNet/bootnode"
-GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/${SCRIPTS_BRANCH}/spec.json"
-GENESIS_JSON="spec.json"
-NODE_TOML="node.toml"
-BOOTNODES_TXT="https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/TestTestNet/bootnodes.txt"
 NGINX_FILE_LOC="https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/TestTestNet/bootnode/nginx.default.site"
 
+INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/TestTestNet/bootnode"
 echo "===== repo base path: ${INSTALL_CONFIG_REPO}"
 
 # this should be provided through env by azure template
@@ -63,7 +59,7 @@ pull_image_and_configs() {
     # curl -s -O "${INSTALL_CONFIG_REPO}/../${GENESIS_JSON}"
     curl -s -o "${GENESIS_JSON}" "${GENESIS_REPO_LOC}"
     curl -s -o "bootnodes.txt" "${BOOTNODES_TXT}"
-    curl -s -O "${INSTALL_CONFIG_REPO}/${NODE_TOML}"
+    curl -s -O "${INSTALL_CONFIG_REPO}/node.toml"
     sed -i "/\[network\]/a nat=\"extip:${EXT_IP}\"" ${NODE_TOML}
     #sed -i "/\[network\]/a bootnodes=\[$(cat bootnodes.txt | sed 's/\r$//' | awk -F'#' '{ print $1 }' | awk '/enode/{ print "\""$1"\"" }' | paste -sd "," -)\]" ${NODE_TOML}
     sed -i "/\[network\]/a reserved_peers=\"/home/${ADMIN_USERNAME}/bootnodes.txt\"" ${NODE_TOML}

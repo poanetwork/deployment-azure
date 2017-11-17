@@ -1,3 +1,5 @@
+echo "=====> sourcing common.funcs"
+
 prepare_homedir() {
     echo "=====> prepare_homedir"
     # ln -s "$(pwd)" "/home/${ADMIN_USERNAME}/script-dir"
@@ -223,3 +225,5 @@ EOF"
 
     echo "<===== configure_logrotate"
 }
+
+echo "<===== sourcing common.funcs"

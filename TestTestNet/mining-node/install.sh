@@ -21,9 +21,6 @@ source common.vars
 EXT_IP="$(curl ifconfig.co)"
 echo "===== external ip: ${EXT_IP}"
 
-echo "===== environmental variables:"
-printenv
-
 INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/TestTestNet/mining-node"
 echo "===== repo base path: ${INSTALL_CONFIG_REPO}"
 
@@ -39,6 +36,9 @@ ADMIN_USERNAME="${ADMIN_USERNAME}"
 #SSHPUBKEY="${SSHPUBKEY}"
 
 export HOME="${HOME:-/home/${ADMIN_USERNAME}}"
+
+echo "===== environmental variables:"
+printenv
 
 echo "===== downloading common.funcs"
 curl -sLO "https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/TestTestNet/common.funcs"

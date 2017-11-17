@@ -52,6 +52,7 @@
     }
   },
   "variables": {
+    "TEMPLATES_BRANCH": "dev-mainnet",
     "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'salinuxvm')]",
     "imagePublisher": "Canonical",
     "imageOffer": "UbuntuServer",
@@ -234,7 +235,7 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
                 "fileUris": [
-                    "https://raw.githubusercontent.com/oraclesorg/test-templates/dev-mainnet/TestTestNet/owner/install.sh"
+                    "[concat('https://raw.githubusercontent.com/oraclesorg/test-templates/', variables('TEMPLATES_BRANCH'), '/TestTestNet/bootnode/install.sh']"
                 ]
             },
             "protectedSettings": {

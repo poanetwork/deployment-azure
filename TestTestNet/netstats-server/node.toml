@@ -1,4 +1,3 @@
-# dev-mainnet branch
 [parity]
 chain = "spec.json"
 base_path = "parity_data"

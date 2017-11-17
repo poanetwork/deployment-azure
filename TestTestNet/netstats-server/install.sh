@@ -45,6 +45,8 @@ setup_ufw() {
     echo "=====> setup_ufw"
     sudo sudo ufw enable
     sudo ufw default deny incoming
+    sudo ufw allow 3000
+    sudo ufw allow 4000
     sudo ufw allow 443
     sudo ufw allow 8545
     sudo ufw allow 22/tcp

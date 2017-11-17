@@ -21,9 +21,6 @@ source common.vars
 EXT_IP="$(curl ifconfig.co)"
 echo "===== external ip: ${EXT_IP}"
 
-echo "===== environmental variables:"
-printenv
-
 NETSTATS_SERVER="localhost"
 
 INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/TestTestNet/netstats-server"
@@ -36,6 +33,9 @@ NODE_ADMIN_EMAIL="${NODE_ADMIN_EMAIL:-somebody@somehere}"
 ADMIN_USERNAME="${ADMIN_USERNAME}"
 
 export HOME="${HOME:-/home/${ADMIN_USERNAME}}"
+
+echo "===== environmental variables:"
+printenv
 
 echo "===== downloading common.funcs"
 curl -sLO "https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/TestTestNet/common.funcs"

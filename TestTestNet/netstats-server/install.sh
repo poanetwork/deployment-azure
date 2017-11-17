@@ -14,10 +14,6 @@ lsb_release -a
 echo "===== memory usage info:"
 free -m
 
-echo "===== downloading common.vars"
-curl -sLO "https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/TestTestNet/common.vars"
-source common.vars
-
 EXT_IP="$(curl ifconfig.co)"
 echo "===== external ip: ${EXT_IP}"
 
@@ -25,6 +21,10 @@ NETSTATS_SERVER="localhost"
 
 INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/TestTestNet/netstats-server"
 echo "===== repo base path: ${INSTALL_CONFIG_REPO}"
+
+echo "===== downloading common.vars"
+curl -sLO "https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/TestTestNet/common.vars"
+source common.vars
 
 # this should be provided through env by azure template
 NETSTATS_SECRET="${NETSTATS_SECRET}"

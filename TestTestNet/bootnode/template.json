@@ -237,7 +237,7 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
                 "fileUris": [
-                    "[concat('https://raw.githubusercontent.com/oraclesorg/test-templates/', variables('TEMPLATES_BRANCH'), '/TestTestNet/bootnode/install.sh']"
+                    "[concat('https://raw.githubusercontent.com/oraclesorg/test-templates/', variables('TEMPLATES_BRANCH'), '/TestTestNet/bootnode/install.sh')]"
                 ]
             },
             "protectedSettings": {

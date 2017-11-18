@@ -249,6 +249,32 @@
       "properties": {
           "securityRules": [
               {
+                  "name": "access-dashboard",
+                  "properties": {
+                      "priority": 1000,
+                      "direction": "Inbound",
+                      "sourceAddressPrefix": "*",
+                      "sourcePortRange": "*",
+                      "protocol": "Tcp",
+                      "access": "Allow",
+                      "destinationAddressPrefix": "*",
+                      "destinationPortRange": "3000"
+                  }
+              },
+              {
+                  "name": "access-explorer",
+                  "properties": {
+                      "priority": 1000,
+                      "direction": "Inbound",
+                      "sourceAddressPrefix": "*",
+                      "sourcePortRange": "*",
+                      "protocol": "Tcp",
+                      "access": "Allow",
+                      "destinationAddressPrefix": "*",
+                      "destinationPortRange": "4000"
+                  }
+              },
+              {
                   "name": "allow-ssh",
                   "properties": {
                       "priority": 1000,

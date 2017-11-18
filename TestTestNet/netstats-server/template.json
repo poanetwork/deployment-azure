@@ -249,32 +249,6 @@
       "properties": {
           "securityRules": [
               {
-                  "name": "access-dashboard",
-                  "properties": {
-                      "priority": 1000,
-                      "direction": "Inbound",
-                      "sourceAddressPrefix": "*",
-                      "sourcePortRange": "*",
-                      "protocol": "Tcp",
-                      "access": "Allow",
-                      "destinationAddressPrefix": "*",
-                      "destinationPortRange": "3000"
-                  }
-              },
-              {
-                  "name": "access-explorer",
-                  "properties": {
-                      "priority": 1000,
-                      "direction": "Inbound",
-                      "sourceAddressPrefix": "*",
-                      "sourcePortRange": "*",
-                      "protocol": "Tcp",
-                      "access": "Allow",
-                      "destinationAddressPrefix": "*",
-                      "destinationPortRange": "4000"
-                  }
-              },
-              {
                   "name": "allow-ssh",
                   "properties": {
                       "priority": 1000,
@@ -324,6 +298,32 @@
                       "access": "Allow",
                       "destinationAddressPrefix": "*",
                       "destinationPortRange": "443"
+                  }
+              },
+              {
+                  "name": "access-dashboard",
+                  "properties": {
+                      "priority": 1400,
+                      "direction": "Inbound",
+                      "sourceAddressPrefix": "*",
+                      "sourcePortRange": "*",
+                      "protocol": "Tcp",
+                      "access": "Allow",
+                      "destinationAddressPrefix": "*",
+                      "destinationPortRange": "3000"
+                  }
+              },
+              {
+                  "name": "access-explorer",
+                  "properties": {
+                      "priority": 1500,
+                      "direction": "Inbound",
+                      "sourceAddressPrefix": "*",
+                      "sourcePortRange": "*",
+                      "protocol": "Tcp",
+                      "access": "Allow",
+                      "destinationAddressPrefix": "*",
+                      "destinationPortRange": "4000"
                   }
               },
               {

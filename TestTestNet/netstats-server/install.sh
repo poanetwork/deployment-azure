@@ -3,7 +3,8 @@ set -e
 set -u
 set -x
 
-TEMPLATES_BRANCH="dev-mainnet"
+# this should be provided through env by azure template
+TEMPLATES_BRANCH="${TEMPLATES_BRANCH}"
 
 echo "========== ${TEMPLATES_BRANCH}/netstats-server/install.sh starting =========="
 echo "===== current time: $(date)"

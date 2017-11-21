@@ -2,52 +2,59 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "nodeFullName": {
+    "FullName": {
       "type": "string",
       "metadata": {
         "description": "Node full name (publicly visible)"
       }
     },
-    "nodeAdminEmail": {
+    "AdminEmail": {
       "type": "string",
       "metadata": {
         "description": "Node admin email (publicly visible)"
       }
     },
-    "ownerKeyFile": {
-      "type": "secureString",
-      "metadata": {
-        "description": "Content of the file with mining key (json string)"
-      }
-    },
-    "ownerKeypass": {
-      "type": "secureString",
-      "metadata": {
-        "description": "Password for the mining key"
-      }
-    },
-    "adminUsername": {
+    "AdminUsername": {
       "type": "string",
       "metadata": {
         "description": "Username for the Virtual Machine"
       }
     },
-    "sshPublicKey": {
+    "SSHPublicKey": {
       "type": "string",
+      "defaultValue": "",
       "metadata": {
         "description": "SSH public key for the Virtual Machine"
       }
     },
-    "netstatsServer": {
+    "NetstatsServer": {
       "type": "string",
       "metadata": {
         "description": "NetStats server IP"
       }
     },
-    "netstatsSecret": {
+    "NetstatsSecret": {
       "type": "secureString",
       "metadata": {
         "description": "NetStats net code"
+      }
+    },
+    "MiningKeyAddress": {
+      "type": "string",
+      "metadata": {
+        "description": "Miner blockchain account address (0x...)"
+      }
+    },
+    "MiningKeyPassword": {
+      "type": "secureString",
+      "metadata": {
+        "description": "Password for the mining key"
+      }
+    },
+    "MiningJSONKeyFile": {
+      "type": "secureString",
+      "metadata": {
+        "description": "Content of the file with mining key (json string)"
       }
     }
   },
@@ -69,15 +76,16 @@
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
     "ubuntuOSVersion": "16.04.0-LTS",
-    "dnsLabelPrefix": "[concat('oracles-bn-', uniqueString(resourceGroup().id, parameters('nodeFullName')))]",
-    "adminUsername": "[trim(toLower(parameters('adminUsername')))]",
-    "sshPublicKey": "[trim(parameters('sshPublicKey'))]",
-    "nodeFullName": "[trim(parameters('nodeFullName'))]",
-    "nodeAdminEmail": "[trim(parameters('nodeAdminEmail'))]",
-    "ownerKeyFile": "[base64(trim(string(parameters('ownerKeyFile'))))]",
-    "ownerKeypass": "[trim(parameters('ownerKeypass'))]",
-    "netstatsServer": "[trim(parameters('netstatsServer'))]",
-    "netstatsSecret": "[trim(parameters('netstatsSecret'))]",
+    "adminUsername": "[trim(toLower(parameters('AdminUsername')))]",
+    "sshPublicKey": "[trim(parameters('SSHPublicKey'))]",
+    "nodeFullName": "[trim(parameters('FullName'))]",
+    "nodeAdminEmail": "[trim(parameters('AdminEmail'))]",
+    "miningAddress": "[trim(parameters('MiningKeyAddress'))]",
+    "miningKeyfile": "[base64(trim(string(parameters('MiningJSONKeyFile'))))]",
+    "miningKeypass": "[trim(parameters('MiningKeyPassword'))]",
+    "netstatsServer": "[trim(parameters('NetstatsServer'))]",
+    "netstatsSecret": "[trim(parameters('NetstatsSecret'))]",
+    "dnsLabelPrefix": "[toLower(concat('oracles-', uniqueString(resourceGroup().id, variables('miningAddress'))))]",
     "networkSecurityGroupName": "OraclesTest-NSG-1"
   },
   "resources": [
@@ -235,11 +243,11 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
                 "fileUris": [
-                    "[concat('https://raw.githubusercontent.com/oraclesorg/test-templates/', variables('TEMPLATES_BRANCH'), '/TestTestNet/owner/install.sh')]"
+                    "[concat('https://raw.githubusercontent.com/oraclesorg/deployment-azure/', variables('TEMPLATES_BRANCH'), '/nodes/mining-node/install.sh')]"
                 ]
             },
             "protectedSettings": {
-                "commandToExecute": "[concat('cp install.sh /home/', variables('adminUsername'), '/; cd /home/', variables('adminUsername'), '; chown ', variables('adminUsername'), ':', variables('adminUsername'), ' install.sh; chmod +x install.sh; TEMPLATES_BRANCH=\"', variables('TEMPLATES_BRANCH'), '\" ADMIN_USERNAME=\"', variables('adminUsername'), '\" NETSTATS_SERVER=\"', variables('netstatsServer'), '\" NETSTATS_SECRET=\"', variables('netstatsSecret'), '\" OWNER_KEYFILE=\"', variables('ownerKeyFile'), '\" OWNER_KEYPASS=\"', variables('ownerKeypass'), '\" NODE_FULLNAME=\"', variables('nodeFullName'), '\" NODE_ADMIN_EMAIL=\"', variables('nodeAdminEmail'), '\" sudo -u ', variables('adminUsername'), ' -E -H ./install.sh')]"
+                "commandToExecute": "[concat('cp install.sh /home/', variables('adminUsername'), '/; cd /home/', variables('adminUsername'), '; chown ', variables('adminUsername'), ':', variables('adminUsername'), ' install.sh; chmod +x install.sh; TEMPLATES_BRANCH=\"', variables('TEMPLATES_BRANCH'), '\" ADMIN_USERNAME=\"', variables('adminUsername'), '\" NETSTATS_SERVER=\"', variables('netstatsServer'), '\" NETSTATS_SECRET=\"', variables('netstatsSecret'), '\" MINING_KEYFILE=\"', variables('miningKeyfile'), '\" MINING_ADDRESS=\"', variables('miningAddress'), '\" MINING_KEYPASS=\"', variables('miningKeypass'), '\" NODE_FULLNAME=\"', variables('nodeFullName'), '\" NODE_ADMIN_EMAIL=\"', variables('nodeAdminEmail'), '\" sudo -u ', variables('adminUsername'), ' -E -H ./install.sh')]"
             }
           }
         }
@@ -317,6 +325,10 @@
     "sshCommand": {
       "type": "string",
       "value": "[concat('ssh ', variables('adminUsername'), '@', reference(variables('publicIPAddressName')).dnsSettings.fqdn)]"
+    },
+    "miningAddress": {
+      "type": "string",
+      "value": "[variables('miningAddress')]"
     }
   }
 }

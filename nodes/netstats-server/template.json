@@ -2,59 +2,50 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "FullName": {
+    "nodeFullName": {
       "type": "string",
       "metadata": {
         "description": "Node full name (publicly visible)"
       }
     },
-    "AdminEmail": {
+    "nodeAdminEmail": {
       "type": "string",
       "metadata": {
         "description": "Node admin email (publicly visible)"
       }
     },
-    "AdminUsername": {
+    "adminUsername": {
       "type": "string",
       "metadata": {
         "description": "Username for the Virtual Machine"
       }
     },
-    "SSHPublicKey": {
+    "vmSize": {
       "type": "string",
-      "defaultValue": "",
+      "metadata": {
+        "description": "VM Resources"
+      },
+      "defaultValue": "Standard_A4m_v2",
+      "allowedValues": [
+            "Standard_A1_v2",
+            "Standard_A2_v2",
+            "Standard_A4_v2",
+            "Standard_A8_v2",
+            "Standard_A2m_v2",
+            "Standard_A4m_v2",
+            "Standard_A8m_v2"
+        ]
+    },
+    "sshPublicKey": {
+      "type": "string",
       "metadata": {
         "description": "SSH public key for the Virtual Machine"
       }
     },
-    "NetstatsServer": {
-      "type": "string",
-      "metadata": {
-        "description": "NetStats server IP"
-      }
-    },
-    "NetstatsSecret": {
+    "netstatsSecret": {
       "type": "secureString",
       "metadata": {
         "description": "NetStats net code"
-      }
-    },
-    "MiningKeyAddress": {
-      "type": "string",
-      "metadata": {
-        "description": "Miner blockchain account address (0x...)"
-      }
-    },
-    "MiningKeyPassword": {
-      "type": "secureString",
-      "metadata": {
-        "description": "Password for the mining key"
-      }
-    },
-    "MiningJSONKeyFile": {
-      "type": "secureString",
-      "metadata": {
-        "description": "Content of the file with mining key (json string)"
       }
     }
   },
@@ -71,21 +62,17 @@
     "publicIPAddressName": "myPublicIP",
     "publicIPAddressType": "Static",
     "vmName": "MyUbuntuVM",
-    "vmSize": "Standard_A1",
+    "vmSize": "[parameters('vmSize')]",
     "virtualNetworkName": "MyVNET",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
     "ubuntuOSVersion": "16.04.0-LTS",
-    "adminUsername": "[trim(toLower(parameters('AdminUsername')))]",
-    "sshPublicKey": "[trim(parameters('SSHPublicKey'))]",
-    "nodeFullName": "[trim(parameters('FullName'))]",
-    "nodeAdminEmail": "[trim(parameters('AdminEmail'))]",
-    "miningAddress": "[trim(parameters('MiningKeyAddress'))]",
-    "miningKeyfile": "[base64(trim(string(parameters('MiningJSONKeyFile'))))]",
-    "miningKeypass": "[trim(parameters('MiningKeyPassword'))]",
-    "netstatsServer": "[trim(parameters('NetstatsServer'))]",
-    "netstatsSecret": "[trim(parameters('NetstatsSecret'))]",
-    "dnsLabelPrefix": "[toLower(concat('oracles-', uniqueString(resourceGroup().id, variables('miningAddress'))))]",
+    "dnsLabelPrefix": "[concat('oracles-ns-', uniqueString(resourceGroup().id, parameters('nodeFullName')))]",
+    "adminUsername": "[trim(toLower(parameters('adminUsername')))]",
+    "sshPublicKey": "[trim(parameters('sshPublicKey'))]",
+    "nodeFullName": "[trim(parameters('nodeFullName'))]",
+    "nodeAdminEmail": "[trim(parameters('nodeAdminEmail'))]",
+    "netstatsSecret": "[trim(parameters('netstatsSecret'))]",
     "networkSecurityGroupName": "OraclesTest-NSG-1"
   },
   "resources": [
@@ -243,11 +230,11 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
                 "fileUris": [
-                    "[concat('https://raw.githubusercontent.com/oraclesorg/test-templates/', variables('TEMPLATES_BRANCH'), '/TestTestNet/mining-node/install.sh')]"
+                    "[concat('https://raw.githubusercontent.com/oraclesorg/deployment-azure/', variables('TEMPLATES_BRANCH'), '/nodes/netstats-server/install.sh')]"
                 ]
             },
             "protectedSettings": {
-                "commandToExecute": "[concat('cp install.sh /home/', variables('adminUsername'), '/; cd /home/', variables('adminUsername'), '; chown ', variables('adminUsername'), ':', variables('adminUsername'), ' install.sh; chmod +x install.sh; TEMPLATES_BRANCH=\"', variables('TEMPLATES_BRANCH'), '\" ADMIN_USERNAME=\"', variables('adminUsername'), '\" NETSTATS_SERVER=\"', variables('netstatsServer'), '\" NETSTATS_SECRET=\"', variables('netstatsSecret'), '\" MINING_KEYFILE=\"', variables('miningKeyfile'), '\" MINING_ADDRESS=\"', variables('miningAddress'), '\" MINING_KEYPASS=\"', variables('miningKeypass'), '\" NODE_FULLNAME=\"', variables('nodeFullName'), '\" NODE_ADMIN_EMAIL=\"', variables('nodeAdminEmail'), '\" sudo -u ', variables('adminUsername'), ' -E -H ./install.sh')]"
+                "commandToExecute": "[concat('cp install.sh /home/', variables('adminUsername'), '/; cd /home/', variables('adminUsername'), '; chown ', variables('adminUsername'), ':', variables('adminUsername'), ' install.sh; chmod +x install.sh; TEMPLATES_BRANCH=\"', variables('TEMPLATES_BRANCH'), '\" ADMIN_USERNAME=\"', variables('adminUsername'), '\" NETSTATS_SECRET=\"', variables('netstatsSecret'), '\" NODE_FULLNAME=\"', variables('nodeFullName'), '\" NODE_ADMIN_EMAIL=\"', variables('nodeAdminEmail'), '\" sudo -u ', variables('adminUsername'), ' -E -H ./install.sh')]"
             }
           }
         }
@@ -301,6 +288,45 @@
                   }
               },
               {
+                  "name": "allow-https",
+                  "properties": {
+                      "priority": 1300,
+                      "direction": "Inbound",
+                      "sourceAddressPrefix": "*",
+                      "sourcePortRange": "*",
+                      "protocol": "*",
+                      "access": "Allow",
+                      "destinationAddressPrefix": "*",
+                      "destinationPortRange": "443"
+                  }
+              },
+              {
+                  "name": "access-dashboard",
+                  "properties": {
+                      "priority": 1400,
+                      "direction": "Inbound",
+                      "sourceAddressPrefix": "*",
+                      "sourcePortRange": "*",
+                      "protocol": "Tcp",
+                      "access": "Allow",
+                      "destinationAddressPrefix": "*",
+                      "destinationPortRange": "3000"
+                  }
+              },
+              {
+                  "name": "access-explorer",
+                  "properties": {
+                      "priority": 1500,
+                      "direction": "Inbound",
+                      "sourceAddressPrefix": "*",
+                      "sourcePortRange": "*",
+                      "protocol": "Tcp",
+                      "access": "Allow",
+                      "destinationAddressPrefix": "*",
+                      "destinationPortRange": "4000"
+                  }
+              },
+              {
                   "name": "disallow-other",
                   "properties": {
                       "priority": 2000,
@@ -325,10 +351,6 @@
     "sshCommand": {
       "type": "string",
       "value": "[concat('ssh ', variables('adminUsername'), '@', reference(variables('publicIPAddressName')).dnsSettings.fqdn)]"
-    },
-    "miningAddress": {
-      "type": "string",
-      "value": "[variables('miningAddress')]"
     }
   }
 }

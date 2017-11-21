@@ -14,18 +14,12 @@
         "description": "Node admin email (publicly visible)"
       }
     },
-    "adminUsername": {
-      "type": "string",
-      "metadata": {
-        "description": "Username for the Virtual Machine"
-      }
-    },
     "vmSize": {
       "type": "string",
       "metadata": {
         "description": "VM Resources"
       },
-      "defaultValue": "Standard_A4m_v2",
+      "defaultValue": "Standard_A2_v2",
       "allowedValues": [
             "Standard_A1_v2",
             "Standard_A2_v2",
@@ -36,16 +30,28 @@
             "Standard_A8m_v2"
         ]
     },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "Username for the Virtual Machine"
+      }
+    },
     "sshPublicKey": {
       "type": "string",
       "metadata": {
         "description": "SSH public key for the Virtual Machine"
       }
     },
+    "netstatsServer": {
+      "type": "string",
+      "metadata": {
+        "description": "NetStats server"
+      }
+    },
     "netstatsSecret": {
       "type": "secureString",
       "metadata": {
-        "description": "NetStats net code"
+        "description": "NetStats secret code"
       }
     }
   },
@@ -67,11 +73,12 @@
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
     "ubuntuOSVersion": "16.04.0-LTS",
-    "dnsLabelPrefix": "[concat('oracles-ns-', uniqueString(resourceGroup().id, parameters('nodeFullName')))]",
+    "dnsLabelPrefix": "[concat('oracles-bn-', uniqueString(resourceGroup().id, parameters('nodeFullName')))]",
     "adminUsername": "[trim(toLower(parameters('adminUsername')))]",
     "sshPublicKey": "[trim(parameters('sshPublicKey'))]",
     "nodeFullName": "[trim(parameters('nodeFullName'))]",
     "nodeAdminEmail": "[trim(parameters('nodeAdminEmail'))]",
+    "netstatsServer": "[trim(parameters('netstatsServer'))]",
     "netstatsSecret": "[trim(parameters('netstatsSecret'))]",
     "networkSecurityGroupName": "OraclesTest-NSG-1"
   },
@@ -230,11 +237,11 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
                 "fileUris": [
-                    "[concat('https://raw.githubusercontent.com/oraclesorg/test-templates/', variables('TEMPLATES_BRANCH'), '/TestTestNet/netstats-server/install.sh')]"
+                    "[concat('https://raw.githubusercontent.com/oraclesorg/deployment-azure/', variables('TEMPLATES_BRANCH'), '/nodes/bootnode/install.sh')]"
                 ]
             },
             "protectedSettings": {
-                "commandToExecute": "[concat('cp install.sh /home/', variables('adminUsername'), '/; cd /home/', variables('adminUsername'), '; chown ', variables('adminUsername'), ':', variables('adminUsername'), ' install.sh; chmod +x install.sh; TEMPLATES_BRANCH=\"', variables('TEMPLATES_BRANCH'), '\" ADMIN_USERNAME=\"', variables('adminUsername'), '\" NETSTATS_SECRET=\"', variables('netstatsSecret'), '\" NODE_FULLNAME=\"', variables('nodeFullName'), '\" NODE_ADMIN_EMAIL=\"', variables('nodeAdminEmail'), '\" sudo -u ', variables('adminUsername'), ' -E -H ./install.sh')]"
+                "commandToExecute": "[concat('cp install.sh /home/', variables('adminUsername'), '/; cd /home/', variables('adminUsername'), '; chown ', variables('adminUsername'), ':', variables('adminUsername'), ' install.sh; chmod +x install.sh; TEMPLATES_BRANCH=\"', variables('TEMPLATES_BRANCH'), '\" ADMIN_USERNAME=\"', variables('adminUsername'), '\" NETSTATS_SERVER=\"', variables('netstatsServer'), '\" NETSTATS_SECRET=\"', variables('netstatsSecret'), '\" NODE_FULLNAME=\"', variables('nodeFullName'), '\" NODE_ADMIN_EMAIL=\"', variables('nodeAdminEmail'), '\" sudo -u ', variables('adminUsername'), ' -E -H ./install.sh')]"
             }
           }
         }
@@ -298,32 +305,6 @@
                       "access": "Allow",
                       "destinationAddressPrefix": "*",
                       "destinationPortRange": "443"
-                  }
-              },
-              {
-                  "name": "access-dashboard",
-                  "properties": {
-                      "priority": 1400,
-                      "direction": "Inbound",
-                      "sourceAddressPrefix": "*",
-                      "sourcePortRange": "*",
-                      "protocol": "Tcp",
-                      "access": "Allow",
-                      "destinationAddressPrefix": "*",
-                      "destinationPortRange": "3000"
-                  }
-              },
-              {
-                  "name": "access-explorer",
-                  "properties": {
-                      "priority": 1500,
-                      "direction": "Inbound",
-                      "sourceAddressPrefix": "*",
-                      "sourcePortRange": "*",
-                      "protocol": "Tcp",
-                      "access": "Allow",
-                      "destinationAddressPrefix": "*",
-                      "destinationPortRange": "4000"
                   }
               },
               {

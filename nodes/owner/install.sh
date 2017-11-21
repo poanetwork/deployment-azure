@@ -18,12 +18,12 @@ free -m
 EXT_IP="$(curl ifconfig.co)"
 echo "===== external ip: ${EXT_IP}"
 
-INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/TestTestNet/owner"
-echo "===== repo base path: ${INSTALL_CONFIG_REPO}"
-
 echo "===== downloading common.vars"
-curl -sLO "https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/TestTestNet/common.vars"
+curl -sLO "https://raw.githubusercontent.com/oraclesorg/deployment-azure/${TEMPLATES_BRANCH}/nodes/common.vars"
 source common.vars
+
+INSTALL_CONFIG_REPO="${REPO_BASE_PATH}/owner"
+echo "===== INSTALL_CONFIG_REPO: ${INSTALL_CONFIG_REPO}"
 
 # this should be provided through env by azure template
 NETSTATS_SERVER="${NETSTATS_SERVER}"
@@ -40,7 +40,7 @@ echo "===== environmental variables:"
 printenv
 
 echo "===== downloading common.funcs"
-curl -sLO "https://raw.githubusercontent.com/oraclesorg/test-templates/${TEMPLATES_BRANCH}/TestTestNet/common.funcs"
+curl -sLO "https://raw.githubusercontent.com/oraclesorg/deployment-azure/${TEMPLATES_BRANCH}/nodes/common.funcs"
 source common.funcs
 
 setup_ufw() {

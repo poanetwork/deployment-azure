@@ -72,6 +72,7 @@ unlock = ["${OWNER_ADDRESS}"]
 [mining]
 force_sealing = true
 engine_signer = "${OWNER_ADDRESS}"
+tx_gas_limit = "${TX_GAS_LIMIT}"
 reseal_on_txs = "none"
 EOF
     echo "${OWNER_KEYPASS}" > "${NODE_PWD}"

@@ -76,7 +76,7 @@ printenv
 # script parameters
 #INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
 #INSTALL_DOCKER_IMAGE="parity/parity:v1.6.8"
-INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/AlphaTestTestNet/TestTestNet/mining-node"
+INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/deployment-azure/AlphaTestTestNet/TestTestNet/mining-node"
 GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/alphadevtestnet/spec.json"
 GENESIS_JSON="spec.json"
 NODE_TOML="node.toml"
@@ -338,7 +338,7 @@ use_deb() {
     curl -LO 'http://parity-downloads-mirror.parity.io/v1.7.0/x86_64-unknown-linux-gnu/parity_1.7.0_amd64.deb'
     sudo dpkg -i parity_1.7.0_amd64.deb
     sudo apt-get install dtach
-    
+
     cat > parity.start << EOF
 dtach -n parity.dtach bash -c "parity -l engine=trace,discovery=trace,network=trace --config ${NODE_TOML} >> logs/parity.out 2>> logs/parity.err"
 EOF
@@ -378,12 +378,12 @@ use_bin() {
     curl -L -o parity-bin-v1.7.0.zip 'https://gitlab.parity.io/parity/parity/-/jobs/61863/artifacts/download'
     unzip parity-bin-v1.7.0.zip -d parity-bin-v1.7.0
     ln -s parity-bin-v1.7.0/target/release/parity parity-v1.7.0
-    
+
     cat > parity.start << EOF
 dtach -n parity.dtach bash -c "./parity-v1.7.0 -l discovery=trace,network=trace --config ${NODE_TOML} >> logs/parity.out 2>> logs/parity.err"
 EOF
     chmod +x parity.start
-    ./parity.start 
+    ./parity.start
     echo "<===== use_bin"
 }
 
@@ -400,7 +400,7 @@ compile_source() {
     cargo build --release
     cd ..
     ln -s parity-src-v1.7.0/target/release/parity parity-v1.7.0
-    
+
     cat > parity.start << EOF
 ./parity-v1.7.0 -l discovery=trace,network=trace --config "${NODE_TOML}" >> logs/parity.out 2>> logs/parity.err
 EOF
@@ -448,7 +448,7 @@ EOF"
 
 configure_logrotate() {
     echo "=====> configure_logrotate"
-    
+
     sudo bash -c "cat > /etc/logrotate.d/oracles.conf << EOF
 /home/${ADMIN_USERNAME}/logs/*.log {
     rotate 10
@@ -481,7 +481,7 @@ main () {
 
     prepare_homedir
     #add_user_to_docker_group
-    
+
     install_ntpd
     install_haveged
     allocate_swap
@@ -494,7 +494,7 @@ main () {
     #use_deb
     use_deb_via_systemd
     #use_bin
-    
+
     #setup_autoupdate
 
     #install_netstats

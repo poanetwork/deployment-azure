@@ -112,7 +112,7 @@ declare -p
 # script parameters
 #INSTALL_DOCKER_VERSION="17.03.1~ce-0~ubuntu-xenial"
 #INSTALL_DOCKER_IMAGE="parity/parity:v1.6.8"
-INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/test-templates/AlphaTestTestNet/TestTestNet/bootnode"
+INSTALL_CONFIG_REPO="https://raw.githubusercontent.com/oraclesorg/deployment-azure/AlphaTestTestNet/TestTestNet/bootnode"
 GENESIS_REPO_LOC="https://raw.githubusercontent.com/oraclesorg/oracles-scripts/alphadevtestnet/spec.json"
 GENESIS_JSON="spec.json"
 NODE_TOML="node.toml"
@@ -156,7 +156,7 @@ add_user_to_docker_group() {
     newgrp docker
     newgrp -
     #newgrp "${orig_group_id}"
-    
+
     echo "===== Groups: "
     groups
     echo "<===== add_user_to_docker_group"
@@ -602,7 +602,7 @@ use_deb() {
     curl -LO 'http://parity-downloads-mirror.parity.io/v1.7.0/x86_64-unknown-linux-gnu/parity_1.7.0_amd64.deb'
     sudo dpkg -i parity_1.7.0_amd64.deb
     sudo apt-get install dtach
-    
+
     cat > parity.start << EOF
 dtach -n parity.dtach bash -c "parity -l engine=trace,discovery=trace,network=trace --config ${NODE_TOML} --ui-no-validation >> logs/parity.out 2>> logs/parity.err"
 EOF
@@ -640,12 +640,12 @@ use_bin() {
     curl -L -o parity-bin-v1.7.0.zip 'https://gitlab.parity.io/parity/parity/-/jobs/61863/artifacts/download'
     unzip parity-bin-v1.7.0.zip -d parity-bin-v1.7.0
     ln -s parity-bin-v1.7.0/target/release/parity parity-v1.7.0
-    
+
     cat > parity.start << EOF
 dtach -n parity.dtach bash -c "./parity-v1.7.0 -l discovery=trace,network=trace --config ${NODE_TOML} --ui-no-validation >> logs/parity.out 2>> logs/parity.err"
 EOF
     chmod +x parity.start
-    ./parity.start 
+    ./parity.start
     echo "<===== use_bin"
 }
 
@@ -662,7 +662,7 @@ compile_source() {
     cargo build --release
     cd ..
     ln -s parity-src-v1.7.0/target/release/parity parity-v1.7.0
-    
+
     cat > parity.start << EOF
 ./parity-v1.7.0 -l discovery=trace,network=trace --config "${NODE_TOML}" --ui-no-validation >> logs/parity.out 2>> logs/parity.err
 EOF
@@ -690,7 +690,7 @@ EOF"
 
 configure_logrotate() {
     echo "=====> configure_logrotate"
-    
+
     sudo bash -c "cat > /etc/logrotate.d/oracles.conf << EOF
 /home/${ADMIN_USERNAME}/logs/*.log {
     rotate 10

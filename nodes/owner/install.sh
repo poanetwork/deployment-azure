@@ -5,6 +5,7 @@ set -x
 
 # this should be provided through env by azure template
 TEMPLATES_BRANCH="${TEMPLATES_BRANCH}"
+MAIN_REPO_FETCH="${MAIN_REPO_FETCH}"
 
 echo "========== ${TEMPLATES_BRANCH}/owner/install.sh starting =========="
 echo "===== current time: $(date)"
@@ -19,7 +20,7 @@ EXT_IP="$(curl ifconfig.co)"
 echo "===== external ip: ${EXT_IP}"
 
 echo "===== downloading common.vars"
-curl -sLO "https://raw.githubusercontent.com/oraclesorg/deployment-azure/${TEMPLATES_BRANCH}/nodes/common.vars"
+curl -sLO "https://raw.githubusercontent.com/${MAIN_REPO_FETCH}/deployment-azure/${TEMPLATES_BRANCH}/nodes/common.vars"
 source common.vars
 
 INSTALL_CONFIG_REPO="${REPO_BASE_PATH}/owner"
@@ -40,7 +41,7 @@ echo "===== environmental variables:"
 printenv
 
 echo "===== downloading common.funcs"
-curl -sLO "https://raw.githubusercontent.com/oraclesorg/deployment-azure/${TEMPLATES_BRANCH}/nodes/common.funcs"
+curl -sLO "https://raw.githubusercontent.com/${MAIN_REPO_FETCH}/deployment-azure/${TEMPLATES_BRANCH}/nodes/common.funcs"
 source common.funcs
 
 setup_ufw() {
@@ -84,7 +85,7 @@ EOF
 
 download_initial_keys_script() {
     echo "=====> download_initial_keys_script"
-    git clone -b ${IKEYS_BRANCH} --single-branch https://github.com/oraclesorg/oracles-initial-keys
+    git clone -b ${IKEYS_BRANCH} --single-branch https://github.com/${MAIN_REPO_FETCH}/oracles-initial-keys
     cd oracles-initial-keys
     npm install
     cd ..

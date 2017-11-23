@@ -5,6 +5,7 @@ set -x
 
 # this should be provided through env by azure template
 TEMPLATES_BRANCH="${TEMPLATES_BRANCH}"
+MAIN_REPO_FETCH="${MAIN_REPO_FETCH}"
 
 echo "========== ${TEMPLATES_BRANCH}/netstats-server/install.sh starting =========="
 echo "===== current time: $(date)"
@@ -19,7 +20,7 @@ EXT_IP="$(curl ifconfig.co)"
 echo "===== external ip: ${EXT_IP}"
 
 echo "===== downloading common.vars"
-curl -sLO "https://raw.githubusercontent.com/oraclesorg/deployment-azure/${TEMPLATES_BRANCH}/nodes/common.vars"
+curl -sLO "https://raw.githubusercontent.com/${MAIN_REPO_FETCH}/deployment-azure/${TEMPLATES_BRANCH}/nodes/common.vars"
 source common.vars
 
 INSTALL_CONFIG_REPO="${REPO_BASE_PATH}/netstats-server"
@@ -38,7 +39,7 @@ echo "===== environmental variables:"
 printenv
 
 echo "===== downloading common.funcs"
-curl -sLO "https://raw.githubusercontent.com/oraclesorg/deployment-azure/${TEMPLATES_BRANCH}/nodes/common.funcs"
+curl -sLO "https://raw.githubusercontent.com/${MAIN_REPO_FETCH}/deployment-azure/${TEMPLATES_BRANCH}/nodes/common.funcs"
 source common.funcs
 
 setup_ufw() {

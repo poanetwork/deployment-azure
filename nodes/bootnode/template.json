@@ -237,7 +237,7 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
                 "fileUris": [
-                    "[concat('https://raw.githubusercontent.com/oraclesorg/deployment-azure/', variables('TEMPLATES_BRANCH'), '/nodes/bootnode/install.sh')]"
+                    "[concat('https://raw.githubusercontent.com/', variables('MAIN_REPO_FETCH'), '/deployment-azure/', variables('TEMPLATES_BRANCH'), '/nodes/bootnode/install.sh')]"
                 ]
             },
             "protectedSettings": {

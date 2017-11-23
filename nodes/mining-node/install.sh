@@ -5,6 +5,7 @@ set -x
 
 # this should be provided through env by azure template
 TEMPLATES_BRANCH="${TEMPLATES_BRANCH}"
+MAIN_REPO_FETCH="${MAIN_REPO_FETCH}"
 
 echo "========== ${TEMPLATES_BRANCH}/mining-node/install.sh starting =========="
 echo "===== current time: $(date)"
@@ -19,7 +20,7 @@ EXT_IP="$(curl ifconfig.co)"
 echo "===== external ip: ${EXT_IP}"
 
 echo "===== downloading common.vars"
-curl -sLO "https://raw.githubusercontent.com/oraclesorg/deployment-azure/${TEMPLATES_BRANCH}/nodes/common.vars"
+curl -sLO "https://raw.githubusercontent.com/${MAIN_REPO_FETCH}/deployment-azure/${TEMPLATES_BRANCH}/nodes/common.vars"
 source common.vars
 
 INSTALL_CONFIG_REPO="${REPO_BASE_PATH}/mining-node"
@@ -42,7 +43,7 @@ echo "===== environmental variables:"
 printenv
 
 echo "===== downloading common.funcs"
-curl -sLO "https://raw.githubusercontent.com/oraclesorg/deployment-azure/${TEMPLATES_BRANCH}/nodes/common.funcs"
+curl -sLO "https://raw.githubusercontent.com/${MAIN_REPO_FETCH}/deployment-azure/${TEMPLATES_BRANCH}/nodes/common.funcs"
 source common.funcs
 
 set_ssh_keys() {
@@ -100,7 +101,7 @@ EOF
 
 install_scripts() {
     echo "=====> install_scripts"
-    git clone -b ${SCRIPTS_BRANCH} --single-branch https://github.com/oraclesorg/oracles-scripts
+    git clone -b ${SCRIPTS_BRANCH} --single-branch https://github.com/${MAIN_REPO_FETCH}/oracles-scripts
     ln -s ../${NODE_TOML} oracles-scripts/node.toml
     cd oracles-scripts/scripts
     npm install

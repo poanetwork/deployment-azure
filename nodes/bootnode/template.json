@@ -57,6 +57,7 @@
   },
   "variables": {
     "TEMPLATES_BRANCH": "dev-mainnet",
+    "MAIN_REPO_FETCH": "oraclesorg",
     "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'salinuxvm')]",
     "imagePublisher": "Canonical",
     "imageOffer": "UbuntuServer",
@@ -241,7 +242,7 @@
                 ]
             },
             "protectedSettings": {
-                "commandToExecute": "[concat('cp install.sh /home/', variables('adminUsername'), '/; cd /home/', variables('adminUsername'), '; chown ', variables('adminUsername'), ':', variables('adminUsername'), ' install.sh; chmod +x install.sh; TEMPLATES_BRANCH=\"', variables('TEMPLATES_BRANCH'), '\" ADMIN_USERNAME=\"', variables('adminUsername'), '\" NETSTATS_SERVER=\"', variables('netstatsServer'), '\" NETSTATS_SECRET=\"', variables('netstatsSecret'), '\" NODE_FULLNAME=\"', variables('nodeFullName'), '\" NODE_ADMIN_EMAIL=\"', variables('nodeAdminEmail'), '\" sudo -u ', variables('adminUsername'), ' -E -H ./install.sh')]"
+                "commandToExecute": "[concat('cp install.sh /home/', variables('adminUsername'), '/; cd /home/', variables('adminUsername'), '; chown ', variables('adminUsername'), ':', variables('adminUsername'), ' install.sh; chmod +x install.sh; TEMPLATES_BRANCH=\"', variables('TEMPLATES_BRANCH'), '\" ADMIN_USERNAME=\"', variables('adminUsername'), '\" NETSTATS_SERVER=\"', variables('netstatsServer'), '\" NETSTATS_SECRET=\"', variables('netstatsSecret'), '\" NODE_FULLNAME=\"', variables('nodeFullName'), '\" NODE_ADMIN_EMAIL=\"', variables('nodeAdminEmail'), '\" MAIN_REPO_FETCH=\"', variables('MAIN_REPO_FETCH'), '\" sudo -u ', variables('adminUsername'), ' -E -H ./install.sh')]"
             }
           }
         }

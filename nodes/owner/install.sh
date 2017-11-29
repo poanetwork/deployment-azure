@@ -83,13 +83,19 @@ EOF
     echo "<===== pull_image_and_configs"
 }
 
-download_initial_keys_script() {
-    echo "=====> download_initial_keys_script"
-    git clone -b ${IKEYS_BRANCH} --single-branch https://github.com/${MAIN_REPO_FETCH}/oracles-initial-keys
-    cd oracles-initial-keys
-    npm install
+install_scripts() {
+    echo "=====> install_scripts"
+    git clone -b ${SCRIPTS_OWNER_BRANCH} --single-branch "${SCRIPTS_OWNER_REPO}"
+    SCRIPTS_OWNER_FOLDER="$(basename ${SCRIPTS_OWNER_REPO})"
+    cd "${SCRIPTS_OWNER_FOLDER}"
+      cd generateInitialKey
+        npm install
+      cd ..
+      cd joinContracts
+        npm install
+      cd ..
     cd ..
-    echo "<===== download_initial_keys_script"
+    echo "<===== install_scripts"
 }
 
 # MAIN
@@ -120,7 +126,7 @@ main () {
 
     configure_logrotate
 
-    download_initial_keys_script
+    install_scripts
 }
 
 main

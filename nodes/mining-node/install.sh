@@ -101,9 +101,10 @@ EOF
 
 install_scripts() {
     echo "=====> install_scripts"
-    git clone -b ${SCRIPTS_BRANCH} --single-branch https://github.com/${MAIN_REPO_FETCH}/oracles-scripts
-    ln -s ../${NODE_TOML} oracles-scripts/node.toml
-    cd oracles-scripts/scripts
+    git clone -b "${SCRIPTS_VALIDATOR_BRANCH}" --single-branch "${SCRIPTS_VALIDATOR_REPO}"
+    SCRIPTS_VALIDATOR_FOLDER="$(basename ${SCRIPTS_VALIDATOR_REPO})"
+    ln -s ../${NODE_TOML} "${SCRIPTS_VALIDATOR_FOLDER}/node.toml"
+    cd "${SCRIPTS_VALIDATOR_FOLDER}/transferRewardToPayoutKey"
     npm install
     sudo bash -c "cat > /etc/cron.hourly/transferRewardToPayoutKey <<EOF
 #!/bin/bash

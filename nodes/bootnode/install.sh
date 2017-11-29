@@ -72,15 +72,6 @@ EOF
     echo "<===== pull_image_and_configs"
 }
 
-clone_dapps() {
-    echo "=====> clone_dapps"
-    mkdir -p parity_data/dapps
-    git clone -b ${DAPPS_BRANCH} --single-branch https://github.com/${MAIN_REPO_FETCH}/oracles-dapps-keys-generation.git parity_data/dapps/KeysGenerator
-    git clone -b ${DAPPS_BRANCH} --single-branch https://github.com/${MAIN_REPO_FETCH}/oracles-dapps-voting.git parity_data/dapps/Voting
-    git clone -b ${DAPPS_BRANCH} --single-branch https://github.com/${MAIN_REPO_FETCH}/oracles-dapps-validators.git parity_data/dapps/ValidatorsList
-    echo "<===== clone_dapps"
-}
-
 gen_certs() {
     echo "=====> gen_certs"
     mkdir certs
@@ -109,7 +100,6 @@ main () {
 
     install_nodejs
     pull_image_and_configs
-    clone_dapps
 
     if [ "${PARITY_INSTALLATION_MODE}" = "BIN" ]; then
         use_bin_via_systemd

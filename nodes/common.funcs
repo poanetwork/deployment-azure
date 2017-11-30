@@ -194,7 +194,7 @@ configure_logrotate() {
     echo "=====> configure_logrotate"
 
     sudo bash -c "cat > /home/${ADMIN_USERNAME}/oracles-logrotate.conf << EOF
-/home/${ADMIN_USERNAME}/logs/*.log {
+/home/${ADMIN_USERNAME}/logs/*.log /home/${ADMIN_USERNAME}/logs/*.err /home/${ADMIN_USERNAME}/logs/*.out {
     rotate 10
     size 200M
     missingok

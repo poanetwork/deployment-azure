@@ -87,7 +87,7 @@
     "netstatsServer": "[trim(parameters('NetstatsServer'))]",
     "netstatsSecret": "[trim(parameters('NetstatsSecret'))]",
     "dnsLabelPrefix": "[toLower(concat('oracles-', uniqueString(resourceGroup().id, variables('miningAddress'))))]",
-    "networkSecurityGroupName": "OraclesTest-NSG-1"
+    "networkSecurityGroupName": "Oracles-NSG-1"
   },
   "resources": [
     {

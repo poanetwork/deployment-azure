@@ -67,7 +67,7 @@
     "sshPublicKey": "[trim(parameters('sshPublicKey'))]",
     "nodeFullName": "[trim(parameters('nodeFullName'))]",
     "nodeAdminEmail": "[trim(parameters('nodeAdminEmail'))]",
-    "networkSecurityGroupName": "OraclesTest-NSG-1"
+    "networkSecurityGroupName": "Oracles-NSG-1"
   },
   "resources": [
     {

@@ -74,7 +74,7 @@
     "nodeFullName": "[trim(parameters('nodeFullName'))]",
     "nodeAdminEmail": "[trim(parameters('nodeAdminEmail'))]",
     "netstatsSecret": "[trim(parameters('netstatsSecret'))]",
-    "networkSecurityGroupName": "OraclesTest-NSG-1"
+    "networkSecurityGroupName": "Oracles-NSG-1"
   },
   "resources": [
     {

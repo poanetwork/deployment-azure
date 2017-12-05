@@ -4,5 +4,4 @@ base_path = "parity_data"
 [network]
 port = 30303
 [rpc]
-cors="null"
 apis = ["web3", "eth", "parity", "parity_set", "net", "traces", "rpc"]

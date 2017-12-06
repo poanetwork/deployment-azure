@@ -26,7 +26,7 @@ source common.vars
 INSTALL_CONFIG_REPO="${REPO_BASE_PATH}/netstats-server"
 echo "===== INSTALL_CONFIG_REPO: ${INSTALL_CONFIG_REPO}"
 
-NETSTATS_SERVER="localhost"
+NETSTATS_SERVER="http://localhost:3000"
 # this should be provided through env by azure template
 NETSTATS_SECRET="${NETSTATS_SECRET}"
 NODE_FULLNAME="${NODE_FULLNAME:-NetStat}"

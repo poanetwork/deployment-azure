@@ -6,3 +6,4 @@ port = 30303
 [rpc]
 #apis = ["web3", "eth", "parity", "parity_set", "net", "traces", "rpc"]
 apis = ["web3","eth","net"]
+threads = 4
